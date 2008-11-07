@@ -59,14 +59,24 @@
 CVAPI(int) cvmxIplToCvDepth(int depth)
 {
     /*
-    define CV_8U   0
-    define CV_8S   1
-    define CV_16U  2
-    define CV_16S  3
-    define CV_32S  4
-    define CV_32F  5
-    define CV_64F  6
-    define CV_USRTYPE1 7 */
+    #define CV_8U   0
+    #define CV_8S   1
+    #define CV_16U  2
+    #define CV_16S  3
+    #define CV_32S  4
+    #define CV_32F  5
+    #define CV_64F  6
+    #define CV_USRTYPE1 7 */
+    /*
+    #define IPL_DEPTH_SIGN 0x80000000
+    #define IPL_DEPTH_1U     1
+    #define IPL_DEPTH_8U     8
+    #define IPL_DEPTH_16U   16
+    #define IPL_DEPTH_32F   32
+    #define IPL_DEPTH_64F   64
+    #define IPL_DEPTH_8S  (IPL_DEPTH_SIGN| 8)
+    #define IPL_DEPTH_16S (IPL_DEPTH_SIGN|16)
+    #define IPL_DEPTH_32S (IPL_DEPTH_SIGN|32) */
     /*
     typedef enum {
     mxUNKNOWN_CLASS,
@@ -86,19 +96,6 @@ CVAPI(int) cvmxIplToCvDepth(int depth)
     mxUINT64_CLASS,
     mxFUNCTION_CLASS
     } mxClassID; */
-    /*
-    #define IPL_DEPTH_SIGN 0x80000000
-
-    #define IPL_DEPTH_1U     1
-    #define IPL_DEPTH_8U     8
-    #define IPL_DEPTH_16U   16
-    #define IPL_DEPTH_32F   32
-    #define IPL_DEPTH_64F   64
-
-    #define IPL_DEPTH_8S  (IPL_DEPTH_SIGN| 8)
-    #define IPL_DEPTH_16S (IPL_DEPTH_SIGN|16)
-    #define IPL_DEPTH_32S (IPL_DEPTH_SIGN|32)
-    */
     static const signed char IplToCvDepth[] =
     {
         -1, -1, CV_8U, CV_8S, CV_16U, CV_16S, -1, -1,
@@ -129,7 +126,7 @@ CVAPI(mxClassID) cvmxClassIDFromIplDepth(int depth)
     if (depth == IPL_DEPTH_1U) {
         return mxLOGICAL_CLASS;
     } else {
-        return ClassIDFromIplDepth[(((depth) & 255) >> 2) + ((depth) < 0)];
+        return (mxClassID)ClassIDFromIplDepth[(((depth) & 255) >> 2) + ((depth) < 0)];
     }
 }
 
@@ -204,7 +201,6 @@ CV_INLINE int cvmxClassIDToCvDepth(mxClassID classid)
     return cvmxIplToCvDepth(cvmxClassIDToIplDepth(classid));
 }
 
-
 /**
 * Convert CvArr to mxArray. Allocate memory too
 *
@@ -217,59 +213,80 @@ CV_INLINE int cvmxClassIDToCvDepth(mxClassID classid)
 CVAPI(mxArray*) cvmxArrayFromCvArr(const CvArr* arr)
 {
     CV_FUNCNAME( "cvmxArraFromCvArr" );
-    IplImage matstub, *mat = (IplImage*)arr;
-    int coi = 0;
-    int nChannel, nRow, nCol, nDim, dims[3];
+    IplImage imghdr, *img = (IplImage*)arr;
+    int nChannel, nRow, nCol, nDim;
+    mwSize dims[3];
     mxClassID classid; mxArray* mxarr = NULL;
-    int row, col, z;
+    int row, col, ch;
 
     __BEGIN__;
-    if (!CV_IS_IMAGE(mat)) {
-        CV_CALL(mat = cvGetImage(mat, &matstub));
+    if (!CV_IS_IMAGE(img)) {
+        CV_CALL(img = cvGetImage(img, &imghdr));
     }
-    //ToDo: cvMatND  //(CvMatND*) arr //CV_IS_MATND(mat)
-    nChannel = mat->nChannels;
-    nRow     = mat->height;
-    nCol     = mat->width;
+    nChannel = img->nChannels;
+    nRow     = img->height;
+    nCol     = img->width;
     nDim     = 2;
-    classid  = cvmxClassIDFromIplDepth(mat->depth);
+    classid  = cvmxClassIDFromIplDepth(img->depth);
     dims[0]  = nRow; dims[1] = nCol; dims[2] = nChannel;
     if (nChannel > 1) nDim = 3;
     mxarr    = mxCreateNumericArray(nDim, dims, classid, mxREAL);
 
     if (classid == mxUINT8_CLASS) {
-        unsigned char *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        unsigned char *mxData = (unsigned char*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
-                    mxData[dims[0] * dims[1] * z + dims[0] * col + row]
-                        = ((unsigned char*)mat->imageData)[mat->widthStep * row + nChannel * col + z];
+                    mxData[dims[0] * dims[1] * ch + dims[0] * col + row]
+                        = CV_IMAGE_ELEM(img, unsigned char, row, nChannel * col + ch);
                 }
             }
         }
     } else if (classid == mxDOUBLE_CLASS) {
-        double *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        double *mxData = (double*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
-                    mxData[dims[0] * dims[1] * z + dims[0] * col + row]
-                        = ((double*)mat->imageData)[mat->widthStep * row + nChannel * col + z];
+                    mxData[dims[0] * dims[1] * ch + dims[0] * col + row]
+                        = CV_IMAGE_ELEM(img, double, row, nChannel * col + ch);
                 }
             }
         }
     } else if (classid == mxSINGLE_CLASS) {
-        float *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        float *mxData = (float*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
-                    mxData[dims[0] * dims[1] * z + dims[0] * col + row]
-                        = ((float*)mat->imageData)[mat->widthStep * row + nChannel * col + z];
+                    mxData[dims[0] * dims[1] * ch + dims[0] * col + row]
+                        = CV_IMAGE_ELEM(img, float, row, nChannel * col + ch);
                 }
             }
         }
     }
     __END__;
     return mxarr;
+}
+
+/**
+* Convert mxArray from IplImage. Allocate memory too
+*
+* @param IplImage*
+* @return mxArray*
+*/
+CV_INLINE mxArray* cvmxArrayToIplImage(const IplImage* img)
+{
+    return cvmxArrayFromCvArr(img);
+}
+
+/**
+* Convert mxArray from CvMat. Allocate memory too
+*
+* @param CvMat*
+* @return mxArray*
+*/
+CV_INLINE mxArray* cvmxArrayFromCvMat(const CvMat* mat)
+{
+    return cvmxArrayFromCvMat(mat);
 }
 
 /**
@@ -284,60 +301,59 @@ CVAPI(mxArray*) cvmxArrayFromCvArr(const CvArr* arr)
 CVAPI(CvArr*) cvmxArrayToCvArr(const mxArray* mxarr)
 {
     CV_FUNCNAME( "cvmxArrayToCvArr" );
-    IplImage *mat = NULL;
-    int depth, nChannel = 1;
-    int nDim;
-    const int *dims;
+    IplImage *img = NULL;
+    int depth;
+    mwSize nChannel = 1;
+    mwSize nDim;
+    const mwSize *dims;
     mxClassID classid;
-    int row, col, z;
+    int row, col, ch;
 
     __BEGIN__;
     classid = mxGetClassID(mxarr);
     nDim = mxGetNumberOfDimensions(mxarr);
     dims = mxGetDimensions(mxarr);
-    if (nDim >= 3) {
-        nChannel = dims[2];
-    }
+    if (nDim >= 3) nChannel = dims[2];
     depth = cvmxClassIDToIplDepth(mxGetClassID(mxarr));
-    mat = cvCreateImage(cvSize(dims[1], dims[0]), depth, nChannel);
+    img   = cvCreateImage(cvSize(dims[1], dims[0]), depth, nChannel);
 
     if (classid == mxUINT8_CLASS) {
-        unsigned char *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        unsigned char *mxData = (unsigned char*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
-                    ((unsigned char*)mat->imageData)[mat->widthStep * row + nChannel * col + z]
-                        = mxData[dims[0] * dims[1] * z + dims[0] * col + row];
+                    CV_IMAGE_ELEM(img, unsigned char, row, nChannel * col + ch)
+                        = mxData[dims[0] * dims[1] * ch + dims[0] * col + row];
                 }
             }
         }
     } else if (classid == mxDOUBLE_CLASS) {
-        double *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        double *mxData = (double*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
-                    ((double*)mat->imageData)[mat->widthStep * row + nChannel * col + z]
-                        = mxData[dims[0] * dims[1] * z + dims[0] * col + row];
+                    CV_IMAGE_ELEM(img, double, row, nChannel * col + ch)
+                        = mxData[dims[0] * dims[1] * ch + dims[0] * col + row];
                 }
             }
         }
     } else if (classid == mxSINGLE_CLASS) {
-        float *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        float *mxData = (float*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
-                    ((float*)mat->imageData)[mat->widthStep * row + nChannel * col + z]
-                        = mxData[dims[0] * dims[1] * z + dims[0] * col + row];
+                    CV_IMAGE_ELEM(img, float, row, nChannel * col + ch)
+                        = mxData[dims[0] * dims[1] * ch + dims[0] * col + row];
                 }
             }
         }
     }
     __END__;
-    return (CvArr*)mat;
+    return (CvArr*)img;
 }
 
 /**
-* Convert mxArray to CvArr. Allocate memory too
+* Convert mxArray to IplImage. Allocate memory too
 *
 * Currently support only uint8, float, double
 * Currently support only 1 channel (grayscale) and 3 channels (rgb etc)
@@ -347,7 +363,7 @@ CVAPI(CvArr*) cvmxArrayToCvArr(const mxArray* mxarr)
 */
 CV_INLINE IplImage* cvmxArrayToIplImage(const mxArray* mxarr)
 {
-    return cvmxArrayToCvArr(mxarr);
+    return (IplImage*)cvmxArrayToCvArr(mxarr);
 }
 
 /**
@@ -362,7 +378,7 @@ CV_INLINE IplImage* cvmxArrayToIplImage(const mxArray* mxarr)
 CV_INLINE CvMat* cvmxArrayToCvMat(const mxArray* mxarr)
 {
     int coi = 0;
-    CvMat mathdr, *mat = cvmxArrayToCvArr(mxarr);
+    CvMat mathdr, *mat = (CvMat*)cvmxArrayToCvArr(mxarr);
     if( !CV_IS_MAT(mat) )
     {
         mat = cvGetMat(mat, &mathdr, &coi, 0);
@@ -383,8 +399,8 @@ CV_INLINE CvMat* cvmxArrayToCvMat(const mxArray* mxarr)
 CVAPI(void) cvmxPrint3DMatrix(const mxArray* mxarr)
 {
     int nDim;
-    const int *dims;
-    int row, col, z, nChannel = 1;
+    const mwSize *dims;
+    int row, col, ch, nChannel = 1;
     mxClassID classid;
     classid = mxGetClassID(mxarr);
     nDim = mxGetNumberOfDimensions(mxarr);
@@ -392,36 +408,36 @@ CVAPI(void) cvmxPrint3DMatrix(const mxArray* mxarr)
     if (nDim >= 3) nChannel = dims[2];
 
     if (classid == mxUINT8_CLASS) {
-        unsigned char *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        unsigned char *mxData = (unsigned char*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
                     printf("%d ", mxData[
-                        dims[0] * dims[1] * z + dims[0] * col + row]);
+                        dims[0] * dims[1] * ch + dims[0] * col + row]);
                 }
                 printf("\n");
             }
             printf("\n");
         }
     } else if (classid == mxDOUBLE_CLASS) {
-        double *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        double *mxData = (double*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
                     printf("%lf ", mxData[
-                        dims[0] * dims[1] * z + dims[0] * col + row]);
+                        dims[0] * dims[1] * ch + dims[0] * col + row]);
                 }
                 printf("\n");
             }
             printf("\n");
         }
     } else if (classid == mxSINGLE_CLASS) {
-        float *mxData = mxGetData(mxarr);
-        for (z = 0; z < nChannel; z++) {
+        float *mxData = (float*)mxGetData(mxarr);
+        for (ch = 0; ch < nChannel; ch++) {
             for (row = 0; row < dims[0]; row++) {
                 for (col = 0; col < dims[1]; col++) {
                     printf("%lf ", mxData[
-                        dims[0] * dims[1] * z + dims[0] * col + row]);
+                        dims[0] * dims[1] * ch + dims[0] * col + row]);
                 }
                 printf("\n");
             }

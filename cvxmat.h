@@ -284,34 +284,36 @@ CV_INLINE void cvMatPrint( const CvArr* arr )
     __BEGIN__;
     int row, col, ch;
     int coi = 0;
-    CvMat* mat = (CvMat*)arr, matstub;
-
-    if( !CV_IS_MAT(mat) )
+    CvMat matstub, *mat = (CvMat*)arr;
+    int depth, nChannels;
+    CvScalar value;
+    if( !CV_IS_MAT( mat ) )
     {
         CV_CALL( mat = cvGetMat( mat, &matstub, &coi ) ); // i.e. IplImage to CvMat
         if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
     }
-    CvScalar value;
+    depth = CV_MAT_DEPTH( mat->type );
+    nChannels = CV_MAT_CN( mat->type );
     for( row = 0; row < mat->rows; row++ )
     {
         for( col = 0; col < mat->cols; col++ )
         {
             value = cvGet2D( mat, row, col );
-            if( CV_MAT_CN(mat->type) > 1 )
+            if( nChannels > 1 )
             {
-                std::cout << "(" << value.val[0];
-                for( ch = 1; ch < CV_MAT_CN(mat->type); ch++ )
+                printf( "(%lf", value.val[0] );
+                for( ch = 1; ch < nChannels; ch++ )
                 {
-                    std::cout << " " << value.val[ch];
+                    printf( " %lf", value.val[ch] );
                 }
-                std::cout << ") ";
+                printf( ") " );
             }
             else
             {
-                std::cout << value.val[0] << " ";
+                printf( "%lf ", value.val[0] );
             }
         }
-        std::cout << std::endl;
+        printf("\n");
     }
     __END__;
 }
