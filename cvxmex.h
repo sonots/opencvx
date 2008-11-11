@@ -30,6 +30,8 @@
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:4996)
+#pragma warning(disable:4018) // '<': signed/unsigned mismatch
+#pragma warning(disable:4267) // conversion from 'size_t' to 'int', possible loss of data
 #pragma comment(lib, "cv.lib")
 #pragma comment(lib, "cxcore.lib")
 #pragma comment(lib, "cvaux.lib")
@@ -44,7 +46,6 @@
 /**
 * definitions 
 */
-#define             cvmxCvToIplDepth(type) (cvCvToIplDepth(type))
 CVAPI(int)          cvmxIplToCvDepth(int depth);
 CVAPI(mxClassID)    cvmxClassIDFromIplDepth(int depth);
 CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type);
@@ -58,7 +59,21 @@ CV_INLINE IplImage* cvmxArrayToIplImage(const mxArray* mxarr);
 CV_INLINE CvMat*    cvmxArrayToCvMat(const mxArray* mxarr);
 
 /**
-* Convert IplImage depth to cvMat depth
+* Convert CvMat type to IplImage depth
+*
+* @param int ICvMat type
+* @return int IplImage depth
+* @see cvmxClassIDFromCvDepth
+* @see cvmxClassIDToCvDepth
+* @see cvmxClassIDFromIplDepth
+* @see cvmxClassIDToIplDepth
+* @see cvmxIplToCvDepth
+* @see cvCvToIplDepth
+*/
+#define cvmxCvToIplDepth(type) cvCvToIplDepth(type)
+
+/**
+* Convert IplImage depth to CvMat depth
 *
 * One may use CV_MAKETYPE(depth, nChannel) to create cvMat type
 *
@@ -394,12 +409,17 @@ CV_INLINE IplImage* cvmxArrayToIplImage(const mxArray* mxarr)
 */
 CV_INLINE CvMat* cvmxArrayToCvMat(const mxArray* mxarr)
 {
-    int coi = 0;
-    CvMat mathdr, *mat = (CvMat*)cvmxArrayToCvArr(mxarr);
-    if( !CV_IS_MAT(mat) )
-    {
-        mat = cvGetMat(mat, &mathdr, &coi, 0);
-    }
+    IplImage* img = cvmxArrayToIplImage(mxarr);
+    CvMat *mat = cvCreateMat(img->height, img->width, CV_MAKETYPE(cvmxIplToCvDepth(img->depth), img->nChannels));
+    cvConvert(img, mat);
+    cvReleaseImage(&img);
+    // @todo: why cvGetMat results in error?
+    //int coi = 0;
+    //CvMat mathdr, *mat = (CvMat*)cvmxArrayToCvArr(mxarr);
+    //if( !CV_IS_MAT(mat) )
+    //{
+    //    mat = cvGetMat(mat, &mathdr, &coi, 0);
+    //}
     return mat;
 }
 

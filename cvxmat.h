@@ -272,6 +272,21 @@ CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, 
 #define cvHcat( src1, src2, dst ) cvCat( (src1), (src2), (dst), 0 )
 #define cvVcat( src1, src2, dst ) cvCat( (src1), (src2), (dst), 1 )
 
+CV_INLINE void cvMatPrintProperty( const CvMat* mat )
+{
+    printf("cols: %d\n", mat->cols);
+    printf("rows: %d\n", mat->rows);
+    printf("step: %d\n", mat->step);
+    printf("type: %d\n", mat->type);
+}
+
+CV_INLINE void cvIplImagePrintProperty( const IplImage* img )
+{
+    printf("width: %d\n", img->width);
+    printf("height: %d\n", img->height);
+    printf("nChannels: %d\n", img->nChannels);
+}
+
 /**
 * Print array
 *
