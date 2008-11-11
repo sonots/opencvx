@@ -21,6 +21,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+#ifndef CV_MATEXT_INCLUDED
+#define CV_MATEXT_INCLUDED
+
 #ifdef _MSC_VER
 #pragma warning( push )
 #pragma warning( disable : 4996 )
@@ -33,9 +36,6 @@
 #include "cvaux.h"
 #include <stdio.h>
 #include <iostream>
-
-#ifndef CV_MATEXT_INCLUDED
-#define CV_MATEXT_INCLUDED
 
 /**
 * Set array row or row span

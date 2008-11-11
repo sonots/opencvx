@@ -1,5 +1,6 @@
 /**
 * OpenCV versus Matlab C Library (MEX) interfaces
+*     verified under OpenCV 1.00 and Matlab 2007b
 *
 * The MIT License
 * 
@@ -23,6 +24,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+#ifndef CV_MEX_INCLUDED
+#define CV_MEX_INCLUDED
+
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:4996)
@@ -37,8 +41,21 @@
 #include "mat.h"
 #include "matrix.h"
 
-#ifndef CV_MEX_INCLUDED
-#define CV_MEX_INCLUDED
+/**
+* definitions 
+*/
+#define             cvmxCvToIplDepth(type) (cvCvToIplDepth(type))
+CVAPI(int)          cvmxIplToCvDepth(int depth);
+CVAPI(mxClassID)    cvmxClassIDFromIplDepth(int depth);
+CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type);
+CVAPI(int)          cvmxClassIDToIplDepth(mxClassID classid);
+CV_INLINE int       cvmxClassIDToCvDepth(mxClassID classid);
+CVAPI(mxArray*)     cvmxArrayFromCvArr(const CvArr* arr);
+CV_INLINE mxArray*  cvmxArrayFromIplImage(const IplImage* img);
+CV_INLINE mxArray*  cvmxArrayFromCvMat(const CvMat* mat);
+CVAPI(CvArr*)       cvmxArrayToCvArr(const mxArray* mxarr);
+CV_INLINE IplImage* cvmxArrayToIplImage(const mxArray* mxarr);
+CV_INLINE CvMat*    cvmxArrayToCvMat(const mxArray* mxarr);
 
 /**
 * Convert IplImage depth to cvMat depth
@@ -273,7 +290,7 @@ CVAPI(mxArray*) cvmxArrayFromCvArr(const CvArr* arr)
 * @param IplImage*
 * @return mxArray*
 */
-CV_INLINE mxArray* cvmxArrayToIplImage(const IplImage* img)
+CV_INLINE mxArray* cvmxArrayFromIplImage(const IplImage* img)
 {
     return cvmxArrayFromCvArr(img);
 }
@@ -386,65 +403,6 @@ CV_INLINE CvMat* cvmxArrayToCvMat(const mxArray* mxarr)
     return mat;
 }
 
-/**
-* Print mxArray 
-*
-* Currently support only uint8, float, double
-* Currently support only upto 3-D. 
-*
-* @param mxArray* mxarr
-* @return void
-* @see mlfPrintMatrix
-*/
-CVAPI(void) cvmxPrint3DMatrix(const mxArray* mxarr)
-{
-    int nDim;
-    const mwSize *dims;
-    int row, col, ch, nChannel = 1;
-    mxClassID classid;
-    classid = mxGetClassID(mxarr);
-    nDim = mxGetNumberOfDimensions(mxarr);
-    dims = mxGetDimensions(mxarr);
-    if (nDim >= 3) nChannel = dims[2];
-
-    if (classid == mxUINT8_CLASS) {
-        unsigned char *mxData = (unsigned char*)mxGetData(mxarr);
-        for (ch = 0; ch < nChannel; ch++) {
-            for (row = 0; row < dims[0]; row++) {
-                for (col = 0; col < dims[1]; col++) {
-                    printf("%d ", mxData[
-                        dims[0] * dims[1] * ch + dims[0] * col + row]);
-                }
-                printf("\n");
-            }
-            printf("\n");
-        }
-    } else if (classid == mxDOUBLE_CLASS) {
-        double *mxData = (double*)mxGetData(mxarr);
-        for (ch = 0; ch < nChannel; ch++) {
-            for (row = 0; row < dims[0]; row++) {
-                for (col = 0; col < dims[1]; col++) {
-                    printf("%lf ", mxData[
-                        dims[0] * dims[1] * ch + dims[0] * col + row]);
-                }
-                printf("\n");
-            }
-            printf("\n");
-        }
-    } else if (classid == mxSINGLE_CLASS) {
-        float *mxData = (float*)mxGetData(mxarr);
-        for (ch = 0; ch < nChannel; ch++) {
-            for (row = 0; row < dims[0]; row++) {
-                for (col = 0; col < dims[1]; col++) {
-                    printf("%lf ", mxData[
-                        dims[0] * dims[1] * ch + dims[0] * col + row]);
-                }
-                printf("\n");
-            }
-            printf("\n");
-        }
-    }
-}
 
 #ifdef _MSC_VER
 #pragma warning( pop )
