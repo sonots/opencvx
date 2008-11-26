@@ -2,10 +2,10 @@ CC      = g++
 CFLAGS  = -O3 -I. -I.. `pkg-config --cflags opencv`
 LIBS    = `pkg-config --libs opencv`
 
-all: pca.exe
+all: cvpcadiffs.exe
 
-pca.exe: pca.cpp ../cvxpca.h
-	echo $(CFLAGS) $(LIBS) | xargs $(CC) pca.cpp -o $@
+cvpcadiffs.exe: cvpcadiffs.cpp ../cvpcadiffs.h
+	echo $(CFLAGS) $(LIBS) | xargs $(CC) cvpcadiffs.cpp -o $@
 
 clean:
 	rm -f *~ *.o *.exe core
