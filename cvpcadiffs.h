@@ -37,9 +37,9 @@
 //                       const CvArr* eigenvects, CvArr* result );
 void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
                     const CvMat* eigenvectors, CvMat* probs, 
-                    bool normalize = false, bool logprob = true );
+                    int normalize = 0, bool logprob = true );
 double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
-                   const CvMat* eigenvectors, bool normalize = false, bool logprob = true );
+                   const CvMat* eigenvectors, int normalize = 0, bool logprob = true );
 
 /**
  * cvPcaDiffs - Distance "in" and "from" feature space [1]
@@ -61,7 +61,10 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
  * @param eigenvalues         nEig x 1 eigen values
  * @param eigenvectors        M x D eigen vectors
  * @param probs               1 x N computed likelihood probabilities
- * @param [normalize = false] Compute normalization term or not
+ * @param [normalize = 0]     Compute normalization term or not
+ *                            0 - nothing
+ *                            1 - normalization term
+ *                            2 - normalize so that sum becomes 1.0
  * @param [logprob   = false] Log probability or not
  *
  * References
@@ -95,7 +98,7 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
  *   11/18/2008  First Edition
  */
 void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
-                    const CvMat* eigenvectors, CvMat* probs, bool normalize, bool logprob )
+                    const CvMat* eigenvectors, CvMat* probs, int normalize, bool logprob )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -141,7 +144,7 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
             }
             cvmSet( DIFS, 0, n, pow(cvNorm( scsubproj, NULL, CV_L2 ), 2) );
         }
-        if( normalize ) {
+        if( normalize == 1 ) {
             for( d = 0; d < M; d++ ) {
                 normterm += log( cvmGet( sqrt_pLambda, d, 0 ) );
             }
@@ -168,7 +171,7 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
         for( n = 0; n < N; n++ ) {
             cvmSet( DFFS, 0, n, cvmGet( DFFS, 0, n ) / rho.val[0] );
         }
-        if( normalize ) {
+        if( normalize == 1 ) {
             normterm += log(2*M_PI*rho.val[0]) * ((nEig - M)/2.0);
         }
     }
@@ -177,9 +180,23 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
     for( n = 0; n < N; n++ ) {
         cvmSet( probs, 0, n, cvmGet( DIFS, 0, n ) / (-2) + cvmGet( DFFS, 0, n) / (-2) - normterm );
     }
-    if( !logprob ) {
+    if( normalize == 2 ) {
+        double minval, maxval;
+        cvMinMaxLoc( probs, &minval, &maxval );
+        cvSubS( probs, cvScalar( maxval ), probs );
+    }
+    if( !logprob || normalize == 2 ) {
         for( n = 0; n < N; n++ ) {
             cvmSet( probs, 0, n, exp(cvmGet( probs, 0, n )) );
+        }
+        if( normalize == 2 ) {
+            CvScalar sumprob = cvSum( probs );
+            cvScale( probs, probs, 1.0 / sumprob.val[0] );
+        }
+    }
+    if( logprob && normalize == 2 ) {
+        for( n = 0; n < N; n++ ) {
+            cvmSet( probs, 0, n, log(cvmGet( probs, 0, n )) );
         }
     }
     cvReleaseMat( &proj );
@@ -205,7 +222,7 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
 // @return double likelihood
 */
 double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
-                   const CvMat* eigenvectors, bool normalize, bool logprob )
+                   const CvMat* eigenvectors, int normalize, bool logprob )
 {
     double prob;
     CvMat *_probs  = cvCreateMat( 1, 1, sample->type );

@@ -62,7 +62,7 @@ int main( int argc, char** argv )
     N = 2;
     CvMat mat2 = cvMat( D, N, CV_64FC1, b );
     CvMat *loglikeli = cvCreateMat( 1, N, CV_64FC1 );
-    cvMatPcaDiffs( &mat2, avg, eigenvalues, eigenvectors, loglikeli, true, true );
+    cvMatPcaDiffs( &mat2, avg, eigenvalues, eigenvectors, loglikeli, 1, true );
     printf("data\n");
     cvMatPrint( &mat2 );
     printf("loglikeli\n");
@@ -103,3 +103,4 @@ data
 loglikeli
 0.107349 -5.936231
 */
+
