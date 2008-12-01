@@ -30,19 +30,19 @@ int main( int argc, char** argv )
     CvMat *eigenvectors = cvCreateMat( MIN(D, N-1), D, CV_64FC1 );
     cvCalcPCA( &mat, avg, eigenvalues, eigenvectors, CV_PCA_DATA_AS_COL );
     printf("data (col vec)\n");
-    cvMatPrint( &mat );
+    cvPrintMat( &mat );
     printf("avg (col vec)\n");
-    cvMatPrint( avg );
+    cvPrintMat( avg );
     printf("eigenvalues\n");
-    cvMatPrint( eigenvalues );
+    cvPrintMat( eigenvalues );
     printf("eigenvectors (row vec)\n");
-    cvMatPrint( eigenvectors );
+    cvPrintMat( eigenvectors );
 
     int M = eigenvectors->rows;
     CvMat *proj = cvCreateMat( N, M, CV_64FC1 );
     cvProjectPCA( &mat, avg, eigenvectors, proj );
     printf("proj (row vec)\n");
-    cvMatPrint( proj );
+    cvPrintMat( proj );
     cvReleaseMat( &proj );
 
     M = 1;
@@ -50,7 +50,7 @@ int main( int argc, char** argv )
     proj = cvCreateMat( N, M, CV_64FC1 );
     cvProjectPCA( &mat, avg, eigenvectors, proj );
     printf("reduced proj (row vec)\n");
-    cvMatPrint( proj );
+    cvPrintMat( proj );
     cvReleaseMat( &proj );
 
     double b[] = { 
@@ -64,9 +64,9 @@ int main( int argc, char** argv )
     CvMat *loglikeli = cvCreateMat( 1, N, CV_64FC1 );
     cvMatPcaDiffs( &mat2, avg, eigenvalues, eigenvectors, loglikeli, 1, true );
     printf("data\n");
-    cvMatPrint( &mat2 );
+    cvPrintMat( &mat2 );
     printf("loglikeli\n");
-    cvMatPrint( loglikeli );
+    cvPrintMat( loglikeli );
 
     return 0;
 }
