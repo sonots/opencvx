@@ -269,6 +269,7 @@ CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type = CV_L2 )
 CV_INLINE void cvPrintRect( const CvRect &rect )
 {
     printf( "%d %d %d %d\n", rect.x, rect.y, rect.width, rect.height );
+    fflush( stdout );
 }
 
 /**
