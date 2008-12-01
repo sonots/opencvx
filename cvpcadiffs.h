@@ -59,7 +59,7 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
  * @param samples             D x N sample vectors
  * @param avg                 D x 1 mean vector
  * @param eigenvalues         nEig x 1 eigen values
- * @param eigenvectors        M x D eigen vectors
+ * @param eigenvectors        M x D or D x M (automatically adjusted) eigen vectors
  * @param probs               1 x N computed likelihood probabilities
  * @param [normalize = 0]     Compute normalization term or not
  *                            0 - nothing
@@ -102,11 +102,12 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
 {
     int D = samples->rows;
     int N = samples->cols;
-    int M = eigenvectors->rows;
+    int M = (eigenvectors->rows == D) ? eigenvectors->cols : eigenvectors->rows;
     int type = samples->type;
     int nEig = eigenvalues->rows;
     int d, n;
     double normterm = 0;
+    CvMat *_eigenvectors; // cvProjectPCA requires M x D vec
     CvMat *proj = cvCreateMat( N, M, type );
     CvMat *subproj = cvCreateMat( 1, M, type );
     CvMat *scsubproj = cvCreateMat( 1, M, type );
@@ -123,13 +124,20 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
     CV_ASSERT( CV_IS_MAT(avg) );
     CV_ASSERT( CV_IS_MAT(eigenvalues) );
     CV_ASSERT( CV_IS_MAT(eigenvectors) );
+    CV_ASSERT( D == eigenvectors->rows || D == eigenvectors->cols );
     CV_ASSERT( D == avg->rows && 1 == avg->cols );
-    CV_ASSERT( D == eigenvectors->cols );
     CV_ASSERT( 1 == probs->rows && N == probs->cols );
-
+    
     cvZero( DIFS );
     cvZero( DFFS );
-    cvProjectPCA( samples, avg, eigenvectors, proj );
+
+    if( D == eigenvectors->rows ) {
+        _eigenvectors = cvCreateMat( M, D, type );
+        cvT( eigenvectors, _eigenvectors );
+    } else {
+        _eigenvectors = (CvMat*)eigenvectors;
+    }
+    cvProjectPCA( samples, avg, _eigenvectors, proj );
 
     // distance in feature space
     if( M > 0 ) {
@@ -208,6 +216,9 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
     cvReleaseMat( &DFFS );
     cvReleaseMat( &samples0 );
     cvReleaseMat( &subsamples0 );
+    if( D == eigenvectors->rows ) {
+        cvReleaseMat( &_eigenvectors );
+    }
     __END__;
 }
 
