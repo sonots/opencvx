@@ -21,8 +21,8 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-#ifndef CV_MATEXT_INCLUDED
-#define CV_MATEXT_INCLUDED
+#ifndef CV_POINTNORM_INCLUDED
+#define CV_POINTNORM_INCLUDED
 
 #ifdef _MSC_VER // MS Visual Studio
 #pragma warning(push)
@@ -34,11 +34,27 @@
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
+#include <math.h>
+using namespace std;
 
-#include "cvprintmat.h"
-#include "cvsetrow.h"
-#include "cvsetcol.h"
-#include "cvcat.h"
+CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type = CV_L2 );
+
+/**
+// Compute Norm between two points
+//
+// @param CvPoint p1              A point 1
+// @param CVPoint p2              A point 2
+// @param int [norm_type = CV_L2] CV_L2 to compute L2 norm (euclidean distance)
+//                                CV_L1 to compute L1 norm (abs)
+// @return double
+*/
+CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type )
+{
+    if( norm_type == CV_L1 )
+        return abs( p2.x - p1.x ) + abs( p2.y - p1.y );
+    else
+        return sqrt( pow( (double)p2.x - p1.x, 2 ) + pow( (double)p2.y - p1.y, 2 ) );
+}
 
 #ifdef _MSC_VER // MS Visual Studio
 #pragma warning(pop)

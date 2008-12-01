@@ -35,6 +35,8 @@
 #include "cv.h"
 #include "cvaux.h"
 
+double cvRandGauss( CvRNG* rng, double sigma );
+
 /**
  * This function returns a Gaussian random variate, with mean zero and standard deviation sigma.
  *
