@@ -274,18 +274,22 @@ CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, 
 
 CV_INLINE void cvPrintMatProperty( const CvMat* mat )
 {
-    printf("rows: %d\n", mat->rows);
-    printf("cols: %d\n", mat->cols);
-    printf("type: %d\n", mat->type);
-    printf("step: %d\n", mat->step);
+    printf("CvMat Property\n");
+    printf(" rows: %d\n", mat->rows);
+    printf(" cols: %d\n", mat->cols);
+    printf(" type: %d\n", mat->type);
+    printf(" step: %d\n", mat->step);
+    fflush( stdout );
 }
 
 CV_INLINE void cvPrintIplImageProperty( const IplImage* img )
 {
-    printf("width: %d\n", img->width);
-    printf("height: %d\n", img->height);
-    printf("depth: %d\n", img->depth);
-    printf("nChannels: %d\n", img->nChannels);
+    printf("IplImage Property\n");
+    printf(" width: %d\n", img->width);
+    printf(" height: %d\n", img->height);
+    printf(" depth: %d\n", img->depth);
+    printf(" nChannels: %d\n", img->nChannels);
+    fflush( stdout );
 }
 
 /**
@@ -331,6 +335,7 @@ CV_INLINE void cvPrintMat( const CvArr* arr )
         }
         printf("\n");
     }
+    fflush( stdout );
     __END__;
 }
 
