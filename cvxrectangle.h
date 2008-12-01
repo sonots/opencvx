@@ -34,6 +34,7 @@
 #include "highgui.h"
 #include <stdio.h>
 #include <math.h>
+using namespace std;
 
 #ifndef CV_RECTANGLE_INCLUDED
 #define CV_RECTANGLE_INCLUDED
