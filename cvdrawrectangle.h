@@ -57,6 +57,8 @@ CV_INLINE void cvShowImageAndRectangle( const char* w_name, const IplImage* img,
 // @param int       [shift = 0]     Number of fractional bits in the point coordinates. 
 // @todo thickness, line_type, and shift are available only when rotate == 0 && shear == 0 currently. 
 // @return void
+//
+// @uses cvRectangle
 */
 CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint shear, 
                             CvScalar color, int thickness, int line_type, int shift)
