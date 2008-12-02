@@ -21,30 +21,10 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-#ifndef CV_MATEXT_INCLUDED
-#define CV_MATEXT_INCLUDED
+#ifndef CV_MATELEMCN_INCLUDED
+#define CV_MATELEMCN_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
-#include "cv.h"
-#include "cvaux.h"
-#include "cxcore.h"
-
-#define CV_MAT_ELEM_CN( mat, elemtype, row, col ) \
-    (*(elemtype*)((mat).data.ptr + (size_t)(mat).step*(row) + sizeof(elemtype)*(col)))
-
-#include "cvprintmat.h"
-#include "cvsetrow.h"
-#include "cvsetcol.h"
-#include "cvcat.h"
-
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
+#define CV_MAT_ELEM_CN( mat, elemtype, row, chcol ) \
+    (*(elemtype*)((mat).data.ptr + (size_t)(mat).step*(row) + sizeof(elemtype)*(chcol)))
 
 #endif
