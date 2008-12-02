@@ -70,7 +70,7 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
     if( rotate == 0 && shear.x == 0 && shear.y == 0 )
     {
         CvPoint pt1 = cvPoint( rect.x, rect.y );
-        CvPoint pt2 = cvPoint( rect.x + rect.width, rect.y + rect.height );
+        CvPoint pt2 = cvPoint( rect.x + rect.width - 1, rect.y + rect.height - 1 );
         cvRectangle( img, pt1, pt2, color, thickness, line_type, shift );
     }
     else
