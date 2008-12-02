@@ -42,6 +42,7 @@ using namespace std;
 #include "cvdrawrectangle.h"
 #include "cvcropimageroi.h"
 #include "cvpointnorm.h"
+#include "cvconvrect.h"
 
 /**
 // Print cvRect parameters
