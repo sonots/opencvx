@@ -1,16 +1,26 @@
 /** @file
-// cvgausspdf.h
-//
-// Copyright (c) 2008, Naotoshi Seo. All rights reserved.
-//
-// The program is free to use for non-commercial academic purposes,
-// but for course works, you must understand what is going inside to 
-// use. The program can be used, modified, or re-distributed for any 
-// purposes only if you or one of your group understand not only 
-// programming codes but also theory and math behind (if any). 
-// Please contact the authors if you are interested in using the 
-// program without meeting the above conditions.
-*/
+ * The MIT License
+ * 
+ * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 #ifndef CV_GAUSSPDF_INCLUDED
 #define CV_GAUSSPDF_INCLUDED
 
@@ -24,8 +34,6 @@
 
 #include "cv.h"
 #include "cvaux.h"
-#include <stdio.h>
-#include <iostream>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -53,7 +61,9 @@
 //    cvMatPrint( probs ); // -5.837877 -2.837877 -1.837877
 //    cvReleaseMat( &probs );
 //
-// @param samples   D x N data vector (Note: not N x D for clearness of matrix operation)
+// @param samples   D x N data vectors where D is the number of
+//                  dimensions and N is the number of data
+//                  (Note: not N x D for clearness of matrix operation)
 // @param mean      D x 1 mean vector
 // @param cov       D x D covariance matrix
 // @param probs     1 x N computed probabilites
