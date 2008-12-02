@@ -35,9 +35,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-#define CV_MAT_ELEM_CN( mat, elemtype, row, col ) \
-    (*(elemtype*)((mat).data.ptr + (size_t)(mat).step*(row) + sizeof(elemtype)*(col)))
-
+#include "cvmatelemcn.h"
 #include "cvprintmat.h"
 #include "cvsetrow.h"
 #include "cvsetcol.h"
