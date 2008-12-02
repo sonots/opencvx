@@ -73,9 +73,48 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
         CvPoint pt2 = cvPoint( rect.x + rect.width - 1, rect.y + rect.height - 1 );
         cvRectangle( img, pt1, pt2, color, thickness, line_type, shift );
     }
+    else if( shear.x == 0 && shear.y == 0 )
+    {
+        int x, y, ch, xp, yp;
+        double c = cos( -M_PI / 180 * rotate );
+        double s = sin( -M_PI / 180 * rotate );
+        /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+        cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, R );
+        double c = cvmGet( R, 0, 0 );
+        double s = cvmGet( R, 1, 0 );
+        cvReleaseMat( &R );*/
+
+        for( x = 0; x < rect.width; x++ )
+        {
+            for( y = 0; y < rect.height; y += max(1, rect.height - 1) )
+            {
+                xp = (int)( c * x + -s * y ) + rect.x;
+                yp = (int)( s * x + c * y ) + rect.y;
+                if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
+                for( ch = 0; ch < img->nChannels; ch++ )
+                {
+                    img->imageData[img->widthStep * yp + xp * img->nChannels + ch] = (char)color.val[ch];
+                }
+            }
+        }
+
+        for( y = 0; y < rect.height; y++ )
+        {
+            for( x = 0; x < rect.width; x += max( 1, rect.width - 1) )
+            {
+                xp = (int)( c * x + -s * y ) + rect.x;
+                yp = (int)( s * x + c * y ) + rect.y;
+                if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
+                for( ch = 0; ch < img->nChannels; ch++ )
+                {
+                    img->imageData[img->widthStep * yp + xp * img->nChannels + ch] = (char)color.val[ch];
+                }
+            }
+        }
+    }
     else
     {
-        int x, y, z, xp, yp;
+        int x, y, ch, xp, yp;
         CvMat* affine = cvCreateMat( 2, 3, CV_32FC1 );
         CvMat* xy     = cvCreateMat( 3, 1, CV_32FC1 );
         CvMat* xyp    = cvCreateMat( 2, 1, CV_32FC1 );
@@ -92,9 +131,9 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
                 xp = (int)cvmGet( xyp, 0, 0 );
                 yp = (int)cvmGet( xyp, 1, 0 );
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
-                for( z = 0; z < img->nChannels; z++ )
+                for( ch = 0; ch < img->nChannels; ch++ )
                 {
-                    img->imageData[img->widthStep * yp + xp * img->nChannels + z] = (char)color.val[z];
+                    img->imageData[img->widthStep * yp + xp * img->nChannels + ch] = (char)color.val[ch];
                 }
             }
         }
@@ -108,9 +147,9 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
                 xp = (int)cvmGet( xyp, 0, 0 );
                 yp = (int)cvmGet( xyp, 1, 0 );
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
-                for( z = 0; z < img->nChannels; z++ )
+                for( ch = 0; ch < img->nChannels; ch++ )
                 {
-                    img->imageData[img->widthStep * yp + xp * img->nChannels + z] = (char)color.val[z];
+                    img->imageData[img->widthStep * yp + xp * img->nChannels + ch] = (char)color.val[ch];
                 }
             }
         }

@@ -34,6 +34,8 @@
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include "cvcreateaffine.h"
 
@@ -72,16 +74,21 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
     else if( shear.x == 0 && shear.y == 0 )
     {
         int x, y, ch, xp, yp;
-        CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+        double c = cos( -M_PI / 180 * rotate );
+        double s = sin( -M_PI / 180 * rotate );
+        /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
         cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, R );
+        double c = cvmGet( R, 0, 0 );
+        double s = cvmGet( R, 1, 0 );
+        cvReleaseMat( &R );*/
         cvZero( dst );
 
         for( x = 0; x < rect.width; x++ )
         {
             for( y = 0; y < rect.height; y++ )
             {
-                xp = (int)( cvmGet( R, 0, 0 ) * x + cvmGet( R, 0, 1) * y ) + rect.x;
-                yp = (int)( cvmGet( R, 1, 0 ) * x + cvmGet( R, 1, 1) * y ) + rect.y;
+                xp = (int)( c * x + -s * y ) + rect.x;
+                yp = (int)( s * x + c * y ) + rect.y;
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
                 for( ch = 0; ch < img->nChannels; ch++ )
                 {
@@ -90,7 +97,6 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
                 }
             }
         }
-        cvReleaseMat( &R );
     }
     else
     {
