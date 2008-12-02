@@ -1,4 +1,5 @@
 OpenCV eXtensional headear-only library
+http://code.google.com/p/opencvx/
 
 HOW TO INSTALL:
 
