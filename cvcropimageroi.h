@@ -69,9 +69,32 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
         cvCopy( img, dst );
         cvResetImageROI( img );                
     }
+    else if( shear.x == 0 && shear.y == 0 )
+    {
+        int x, y, ch, xp, yp;
+        CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+        cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, R );
+        cvZero( dst );
+
+        for( x = 0; x < rect.width; x++ )
+        {
+            for( y = 0; y < rect.height; y++ )
+            {
+                xp = (int)( cvmGet( R, 0, 0 ) * x + cvmGet( R, 0, 1) * y ) + rect.x;
+                yp = (int)( cvmGet( R, 1, 0 ) * x + cvmGet( R, 1, 1) * y ) + rect.y;
+                if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
+                for( ch = 0; ch < img->nChannels; ch++ )
+                {
+                    dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
+                        = img->imageData[img->widthStep * yp + xp * img->nChannels + ch];
+                }
+            }
+        }
+        cvReleaseMat( &R );
+    }
     else
     {
-        int x, y, z, xp, yp;
+        int x, y, ch, xp, yp;
         CvMat* affine = cvCreateMat( 2, 3, CV_32FC1 );
         CvMat* xy     = cvCreateMat( 3, 1, CV_32FC1 );
         CvMat* xyp    = cvCreateMat( 2, 1, CV_32FC1 );
@@ -89,10 +112,10 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
                 xp = (int)cvmGet( xyp, 0, 0 );
                 yp = (int)cvmGet( xyp, 1, 0 );
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
-                for( z = 0; z < img->nChannels; z++ )
+                for( ch = 0; ch < img->nChannels; ch++ )
                 {
-                    dst->imageData[dst->widthStep * y + x * dst->nChannels + z]
-                    = img->imageData[img->widthStep * yp + xp * img->nChannels + z];
+                    dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
+                        = img->imageData[img->widthStep * yp + xp * img->nChannels + ch];
                 }
             }
         }
