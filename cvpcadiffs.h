@@ -180,9 +180,7 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
             cvmSet( rLambda, d, 0, cvmGet( eigenvalues, d + M, 0 ) );
         }
         rho = cvAvg( rLambda );
-        for( n = 0; n < N; n++ ) {
-            cvmSet( DFFS, 0, n, cvmGet( DFFS, 0, n ) / rho.val[0] );
-        }
+        cvScale( DFFS, DFFS, 1.0/rho.val[0] );
         if( normalize == 1 ) {
             normterm += log(2*M_PI*rho.val[0]) * ((nEig - M)/2.0);
         }
