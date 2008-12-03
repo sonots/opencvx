@@ -59,18 +59,16 @@ CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, 
 * @param dim 0 horizontally, 1 vertically, -1 flexibly
 * @see cvHcat( src1, src2, dst ) // cvCat( src1, src2, dst, 0 )
 * @see cvVcat( src1, src2, dst ) // cvCat( src1, src2, dst, 1 )
-* @todo support not only CvMat and IplImage but also CvMatND and CvSparseMat
 */
 //CV_IMPL void
 CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, int dim )
 {
-    CV_FUNCNAME( "cvCat" );
-    __BEGIN__;
     int coi = 0;
     CvMat *src1 = (CvMat*)src1arr, src1stub;
     CvMat *src2 = (CvMat*)src2arr, src2stub;
     CvMat *dst  = (CvMat*)dstarr, dststub;
-
+    CV_FUNCNAME( "cvCat" );
+    __BEGIN__;
     if( !CV_IS_MAT(src1) )
     {
         src1 = cvGetMat( src1, &src1stub, &coi );

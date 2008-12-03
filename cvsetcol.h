@@ -35,28 +35,53 @@
 #include "cv.h"
 #include "cvaux.h"
 
-CVAPI( void ) cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end_col );
+CV_INLINE void cvSetCols( const CvArr* subarr, CvArr* arr, 
+                          int start_col, int end_col );
 CV_INLINE void cvSetCol( const CvArr* subarr, CvArr* arr, int col );
 
 /**
-* Set array col or col span
-*
-* Example)
-*    IplImage* img    = cvCreateImage( cvSize(4,4), IPL_DEPTH_8U, 1 ); // width(cols), height(rows)
-*    IplImage* subimg = cvCreateImage( cvSize(1,4), IPL_DEPTH_8U, 1 );
-*    cvSet( img, cvScalar(1) );
-*    cvZero( subimg );
-*    cvSetCol( subimg, img, 2 );
-*    cvMatPrint( img );
-*
-* @param subarr Input sub array
-* @param arr Target array
-* @param start_col Zero-based index of the starting col (inclusive) of the span. 
-* @param end_col Zero-based index of the ending col (exclusive) of the span. 
-* @return void
-* @see cvSetCol( subarr, arr, col ) // cvSetCols( subarr, arr, col, col + 1 )
-* @todo support not only CvMat and IplImage but also CvMatND and CvSparseMat
+ * Set array col or col span
+ *
+ * Following code is faster than using this function because it does not 
+ * require cvCopy()
+ * <code>
+ * CvMat* submat, submathdr;
+ * submat = cvGetCols( mat, &submathdr, start_col, end_col, delta_col );
+ * // Write on submat
+ * </code>
+ *
+ * @param subarr    Input sub array
+ * @param arr       Target array
+ * @param start_col Zero-based index of the starting col (inclusive) of the span. 
+ * @param end_col   Zero-based index of the ending col (exclusive) of the span. 
+ * @return void
+ * @see cvSetCol( subarr, arr, col ) // cvSetCols( subarr, arr, col, col + 1 )
 */
+CV_INLINE void cvSetCols( const CvArr* subarr, CvArr* arr, 
+                          int start_col, int end_col )
+{
+    int coi;
+    CvMat *submat = (CvMat*)subarr, submatstub;
+    CvMat *mat = (CvMat*)arr, matstub;
+    CvMat *refmat, refmathdr;
+    CV_FUNCNAME( "cvSetCols" );
+    __BEGIN__;
+    if( !CV_IS_MAT(mat) )
+    {
+        CV_CALL( mat = cvGetMat( mat, &matstub, &coi ) );
+        if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
+    }
+    if( !CV_IS_MAT(submat) )
+    {
+        CV_CALL( submat = cvGetMat( submat, &submatstub, &coi ) );
+        if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
+    }
+    refmat = cvGetCols( mat, &refmathdr, start_col, end_col );
+    cvCopy( submat, refmat );
+    __END__;
+}
+
+/*
 CVAPI( void ) cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end_col )
 {
     CV_FUNCNAME( "cvSetCols" );
@@ -96,6 +121,7 @@ CVAPI( void ) cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end
     }
     __END__;
 }
+*/
 
 /**
 * Set array col

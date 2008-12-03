@@ -35,20 +35,55 @@
 #include "cv.h"
 #include "cvaux.h"
 
-CVAPI( void ) cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end_row );
+CV_INLINE void cvSetRows( const CvArr* subarr, CvArr* arr, 
+                         int start_row, int end_row, int delta_row = 1 );
 CV_INLINE void cvSetRow( const CvArr* subarr, CvArr* arr, int row );
 
 /**
-* Set array row or row span
-*
-* @param subarr Input sub array
-* @param arr Target array
-* @param start_row Zero-based index of the starting row (inclusive) of the span. 
-* @param end_row Zero-based index of the ending row (exclusive) of the span. 
-* @return void
-* @see cvSetRow( subarr, arr, row ) // cvSetRows( subarr, arr, row, row + 1 )
-* @todo support not only CvMat and IplImage but also CvMatND and CvSparseMat
-*/
+ * Set array row or row span
+ *
+ * Following code is faster than using this function because it does not 
+ * require cvCopy()
+ * <code>
+ * CvMat* submat, submathdr;
+ * submat = cvGetRows( mat, &submathdr, start_row, end_row, delta_row );
+ * // Write on submat
+ * </code>
+ *
+ * @param subarr    Input sub array
+ * @param arr       Target array
+ * @param start_row Zero-based index of the starting row (inclusive) of the span. 
+ * @param end_row   Zero-based index of the ending row (exclusive) of the span. 
+ * @param [delta_row = 1]
+ *                  Index step in the row span. That is, the function extracts every 
+ *                  delta_row-th row from start_row and up to (but not including) end_row. 
+ * @return void
+ * @see cvSetRow( subarr, arr, row ) // cvSetRows( subarr, arr, row, row + 1 )
+ */
+CV_INLINE void cvSetRows( const CvArr* subarr, CvArr* arr, 
+                         int start_row, int end_row, int delta_row )
+{
+    int coi;
+    CvMat *submat = (CvMat*)subarr, submatstub;
+    CvMat *mat = (CvMat*)arr, matstub;
+    CvMat *refmat, refmathdr;
+    CV_FUNCNAME( "cvSetRows" );
+    __BEGIN__;
+    if( !CV_IS_MAT(mat) )
+    {
+        CV_CALL( mat = cvGetMat( mat, &matstub, &coi ) );
+        if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
+    }
+    if( !CV_IS_MAT(submat) )
+    {
+        CV_CALL( submat = cvGetMat( submat, &submatstub, &coi ) );
+        if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
+    }
+    refmat = cvGetRows( mat, &refmathdr, start_row, end_row, delta_row );
+    cvCopy( submat, refmat );
+    __END__;
+}
+/*
 CVAPI( void ) cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end_row )
 {
     CV_FUNCNAME( "cvSetRows" );
@@ -94,6 +129,7 @@ CVAPI( void ) cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end
     }
     __END__;
 }
+*/
 
 /**
 * Set array row
