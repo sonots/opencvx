@@ -38,7 +38,7 @@
 #include <iostream>
 
 CV_INLINE void cvPrintMatProperty( const CvMat* mat );
-CV_INLINE void cvPrintIplImageProperty( const IplImage* img );
+CV_INLINE void cvPrintImageProperty( const IplImage* img );
 CV_INLINE void cvPrintMat( const CvArr* arr );
 
 /**
@@ -63,7 +63,7 @@ CV_INLINE void cvPrintMatProperty( const CvMat* mat )
 * @param img
 * @return void
 */
-CV_INLINE void cvPrintIplImageProperty( const IplImage* img )
+CV_INLINE void cvPrintImageProperty( const IplImage* img )
 {
     printf("IplImage Property\n");
     printf(" width: %d\n", img->width);
