@@ -52,7 +52,7 @@ CvScalar cvLogSum( const CvArr *arr );
 CvScalar cvLogSum( const CvArr *arr )
 {
     IplImage* img = (IplImage*)arr, imgstub;
-    IplImage* tmp;
+    IplImage *tmp, *tmp2;
     int row, col, ch;
     CvScalar sumval;
     CvScalar minval, maxval;
@@ -64,6 +64,7 @@ CvScalar cvLogSum( const CvArr *arr )
         CV_CALL( img = cvGetImage( img, &imgstub ) );
     }
     tmp = cvCreateImage( cvGetSize(img), img->depth, img->nChannels );
+    tmp2 = cvCreateImage( cvGetSize(img), img->depth, img->nChannels );
 
     // to avoid loss of precision caused by taking exp as much as possible
     // if this trick is not required, cvExp -> cvSum are enough
@@ -75,14 +76,15 @@ CvScalar cvLogSum( const CvArr *arr )
     cvSetImageCOI( img, 0 );
     cvSubS( img, maxval, tmp );
 
-    cvExp( tmp, tmp );
-    sumval = cvSum( tmp );
+    cvExp( tmp, tmp2 );
+    sumval = cvSum( tmp2 );
     for( ch = 0; ch < img->nChannels; ch++ )
     {
         sumval.val[ch] = log( sumval.val[ch] ) + maxval.val[ch];
     }
-    __END__;
     cvReleaseImage( &tmp );
+    cvReleaseImage( &tmp2 );
+    __END__;
     return sumval;
 }
 
