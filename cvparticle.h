@@ -43,10 +43,6 @@
 
 /******************************* Structures **********************************/
 
-/**
- * @todo: support nonlinear state transition such as
- *   a x^2 + b x + c + noise
- */
 typedef struct CvParticle {
     // config
     int num_states;    // Number of tracking states, e.g., 4 if x, y, width, height
@@ -354,6 +350,12 @@ void _cvParticleBound( CvParticle* p )
 
 /**
  * Samples new particles from given particles
+ *
+ * Currently suppports only linear dynamics and linear combinations.
+ * Write up a function by yourself to supports nonlinear dynamics or
+ * nonlinear combinations and call your function instead of
+ * cvParticleTrantion( p );
+ * Other functions should not necessary be modified.
  *
  * @param particle
  */
