@@ -109,14 +109,15 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
     double normterm = 0;
     CvMat *_eigenvectors; // cvProjectPCA requires M x D vec
     CvMat *proj = cvCreateMat( N, M, type );
-    CvMat subproj;
+    CvMat *subproj, subprojhdr;
     CvMat *sclsubproj = cvCreateMat( 1, M, type );
+    CvMat *pLambda, pLambdaHdr;
+    CvMat *rLambda, rLambdaHdr;
     CvMat *sqrt_pLambda = cvCreateMat( M, 1, type );
-    CvMat *rLambda = cvCreateMat( nEig - M, 1, type );
     CvMat *DIFS = cvCreateMat( 1, N, type );
     CvMat *DFFS = cvCreateMat( 1, N, type );
     CvMat *samples0 = cvCreateMat( D, N, type ); // mean subtracted samples
-    CvMat subsamples0;
+    CvMat *subsamples0, subsamples0hdr;
     CvScalar rho;
     CV_FUNCNAME( "cvMatPcaDiffs" );
     __BEGIN__;
@@ -150,18 +151,18 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
 
     // distance in feature space
     if( M > 0 ) {
-        for( d = 0; d < M; d++ ) {
-            cvmSet( sqrt_pLambda, d, 0, sqrt( cvmGet( eigenvalues, d, 0 ) ) );
-        }
+        pLambda = cvGetRows( eigenvalues, &pLambdaHdr, 0, M );
+        cvPow( pLambda, sqrt_pLambda, 0.5 );
         for( n = 0; n < N; n++ ) {
-            cvGetRow( proj, &subproj, n );
-            cvCopy( &subproj, sclsubproj );
+            subproj = cvGetRow( proj, &subprojhdr, n );
             for( d = 0; d < M; d++ ) {
-                cvmSet( sclsubproj, 0, d, cvmGet( sclsubproj, 0, d ) / cvmGet( sqrt_pLambda, d, 0 ) );
+                cvmSet( sclsubproj, 0, d, cvmGet( subproj, 0, d ) / cvmGet( sqrt_pLambda, d, 0 ) );
             }
             cvmSet( DIFS, 0, n, pow(cvNorm( sclsubproj, NULL, CV_L2 ), 2) );
         }
         if( normalize == 1 ) {
+            //cvLog( sqrt_pLambda, sqrt_pLambda );
+            //cvSum( sqrt_pLambda );
             for( d = 0; d < M; d++ ) {
                 normterm += log( cvmGet( sqrt_pLambda, d, 0 ) );
             }
@@ -171,15 +172,13 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
 
     // distance from feature space
     if( nEig > M ) {
-        for( n = 0; n < N; n++ ) {
-            cvGetCol( samples0, &subsamples0, n );
-            cvGetRow( proj, &subproj, n );
-            cvmSet( DFFS, 0, n, pow(cvNorm( &subsamples0, NULL, CV_L2 ),2) - pow(cvNorm( &subproj, NULL, CV_L2 ),2) );
-        }
-        for( d = 0; d < nEig - M; d++ ) {
-            cvmSet( rLambda, d, 0, cvmGet( eigenvalues, d + M, 0 ) );
-        }
+        rLambda = cvGetRows( eigenvalues, &rLambdaHdr, M, nEig );
         rho = cvAvg( rLambda );
+        for( n = 0; n < N; n++ ) {
+            subsamples0 = cvGetCol( samples0, &subsamples0hdr, n );
+            subproj = cvGetRow( proj, &subprojhdr, n );
+            cvmSet( DFFS, 0, n, pow(cvNorm( subsamples0, NULL, CV_L2 ),2) - pow(cvNorm( subproj, NULL, CV_L2 ),2) );
+        }
         cvScale( DFFS, DFFS, 1.0/rho.val[0] );
         if( normalize == 1 ) {
             normterm += log(2*M_PI*rho.val[0]) * ((nEig - M)/2.0);
@@ -212,7 +211,6 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
     cvReleaseMat( &proj );
     cvReleaseMat( &sclsubproj );
     cvReleaseMat( &sqrt_pLambda );
-    cvReleaseMat( &rLambda );
     cvReleaseMat( &DIFS );
     cvReleaseMat( &DFFS );
     cvReleaseMat( &samples0 );
