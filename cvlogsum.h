@@ -68,7 +68,6 @@ CvScalar cvLogSum( const CvArr *arr )
 
     // to avoid loss of precision caused by taking exp as much as possible
     // if this trick is not required, cvExp -> cvSum are enough
-    // exp(log(A) + (-k1)) / k2 <=> A * exp(-k1) / k2 <=> A * k
     for( ch = 0; ch < img->nChannels; ch++ )
     {
         cvSetImageCOI( img, ch + 1 );
