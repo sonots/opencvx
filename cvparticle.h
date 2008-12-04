@@ -429,7 +429,7 @@ void cvParticleInit( CvParticle* p, const CvParticle* init )
         CvMat onestate;
 
         int divide = p->num_particles / init->num_particles;
-        int remain = p->num_particles - divide;
+        int remain = p->num_particles - divide * init->num_particles;
         num_copy = (int*) malloc( init->num_particles * sizeof(int) );
         for( i = 0; i < init->num_particles; i++ )
         {
