@@ -574,6 +574,7 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
     p->probs         = cvCreateMat( num_observes, num_particles, CV_64FC1 );
     p->particle_probs = cvCreateMat( 1, num_particles, CV_64FC1 );
     p->observe_probs  = cvCreateMat( num_observes, 1, CV_64FC1 );
+    p->logprob        = logprob;
 
     // Default dynamics: next state = curr state + noise
     cvSetIdentity( p->dynamics, cvScalar(1.0) );
