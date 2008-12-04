@@ -82,7 +82,8 @@ int  _cvParticleMaxParticle( const CvParticle* p );
 void _cvParticleBound( CvParticle* p );
 
 void cvParticlePrint( const CvParticle* p, int particle_id );
-void cvParticleDrawRectangle( const CvParticle* p, IplImage* frame, CvScalar color, int pid = -1, int rectform = RECT_CENTER );
+void cvParticleDrawRectangle( const CvParticle* p, IplImage* frame, CvScalar color, 
+                              int pid = -1, int rectform = RECT_NORMAL ); // RECT_CENTER
 CvMat* cvParticleGetParticle( const CvParticle* p, int particle_id );
 
 /*************************** Function Definitions ****************************/
