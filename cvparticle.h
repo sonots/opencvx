@@ -83,7 +83,7 @@ void _cvParticleBound( CvParticle* p );
 
 void cvParticlePrint( const CvParticle* p, int particle_id );
 void cvParticleDrawRectangle( const CvParticle* p, IplImage* frame, CvScalar color, 
-                              int pid = -1, int rectform = RECT_NORMAL ); // RECT_CENTER
+                              int pid = -1, int rectform = CV_RECT_NORMAL ); // CV_RECT_CENTER
 CvMat* cvParticleGetParticle( const CvParticle* p, int particle_id );
 
 /*************************** Function Definitions ****************************/
@@ -128,8 +128,8 @@ void cvParticleDrawRectangle( const CvParticle* p, IplImage* img, CvScalar color
         rect.width = cvRound( cvmGet( p->particles, 2, pid ) );
         rect.height = cvRound( cvmGet( p->particles, 3, pid ) );
         rotate = cvmGet( p->particles, 4, pid );
-        if( rectform != RECT_NORMAL) {
-            rect = cvConvRect( rect, rotate, rectform, RECT_NORMAL );
+        if( rectform != CV_RECT_NORMAL) {
+            rect = cvConvRect( rect, rotate, rectform, CV_RECT_NORMAL );
         }
         cvDrawRectangle( img, rect, rotate, cvPoint(0,0), color );
     }

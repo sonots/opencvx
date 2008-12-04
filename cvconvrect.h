@@ -35,8 +35,8 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-#define RECT_NORMAL 1
-#define RECT_CENTER 2
+#define CV_RECT_NORMAL 1
+#define CV_RECT_CENTER 2
 CvRect cvConvRect(const CvRect rect, double rotate, int from, int to);
 
 /**
@@ -51,10 +51,10 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to);
 %                     Positive values mean couter-clockwise rotation
 %   (scalar) from     
 %   (scalar) to       
-%                     RECT_NORMAL - [x; y; width; height; xy_rotate]
+%                     CV_RECT_NORMAL - [x; y; width; height; xy_rotate]
 %                     where x, y are upper-left corner coordinates
 %                     and xy_rotate is rotation as (x,y) is center
-%                     RECT_CENTER - [cx; cy; width; height; cxy_rotate]
+%                     CV_RECT_CENTER - [cx; cy; width; height; cxy_rotate]
 %                     where cx, cy are center coordinates
 %                     and cxy_rotate is rotation as (cx,cy) is center
 %                     3 - [x; y; width; height; cxy_rotate]
@@ -67,7 +67,7 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to);
 CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
 {
     CvRect ret = rect;
-    if( from == RECT_NORMAL )
+    if( from == CV_RECT_NORMAL )
     {
         // [x y width height xy_rotate]
         double x = rect.x;
@@ -76,7 +76,7 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
         double height = rect.height;
         double cx, cy;
         // [cx cy width height cxy_rotate]
-        if( to == RECT_CENTER || to == 3 ) {
+        if( to == CV_RECT_CENTER || to == 3 ) {
             CvMat* RMat = cvCreateMat( 2, 3, CV_32FC1 );
             cv2DRotationMatrix( cvPoint2D32f( x, y ), rotate, 1.0, RMat );
             cx = (2*x + width - 1)/2.0;
@@ -86,10 +86,10 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
         }
         // [x y width height cxy_rotate]
         if( to == 3 ) {
-            ret = cvConvRect(ret, rotate, RECT_CENTER, 3);
+            ret = cvConvRect(ret, rotate, CV_RECT_CENTER, 3);
         }
     }
-    else if( from == RECT_CENTER ) // [cx; cy; width; height; cxy_rotate]
+    else if( from == CV_RECT_CENTER ) // [cx; cy; width; height; cxy_rotate]
     { 
         double cx = rect.x;
         double cy = rect.y;
@@ -97,14 +97,14 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
         double height = rect.height;
         double x, y;
         // [x y width height cxy_rotate]
-        if( to == 3 || to == RECT_NORMAL ) {
+        if( to == 3 || to == CV_RECT_NORMAL ) {
             x = ( 2*cx + 1 - width ) / 2.0;
             y = ( 2*cy + 1 - height ) / 2.0;
             ret.x = (int)x;
             ret.y = (int)y;
         }
         // [x y width height xy_rotate]
-        if( to == RECT_NORMAL ) {
+        if( to == CV_RECT_NORMAL ) {
             CvMat* RMat = cvCreateMat( 2, 3, CV_32FC1 );
             cv2DRotationMatrix( cvPoint2D32f( cx, cy ), rotate, 1.0, RMat );
             ret.x = (int)(cvmGet( RMat, 0, 0 ) * x + cvmGet( RMat, 0, 1 ) * y + cvmGet( RMat, 0, 2 ));
@@ -120,14 +120,14 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
         double height = rect.height;
         double cx, cy;
         // [cx cy width height center_rotate]
-        if( to == RECT_CENTER || to == RECT_NORMAL ) {
+        if( to == CV_RECT_CENTER || to == CV_RECT_NORMAL ) {
             cx = (2*x + width - 1)/2.0;
             cy = (2*y + height - 1)/2.0;
             ret.x = (int)cx;
             ret.y = (int)cy;
         }
-        if( to == RECT_NORMAL ) {
-            ret = cvConvRect(ret, rotate, 2, RECT_NORMAL );
+        if( to == CV_RECT_NORMAL ) {
+            ret = cvConvRect(ret, rotate, 2, CV_RECT_NORMAL );
         }
     }
     return ret;

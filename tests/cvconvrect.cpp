@@ -17,13 +17,13 @@
 int main( int argc, char** argv )
 {
     CvRect rect = cvRect( 10, 8, 3, 5 );
-    rect = cvConvRect( rect, 0.0, RECT_NORMAL, RECT_CENTER );
+    rect = cvConvRect( rect, 0.0, CV_RECT_NORMAL, CV_RECT_CENTER );
     cvPrintRect( rect );
-    rect = cvConvRect( rect, 0.0, RECT_CENTER, RECT_NORMAL );
+    rect = cvConvRect( rect, 0.0, CV_RECT_CENTER, CV_RECT_NORMAL );
     cvPrintRect( rect );
-    rect = cvConvRect( rect, 45.0, RECT_NORMAL, RECT_CENTER );
+    rect = cvConvRect( rect, 45.0, CV_RECT_NORMAL, CV_RECT_CENTER );
     cvPrintRect( rect );
-    rect = cvConvRect( rect, 45.0, RECT_CENTER, RECT_NORMAL );
+    rect = cvConvRect( rect, 45.0, CV_RECT_CENTER, CV_RECT_NORMAL );
     cvPrintRect( rect );
     return 0;
 }
