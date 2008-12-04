@@ -40,6 +40,7 @@
 #include "cvsetcol.h"
 #include "cvlogsum.h"
 #include "cvdrawrectangle.h"
+#include "cvconvrect.h"
 
 /******************************* Structures **********************************/
 
@@ -81,7 +82,7 @@ int  _cvParticleMaxParticle( const CvParticle* p );
 void _cvParticleBound( CvParticle* p );
 
 void cvParticlePrint( const CvParticle* p, int particle_id );
-void cvParticleDrawRectangle( const CvParticle* p, IplImage* frame, CvScalar color, int pid = -1 );
+void cvParticleDrawRectangle( const CvParticle* p, IplImage* frame, CvScalar color, int pid = -1, int rectform = RECT_CENTER );
 CvMat* cvParticleGetParticle( const CvParticle* p, int particle_id );
 
 /*************************** Function Definitions ****************************/
@@ -111,12 +112,12 @@ CvMat* cvParticleGetParticle( const CvParticle* p, int particle_id )
  * @param color      color of rectangle
  * @param [pid = -1] particle id. If -1, all particles are drawn
  */
-void cvParticleDrawRectangle( const CvParticle* p, IplImage* img, CvScalar color, int pid )
+void cvParticleDrawRectangle( const CvParticle* p, IplImage* img, CvScalar color, int pid, int rectform )
 {
     int i = 0;
     if( pid == -1 ) {
         for( i = 0; i < p->num_particles; i++ ) {
-            cvParticleDrawRectangle( p, img, color, i );
+            cvParticleDrawRectangle( p, img, color, i, rectform );
         }
     } else {
         CvRect rect;
@@ -126,6 +127,9 @@ void cvParticleDrawRectangle( const CvParticle* p, IplImage* img, CvScalar color
         rect.width = cvRound( cvmGet( p->particles, 2, pid ) );
         rect.height = cvRound( cvmGet( p->particles, 3, pid ) );
         rotate = cvmGet( p->particles, 4, pid );
+        if( rectform != RECT_NORMAL) {
+            rect = cvConvRect( rect, rotate, rectform, RECT_NORMAL );
+        }
         cvDrawRectangle( img, rect, rotate, cvPoint(0,0), color );
     }
 }
