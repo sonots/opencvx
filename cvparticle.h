@@ -144,32 +144,9 @@ void cvParticleDrawRectangle( const CvParticle* p, IplImage* img, CvScalar color
 void cvParticlePrint( const CvParticle*p, int particle_id )
 {
     int i, k = 0;
-    printf( "Particle %d\n", particle_id );
-    printf( " State" );
-    /*
-    for( i = 0; i < p->num_states; i++ )
-    {
-        printf( "%6d ", i );
-    }
-    printf( "\n" );
-    printf( "      " );*/
     for( i = 0; i < p->num_states; i++ )
     {
         printf( "%6.1f ", cvmGet( p->particles, i, particle_id ) );
-    }
-    printf( "\n" );
-
-    printf( " Prob " );
-    /*
-    for( i = 0; i < p->num_observes; i++ )
-    {
-        printf( "%6d ", i );
-    }
-    printf( "\n" );
-    printf( "      " );*/
-    for( i = 0; i < p->num_observes; i++ )
-    {
-        printf( "%6.1f ", cvmGet( p->probs, i, particle_id ) );
     }
     printf( "\n" );
     fflush( stdout );
