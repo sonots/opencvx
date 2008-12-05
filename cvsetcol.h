@@ -24,13 +24,6 @@
 #ifndef CV_SETCOL_INCLUDED
 #define CV_SETCOL_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-#pragma comment( lib, "cv.lib" )
-#pragma comment( lib, "cxcore.lib" )
-#pragma comment( lib, "cvaux.lib" )
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -137,9 +130,6 @@ CV_INLINE void cvSetCol( const CvArr* subarr, CvArr* arr, int col )
     cvSetCols( subarr, arr, col, col + 1 );
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif
 

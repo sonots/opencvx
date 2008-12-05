@@ -24,13 +24,6 @@
 #ifndef CV_POINTNORM_INCLUDED
 #define CV_POINTNORM_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
@@ -56,8 +49,5 @@ CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type )
         return sqrt( pow( (double)p2.x - p1.x, 2 ) + pow( (double)p2.y - p1.y, 2 ) );
 }
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
 
 #endif

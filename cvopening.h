@@ -24,13 +24,6 @@
 #ifndef CV_OPENING_INCLUDED
 #define CV_OPENING_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
@@ -56,8 +49,5 @@ CVAPI( void ) cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element, i
     cvDilate( dst, dst, element, iterations );
 }
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
 
 #endif

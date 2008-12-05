@@ -16,13 +16,6 @@
 #ifndef CV_GMMPDF_INCLUDED
 #define CV_GMMPDF_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-#pragma comment( lib, "cv.lib" )
-#pragma comment( lib, "cxcore.lib" )
-#pragma comment( lib, "cvaux.lib" )
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -150,8 +143,5 @@ double cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, const Cv
     return prob;
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

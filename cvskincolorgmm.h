@@ -14,13 +14,6 @@
 #ifndef CV_SKINCOLOR_GMM_INCLUDED
 #define CV_SKINCOLOR_GMM_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib")
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -173,8 +166,5 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold, Ipl
     __END__;
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

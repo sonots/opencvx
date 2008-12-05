@@ -11,13 +11,6 @@
 // Please contact the authors if you are interested in using the 
 // program without meeting the above conditions.
 */
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-#pragma comment( lib, "cv.lib" )
-#pragma comment( lib, "cxcore.lib" )
-#pragma comment( lib, "cvaux.lib" )
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -243,8 +236,5 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
     return prob;
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

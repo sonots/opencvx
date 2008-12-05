@@ -29,17 +29,6 @@
 #ifndef CVMX_MATCONV_INCLUDED
 #define CVMX_MATCONV_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma warning(disable:4018) // '<': signed/unsigned mismatch
-#pragma warning(disable:4267) // conversion from 'size_t' to 'int', possible loss of data
-#pragma comment(lib, "cv.lib")
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#pragma comment(lib, "libmat.lib")
-#pragma comment(lib, "libmx.lib")
-#endif
 
 #include "cv.h"
 #include "mat.h"
@@ -207,8 +196,5 @@ CVAPI(CvMat*) cvmxArrayToCvMat(const mxArray* mxarr)
 }
 
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

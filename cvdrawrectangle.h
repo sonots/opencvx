@@ -24,13 +24,6 @@
 #ifndef CV_DRAWRECTANGLE_INCLUDED
 #define CV_DRAWRECTANGLE_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
@@ -188,8 +181,5 @@ CV_INLINE void cvShowImageAndRectangle( const char* w_name, const IplImage* img,
     cvReleaseImage( &clone );
 }
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
 
 #endif

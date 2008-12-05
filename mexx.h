@@ -27,12 +27,6 @@
 #ifndef MXX_INCLUDED
 #define MXX_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "libmat.lib")
-#pragma comment(lib, "libmx.lib")
-#endif
 
 #include "mat.h"
 #include "matrix.h"
@@ -204,8 +198,5 @@ mxArray* mxGetRow(mxArray* X, int row)
     return X1;
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

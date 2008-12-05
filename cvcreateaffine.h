@@ -24,13 +24,6 @@
 #ifndef CV_CREATEAFFINE_INCLUDED
 #define CV_CREATEAFFINE_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
@@ -102,8 +95,5 @@ CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect, double rotate, CvPoint s
     __END__;
 }
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
 
 #endif

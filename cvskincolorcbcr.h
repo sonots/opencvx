@@ -14,13 +14,6 @@
 #ifndef CV_SKINCOLOR_CBCR_INCLUDED
 #define CV_SKINCOLOR_CBCR_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib")
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -142,8 +135,5 @@ void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr )
     __END__;
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

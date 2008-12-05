@@ -24,13 +24,6 @@
 #ifndef CV_CAT_INCLUDED
 #define CV_CAT_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-#pragma comment( lib, "cv.lib" )
-#pragma comment( lib, "cxcore.lib" )
-#pragma comment( lib, "cvaux.lib" )
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -127,9 +120,6 @@ CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, 
     __END__;
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif
 

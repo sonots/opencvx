@@ -24,13 +24,6 @@
 #ifndef CV_SETROW_INCLUDED
 #define CV_SETROW_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-#pragma comment( lib, "cv.lib" )
-#pragma comment( lib, "cxcore.lib" )
-#pragma comment( lib, "cvaux.lib" )
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -145,8 +138,5 @@ CV_INLINE void cvSetRow( const CvArr* subarr, CvArr* arr, int row )
     cvSetRows( subarr, arr, row, row + 1 );
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

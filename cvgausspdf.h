@@ -24,13 +24,6 @@
 #ifndef CV_GAUSSPDF_INCLUDED
 #define CV_GAUSSPDF_INCLUDED
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4996 )
-#pragma comment( lib, "cv.lib" )
-#pragma comment( lib, "cxcore.lib" )
-#pragma comment( lib, "cvaux.lib" )
-#endif
 
 #include "cv.h"
 #include "cvaux.h"
@@ -160,8 +153,5 @@ double cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, boo
     return prob;
 }
 
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif

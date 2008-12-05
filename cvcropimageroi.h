@@ -24,13 +24,6 @@
 #ifndef CV_CROPIMAGEROI_INCLUDED
 #define CV_CROPIMAGEROI_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
@@ -153,8 +146,5 @@ CV_INLINE void cvShowCroppedImage( const char* w_name, IplImage* orig, const CvR
     cvReleaseImage( &crop );
 }
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
 
 #endif

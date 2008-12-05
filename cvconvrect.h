@@ -24,13 +24,6 @@
 #ifndef CV_CONVRECT_INCLUDED
 #define CV_CONVRECT_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
@@ -133,8 +126,5 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
     return ret;
 }
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
 
 #endif

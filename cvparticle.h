@@ -24,13 +24,6 @@
 #ifndef CV_PARTICLE_INCLUDED
 #define CV_PARTICLE_INCLUDED
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(push)
-#pragma warning(disable:4996)
-#pragma comment(lib, "cv.lib") 
-#pragma comment(lib, "cxcore.lib")
-#pragma comment(lib, "cvaux.lib")
-#endif
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
@@ -565,8 +558,5 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
     return p;
 }
 
-#ifdef _MSC_VER // MS Visual Studio
-#pragma warning(pop)
-#endif
 
 #endif
