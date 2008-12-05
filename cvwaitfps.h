@@ -33,18 +33,22 @@
 clock_t cvWaitFps( double frame_per_sec, clock_t start = 0 );
 
 /**
- * Wait second per frame
+ * Wait amount of seconds per frame totally. 
+ * If processing time exceeded the seconds per frame, 
+ * no wait occurs and negative waiting time is returned.
  *
  * Example)
+ * <code>
+ * // #include <time.h>
  * clock_t start = clock();
  * fps = cvGetCaptureProperty(video, CV_CAP_PROP_FPS);
  * // process
  * cvWaitFps( fps, start );
+ * </code>
  *
- * @param fps      frame per second video property
- * @param [start = 0]
- *                 start time
- * @return clock_t wait time
+ * @param fps         Frame per second video property
+ * @param [start = 0] Start time
+ * @return clock_t    Wait time
  */
 clock_t cvWaitFps( double fps, clock_t start )
 {
