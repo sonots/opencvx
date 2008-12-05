@@ -27,7 +27,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5 ;
+void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5 );
 
 /**
 // cvSkinColorGauss - Skin Color Detection with a Gaussian model

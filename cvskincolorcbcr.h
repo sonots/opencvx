@@ -27,6 +27,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL );
+
 /**
 // cvSkinColorCbCr - Skin Color Detection in (Cb, Cr) space by [1][2]
 //
@@ -42,7 +44,7 @@
 //  clustering for face detection”, In: submitted to EUROCON –
 //  International Conference on Computer as a Tool , 2003. (Tuned)
 */
-void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL )
+void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr )
 {
     CV_FUNCNAME( "cvSkinColorCbCr" );
     __BEGIN__;
@@ -50,20 +52,7 @@ void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NUL
     int height = _img->height;
     CvMat* dist = (CvMat*)distarr, diststub;
     int coi = 0;
-
-    CV_ASSERT( width == mask->width && height == mask->height );
-    CV_ASSERT( _img->nChannels >= 3 && mask->nChannels == 1 );
-
-    if( dist && !CV_IS_MAT(dist) )
-    {
-        CV_CALL( dist = cvGetMat( dist, &diststub, &coi ) );
-        if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
-        CV_ASSERT( width == dist->cols && height == dist->rows );
-        CV_ASSERT( CV_MAT_TYPE(dist->type) == CV_32FC1 || CV_MAT_TYPE(dist->type) == CV_64FC1 );
-    }
-
-    IplImage* img = cvCreateImage( cvGetSize(_img), IPL_DEPTH_8U, 3 );
-    cvCvtColor( _img, img, CV_BGR2YCrCb );        
+    IplImage* img;
 
     double Wcb = 46.97;
     double WLcb = 23;
@@ -84,6 +73,20 @@ void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NUL
     double ecy = 2.41;
     double a = 25.39;
     double b = 14.03;
+
+    CV_ASSERT( width == mask->width && height == mask->height );
+    CV_ASSERT( _img->nChannels >= 3 && mask->nChannels == 1 );
+
+    if( dist && !CV_IS_MAT(dist) )
+    {
+        CV_CALL( dist = cvGetMat( dist, &diststub, &coi ) );
+        if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
+        CV_ASSERT( width == dist->cols && height == dist->rows );
+        CV_ASSERT( CV_MAT_TYPE(dist->type) == CV_32FC1 || CV_MAT_TYPE(dist->type) == CV_64FC1 );
+    }
+
+    img = cvCreateImage( cvGetSize(_img), IPL_DEPTH_8U, 3 );
+    cvCvtColor( _img, img, CV_BGR2YCrCb );        
 
     cvSet( mask, cvScalarAll(0) );
     for( int row = 0; row < height; row++ )

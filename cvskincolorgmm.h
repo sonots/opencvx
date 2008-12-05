@@ -27,6 +27,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+#include "cvxmat.h"
 #include "cvgmmpdf.h"
 
 void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.0, IplImage* probs = NULL );
@@ -58,23 +59,14 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.
 //      address = {Hingham, MA, USA},
 //  }
 */
-void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.0, IplImage* probs = NULL )
+void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold, IplImage* probs )
 {
     CV_FUNCNAME( "cvSkinColorGmm" );
     __BEGIN__;
-    CV_ASSERT( _img->width == mask->width && _img->height == mask->height );
-    CV_ASSERT( _img->nChannels >= 3 && mask->nChannels == 1 );
-    if( probs )
-    {
-        CV_ASSERT( _img->width == probs->width && _img->height == probs->height );
-        CV_ASSERT( probs->nChannels == 1 );
-    }
-
     const int N = _img->height * _img->width;
     const int D = 3;
     const int K = 16;
-    IplImage* img = cvCreateImage( cvGetSize(_img), _img->depth, _img->nChannels );
-    cvCvtColor( _img, img, CV_BGR2RGB );
+    IplImage* img;
 
     double skin_mean[] = {
         73.5300, 249.7100, 161.6800, 186.0700, 189.2600, 247.0000, 150.1000, 206.8500, 212.7800, 234.8700, 151.1900, 120.5200, 192.2000, 214.2900,  99.5700, 238.8800,
@@ -103,36 +95,43 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.
         0.0637, 0.0516, 0.0864, 0.0636, 0.0747, 0.0365, 0.0349, 0.0649, 0.0656, 0.1189, 0.0362, 0.0849, 0.0368, 0.0389, 0.0943, 0.0477
     };
 
-    // transform to CvMat
-    CvMat* SkinMeans = &cvMat( D, K, CV_64FC1, skin_mean );
-    CvMat* SkinWeights = &cvMat( 1, K, CV_64FC1, skin_weight );
-    CvMat **SkinCovs = (CvMat**)cvAlloc( K * sizeof(*SkinCovs) );
+    CV_ASSERT( _img->width == mask->width && _img->height == mask->height );
+    CV_ASSERT( _img->nChannels >= 3 && mask->nChannels == 1 );
+    if( probs )
+    {
+        CV_ASSERT( _img->width == probs->width && _img->height == probs->height );
+        CV_ASSERT( probs->nChannels == 1 );
+    }
 
+    img = cvCreateImage( cvGetSize(_img), _img->depth, _img->nChannels );
+    cvCvtColor( _img, img, CV_BGR2RGB );
+
+    // transform to CvMat
+    CvMat SkinMeans = cvMat( D, K, CV_64FC1, skin_mean );
+    CvMat SkinWeights = cvMat( 1, K, CV_64FC1, skin_weight );
+    CvMat **SkinCovs = (CvMat**)cvAlloc( K * sizeof( CvMat* ) );
     for( int k = 0; k < K; k++ )
     {
-        double cov_tmp[D][D]; // diagonal
+        SkinCovs[k] = cvCreateMat( D, D, CV_64FC1 );
+        cvZero( SkinCovs[k] );
         for( int i = 0; i < D; i++ )
-            for( int j = 0; j < D; j++ )
-                cov_tmp[i][j] = 0;
-        for( int i = 0; i < D; i++ )
-            cov_tmp[i][i] = skin_cov[K * i + k];
-        SkinCovs[k] = &cvMat( D, D, CV_64FC1, cov_tmp );
+        {
+            cvmSet( SkinCovs[k], i, i, skin_cov[K * i + k] );
+        }
     }
 
     // transform to CvMat
-    CvMat* NonSkinMeans = &cvMat( D, K, CV_64FC1, nonskin_mean );
-    CvMat* NonSkinWeights = &cvMat( 1, K, CV_64FC1, nonskin_weight );
-    CvMat **NonSkinCovs = (CvMat**)cvAlloc( K * sizeof(*NonSkinCovs) );
-
+    CvMat NonSkinMeans = cvMat( D, K, CV_64FC1, nonskin_mean );
+    CvMat NonSkinWeights = cvMat( 1, K, CV_64FC1, nonskin_weight );
+    CvMat **NonSkinCovs = (CvMat**)cvAlloc( K * sizeof( CvMat* ) );
     for( int k = 0; k < K; k++ )
     {
-        double cov_tmp[D][D]; // diagonal
+        NonSkinCovs[k] = cvCreateMat( D, D, CV_64FC1 );
+        cvZero( NonSkinCovs[k] );
         for( int i = 0; i < D; i++ )
-            for( int j = 0; j < D; j++ )
-                cov_tmp[i][j] = 0;
-        for( int i = 0; i < D; i++ )
-            cov_tmp[i][i] = nonskin_cov[K * i + k];
-        NonSkinCovs[k] = &cvMat( D, D, CV_64FC1, cov_tmp );
+        {
+            cvmSet( NonSkinCovs[k], i, i, nonskin_cov[K * i + k] );
+        }
     }
 
     // reshape IplImage to D (colors) x N matrix of CV_64FC1
@@ -146,8 +145,9 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.
     // GMM PDF
     CvMat *SkinProbs = cvCreateMat(1, N, CV_64FC1);
     CvMat *NonSkinProbs = cvCreateMat(1, N, CV_64FC1);
-    cvMatGmmPdf( Mat, SkinMeans, SkinCovs, SkinWeights, SkinProbs, true);
-    cvMatGmmPdf( Mat, NonSkinMeans, NonSkinCovs, NonSkinWeights, NonSkinProbs, true);
+    
+    cvMatGmmPdf( Mat, &SkinMeans, SkinCovs, &SkinWeights, SkinProbs, true);
+    cvMatGmmPdf( Mat, &NonSkinMeans, NonSkinCovs, &NonSkinWeights, NonSkinProbs, true);
 
     // Likelihood-ratio test
     CvMat *Mask = cvCreateMat( 1, N, CV_8UC1 );
@@ -157,6 +157,11 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.
     
     if( probs ) cvConvert( cvReshape( SkinProbs, &hdr, 1, img->height ), probs );
 
+    for( int k = 0; k < K; k++ )
+    {
+        cvReleaseMat( &SkinCovs[k] );
+        cvReleaseMat( &NonSkinCovs[k] );
+    }
     cvFree( &SkinCovs );
     cvFree( &NonSkinCovs );
 
