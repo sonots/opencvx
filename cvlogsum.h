@@ -38,6 +38,7 @@ CvScalar cvLogSum( const CvArr *arr );
  *
  * Get log(a + b + c) from log(a), log(b), log(c)
  * Useful to take sum of probabilities from log probabilities
+ * Useful to avoid loss of precision caused by taking exp
  *
  * @param  arr       array having log values. 32F or 64F
  * @return CvScalar
