@@ -27,8 +27,11 @@
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include "cvcreateaffine.h"
+using namespace std; // max
 
 CVAPI(void) cvDrawRectangle( IplImage* img, 
                              CvRect rect, 

@@ -31,22 +31,27 @@
 #include <math.h>
 
 #include "cvcreateaffine.h"
+using namespace std; // max
 
-CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double rotate = 0, CvPoint shear = cvPoint(0,0) );
-CV_INLINE void cvShowCroppedImage( const char* w_name, IplImage* orig, const CvRect rect, double rotate = 0, CvPoint shear = cvPoint(0,0) );
+CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, 
+                            double rotate = 0, CvPoint shear = cvPoint(0,0) );
+CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig, 
+                                   const CvRect rect, double rotate = 0, 
+                                   CvPoint shear = cvPoint(0,0) );
 
 /**
-// Crop image with rotated and sheared rectangle
-//
-// @param IplImage* img          The target image
-// @param IplImage* dst          The cropped image
-//    IplImage* dst = cvCreateImage( cvSize( rect.width, rect.height ), img->depth, img->nChannels );
-// @param CvRect    rect         The translation (x, y) and scaling (width, height) parameter or the rectangle region
-// @param double    [rotate = 0] The Rotation parameter in degree
-// @param CvPoint   [shear = cvPoint(0,0)]
-//                               The shear deformation parameter shx and shy
-// @return void
-*/
+ * Crop image with rotated and sheared rectangle
+ *
+ * IplImage* dst = cvCreateImage( cvSize( rect.width, rect.height ), img->depth, img->nChannels );
+ *
+ * @param img          The target image
+ * @param dst          The cropped image
+ * @param rect         The rectangle region to crop
+ * @param [rotate = 0] The rotation angle in degree
+ * @param [shear = cvPoint(0,0)]
+ *                     The shear deformation parameter shx and shy
+ * @return void
+ */
 CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double rotate, CvPoint shear )
 {
     CV_FUNCNAME( "cvCropImageROI" );
@@ -126,18 +131,18 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
 }
 
 /**
-// Show Cropped Image
-//
-// @param char*     w_name          Window name
-// @param IplImage* orig            Image to be cropped
-// @param CvRect    rect            Rectangle region to crop
-// @param double    [rotate = 0]    Rotation degree of rectangle
-// @param CvPoint   [shear = cvPoint(0,0)]
-//                                  The shear deformation parameter shx and shy
-// @return void
-// @uses cvCropImageROI
-*/
-CV_INLINE void cvShowCroppedImage( const char* w_name, IplImage* orig, const CvRect rect, double rotate, CvPoint shear )
+ * Crop and show the Cropped Image
+ *
+ * @param w_name       Window name
+ * @param orig         Image to be cropped
+ * @param rect         The rectangle region to crop
+ * @param [rotate = 0] The rotation angle in degree
+ * @param [shear = cvPoint(0,0)]
+ *                     The shear deformation parameter shx and shy
+ * @return void
+ * @uses cvCropImageROI
+ */
+CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig, const CvRect rect, double rotate, CvPoint shear )
 {
     if( rect.width <= 0 || rect.height <= 0 ) return;
     IplImage* crop = cvCreateImage( cvSize( rect.width, rect.height ), orig->depth, orig->nChannels );

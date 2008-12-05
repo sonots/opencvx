@@ -29,7 +29,6 @@
 #include "cxcore.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-using namespace std;
 
 CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect = cvRect(0,0,1,1), 
                             double rotate = 0, CvPoint shear = cvPoint(0,0) );

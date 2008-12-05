@@ -17,6 +17,7 @@
 
 #include "cv.h"
 #include "cvaux.h"
+using namespace std;
 
 void cvSkinColorPeer( const IplImage* img, IplImage* mask );
 
@@ -38,7 +39,6 @@ void cvSkinColorPeer( const IplImage* img, IplImage* mask )
 {
     int x, y;
     uchar r, g, b;
-    uchar maxrgb, minrgb;
     cvSet( mask, cvScalarAll(0) );
     for( y = 0; y < img->height; y++ )
     {
@@ -47,11 +47,9 @@ void cvSkinColorPeer( const IplImage* img, IplImage* mask )
             b = img->imageData[img->widthStep * y + x * 3];
             g = img->imageData[img->widthStep * y + x * 3 + 1];
             r = img->imageData[img->widthStep * y + x * 3 + 2];
-            maxrgb = (r > g ? r : g); maxrgb = (maxrgb > b ? maxrgb : b);
-            minrgb = (r < g ? r : g); minrgb = (minrgb < b ? minrgb : b);
 
             if( r > 95 && g > 40 && b > 20 && 
-                maxrgb - minrgb > 15 &&
+                max( r, max( g, b ) ) - min( r, min( g, b ) ) > 15 &&
                 abs( r - g ) > 15 && r > g && r > b )
             {
                 mask->imageData[mask->widthStep * y + x] = 1;
