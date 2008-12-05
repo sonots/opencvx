@@ -44,9 +44,10 @@ typedef struct CvParticle {
     int num_particles; // Number of particles
     bool logprob;      // probs are log probabilities
     // transition
-    CvMat* dynamics;   // num_states x (num_states + 1). +1 for noise. Dynamics model.
+    CvMat* dynamics;   // num_states x num_states. Dynamics model.
     CvRNG  rng;        // Random seed
     CvMat* std;        // num_states x 1. Standard deviation for gaussian noise
+                       // Set standard deviation == 0 for no noise
     CvMat* bound;      // num_states x 3 (lowerbound, upperbound, circular flag 0 or 1)
                        // Set lowerbound == upperbound to express no bound
     // particle states
@@ -337,47 +338,30 @@ void _cvParticleBound( CvParticle* p )
 void cvParticleTransition( CvParticle* p )
 {
     int i, j;
-    CvMat* dynam_state, dynam_state_hdr;
-    CvMat* dynam_noise, dynam_noise_hdr;
     CvMat* transits = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
-    CvMat* noisesT  = cvCreateMat( p->num_particles, p->num_states, p->particles->type );
-    CvMat* noiseT, noiseThdr;
-    CvScalar std;
+    CvMat* noises   = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
+    CvMat* noise, noisehdr;
+    double std;
     
     // dynamics
-    dynam_state = cvGetCols( p->dynamics, &dynam_state_hdr, 0, p->num_states );
-    dynam_noise = cvGetCol( p->dynamics, &dynam_noise_hdr, p->num_states );
-    cvMatMul( dynam_state, p->particles, transits );
+    cvMatMul( p->dynamics, p->particles, transits );
     
-    // noise
-    for( i = 0; i < p->num_states; i++ ) {
-        float coef = cvmGet( dynam_noise, i, 0 );
-        noiseT = cvGetCol( noisesT, &noiseThdr, i );
-        //std = cvScalar( cvmGet( p->std, i, 0 ) );
-        //cvRandArr( p->rng, noiseT, CV_RAND_NORMAL, cvScalar(0), std );
-        //cvScale( noiseT, noiseT, coef );
-        if( coef == 0.0 ) {
-            cvZero( noiseT );
-        } else {
-            std = cvScalar( cvmGet( p->std, i, 0 ) );
-            cvRandArr( &p->rng, noiseT, CV_RAND_NORMAL, cvScalar(0), std );
-            if( coef != 1.0 ) {
-                cvScale( noiseT, noiseT, coef );
-            }
-        }
+    // noise generation
+    for( i = 0; i < p->num_states; i++ )
+    {
+        std    = cvmGet( p->std, i, 0 );
+        noise = cvGetRow( noises, &noisehdr, i );
+        if( std == 0.0 )
+            cvZero( noise );
+        else
+            cvRandArr( &p->rng, noise, CV_RAND_NORMAL, cvScalar(0), cvScalar( std ) );
     }
     
     // dynamics + noise
-    // cvT( noisesT, noises );
-    // cvAdd( transits, noises, p->particles );
-    for( i = 0; i < p->num_states; i++ ) {
-        for( j = 0; j < p->num_particles; j++ ) {
-            cvmSet( p->particles, i, j, cvmGet( transits, i, j ) + cvmGet( noisesT, j, i ) );
-        }
-    }
+    cvAdd( transits, noises, p->particles );
 
     cvReleaseMat( &transits );
-    cvReleaseMat( &noisesT );
+    cvReleaseMat( &noises );
 
     _cvParticleBound( p );
 }
@@ -460,6 +444,7 @@ void cvParticleSetBound( CvParticle* p, const CvMat* bound )
  * @param particle
  * @param rng      random seed. refer cvRNG(time(NULL))
  * @param std      num_states x 1. standard deviation for gaussian noise
+ *                 Set standard deviation == 0 for no noise
  */
 void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std )
 {
@@ -476,15 +461,15 @@ void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std )
  * Set dynamics model
  *
  * @param particle
- * @param dynamics (num_states) x (num_states + 1). dynamics model
- *    new_state = dynamics(:,1:end-1) * curr_state + dyanmics(:,end) * noise;
+ * @param dynamics (num_states) x (num_states). dynamics model
+ *    new_state = dynamics * curr_state + noise
  */
 void cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics )
 {
     CV_FUNCNAME( "cvParticleSetDynamics" );
     __BEGIN__;
     CV_ASSERT( p->num_states == dynamics->rows );
-    CV_ASSERT( p->num_states + 1 == dynamics->cols );
+    CV_ASSERT( p->num_states == dynamics->cols );
     //cvCopy( dynamics, p->dynamics );
     cvConvert( dynamics, p->dynamics );
     __END__;
@@ -526,7 +511,6 @@ void cvReleaseParticle( CvParticle** particle )
 CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particles, bool logprob )
 {
     CvParticle *p = NULL;
-    CvMat *subdynamics, subdynamicshdr;
     CV_FUNCNAME( "cvCreateParticle" );
     __BEGIN__;
     CV_ASSERT( num_states > 0 );
@@ -536,7 +520,7 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
     p->num_particles = num_particles;
     p->num_states    = num_states;
     p->num_observes  = num_observes;
-    p->dynamics      = cvCreateMat( num_states, num_states + 1, CV_32FC1 );
+    p->dynamics      = cvCreateMat( num_states, num_states, CV_32FC1 );
     p->rng           = 1;
     p->std           = cvCreateMat( num_states, 1, CV_32FC1 );
     p->bound         = cvCreateMat( num_states, 3, CV_32FC1 );
@@ -548,10 +532,8 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
 
     // Default dynamics: next state = curr state + noise
     cvSetIdentity( p->dynamics, cvScalar(1.0) );
-    subdynamics = cvGetCol( p->dynamics, &subdynamicshdr, num_states ); // noise coef
-    cvSet( subdynamics, cvScalar(1.0) );
-    
-    cvSet( p->std, cvScalar(1.0) ); // no reason
+    cvSet( p->std, cvScalar(1.0) );
+
     cvZero( p->bound );
 
     __END__;
