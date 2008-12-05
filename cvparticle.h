@@ -66,68 +66,17 @@ void cvParticleSetBound( CvParticle* p );
 void cvParticleInit( CvParticle* p, const CvParticle* init = NULL );
 void cvReleaseParticle( CvParticle** p );
 
-void cvParticleUpdateByTime( CvParticle* p ); // syntax sugar
 void cvParticleResample( CvParticle* p );
 void cvParticleTransition( CvParticle* p );
 
-void _cvParticleMarginalize( CvParticle* p );
-void _cvParticleNormalize( CvParticle* p );
-int  _cvParticleMaxParticle( const CvParticle* p );
-void _cvParticleBound( CvParticle* p );
+void cvParticleMarginalize( CvParticle* p );
+void cvParticleNormalize( CvParticle* p );
+int  cvParticleMaxParticle( const CvParticle* p );
+void cvParticleBound( CvParticle* p );
 
 void cvParticlePrint( const CvParticle* p, int particle_id );
-void cvParticleDrawRectangle( const CvParticle* p, IplImage* frame, CvScalar color, 
-                              int pid = -1, int rectform = CV_RECT_NORMAL ); // CV_RECT_CENTER
-CvMat* cvParticleGetParticle( const CvParticle* p, int particle_id );
 
 /*************************** Function Definitions ****************************/
-
-/**
- * Get a particle state
- *
- * Do not cvReleaseMat
- *
- * @param particle
- * @param particle_id 
- * @param CvMat*       num_states x 1 matrix
- */
-CvMat* cvParticleGetParticle( const CvParticle* p, int particle_id )
-{
-    CvMat statehdr;
-    return cvGetCol( p->particles, &statehdr, particle_id );
-}
-
-/**
- * Draw a particle or particles by rectangle on given image
- *
- * available only when first 5 states are (x,y,width,height) and rotation angle in degree
- *
- * @param particle
- * @param img        image to be drawn
- * @param color      color of rectangle
- * @param [pid = -1] particle id. If -1, all particles are drawn
- */
-void cvParticleDrawRectangle( const CvParticle* p, IplImage* img, CvScalar color, int pid, int rectform )
-{
-    int i = 0;
-    if( pid == -1 ) {
-        for( i = 0; i < p->num_particles; i++ ) {
-            cvParticleDrawRectangle( p, img, color, i, rectform );
-        }
-    } else {
-        CvRect rect;
-        double rotate;
-        rect.x = cvRound( cvmGet( p->particles, 0, pid ) );
-        rect.y = cvRound( cvmGet( p->particles, 1, pid ) );
-        rect.width = cvRound( cvmGet( p->particles, 2, pid ) );
-        rect.height = cvRound( cvmGet( p->particles, 3, pid ) );
-        rotate = cvmGet( p->particles, 4, pid );
-        if( rectform != CV_RECT_NORMAL) {
-            rect = cvConvRect( rect, rotate, rectform, CV_RECT_NORMAL );
-        }
-        cvDrawRectangle( img, rect, rotate, cvPoint(0,0), color );
-    }
-}
 
 /**
  * Print states of a particle
@@ -147,23 +96,6 @@ void cvParticlePrint( const CvParticle*p, int particle_id )
 }
 
 /**
- * Estimates subsequent model state
- * Call after observation mesurements
- *
- * syntax sugar to call
- *   cvParticleResample
- *   cvParticleTransition
- *
- * @param particle
- */
-void cvParticleUpdateByTime( CvParticle* p )
-{
-    // measure likeli
-    cvParticleResample( p );
-    cvParticleTransition( p );
-}
-
-/**
  * Re-samples a set of particles according to their probs to produce a
  * new set of unweighted particles
  *
@@ -179,8 +111,8 @@ void cvParticleResample( CvParticle* p )
     double prob;
     int max_loc;
 
-    _cvParticleMarginalize( p );
-    _cvParticleNormalize( p );
+    cvParticleMarginalize( p );
+    cvParticleNormalize( p );
 
     k = 0;
     for( i = 0; i < p->num_particles; i++ )
@@ -197,7 +129,7 @@ void cvParticleResample( CvParticle* p )
         }
     }
 
-    max_loc = _cvParticleMaxParticle( p );
+    max_loc = cvParticleMaxParticle( p );
     particle = cvGetCol( p->particles, &hdr, max_loc );
     while( k < p->num_particles )
         cvSetCol( particle, new_particles, k++ );
@@ -213,7 +145,7 @@ exit:
  * @param particle
  * @return int
  */
-int _cvParticleMaxParticle( const CvParticle* p )
+int cvParticleMaxParticle( const CvParticle* p )
 {
     double minval, maxval;
     CvPoint min_loc, max_loc;
@@ -227,7 +159,7 @@ int _cvParticleMaxParticle( const CvParticle* p )
  * @param particle
  * @todo priors
  */
-void _cvParticleMarginalize( CvParticle* p )
+void cvParticleMarginalize( CvParticle* p )
 {
     if( p->logprob )
     {
@@ -263,7 +195,7 @@ void _cvParticleMarginalize( CvParticle* p )
  *
  * @param particle
  */
-void _cvParticleNormalize( CvParticle* p )
+void cvParticleNormalize( CvParticle* p )
 {
     // normalize particle_probs
     if( p->logprob )
@@ -295,7 +227,7 @@ void _cvParticleNormalize( CvParticle* p )
  *
  * @param particle
  */
-void _cvParticleBound( CvParticle* p )
+void cvParticleBound( CvParticle* p )
 {
     int row, col;
     double lower, upper;
@@ -363,7 +295,7 @@ void cvParticleTransition( CvParticle* p )
     cvReleaseMat( &transits );
     cvReleaseMat( &noises );
 
-    _cvParticleBound( p );
+    cvParticleBound( p );
 }
 
 /**
