@@ -27,18 +27,20 @@
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
 using namespace std;
 
-CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect = cvRect(0,0,1,1), double rotate = 0, CvPoint shear = cvPoint(0,0) );
+CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect = cvRect(0,0,1,1), 
+                            double rotate = 0, CvPoint shear = cvPoint(0,0) );
 
 /**
-// Create a affine transform matrix
+// Create an affine transform matrix
 //
-// @param CvMat* affine                   The 2 x 3 CV_32FC1|CV_64FC1 affine matrix to be created
-// @param CvRect [rect = cvRect(0,0,1,1)] The translation (x, y) and scaling (width, height) parameter
-// @param double [rotate = 0]             The Rotation parameter in degree
-// @param CvPoint [shear = cvPoint(0,0)]  The shear deformation parameter shx and shy
+// @param affine                   The 2 x 3 CV_32FC1|CV_64FC1 affine matrix to be created
+// @param [rect = cvRect(0,0,1,1)] The translation (x, y) and scaling (width, height) parameter
+// @param [rotate = 0]             The Rotation parameter in degree
+// @param [shear = cvPoint(0,0)]   The shear deformation parameter shx and shy
 // @return void
 // @Book{Hartley2004,
 //    author = "Hartley, R.~I. and Zisserman, A.",
@@ -50,48 +52,43 @@ CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect = cvRect(0,0,1,1), double
 */
 CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect, double rotate, CvPoint shear )
 {
+    double c, s;
+    CvMat *R, *S, *A, hdr;
     CV_FUNCNAME( "cvCreateAffine" );
     __BEGIN__;
     CV_ASSERT( rect.width > 0 && rect.height > 0 );
     CV_ASSERT( affine->rows == 2 && affine->cols == 3 );
 
-    // [ a b tx; c d ty]
-    // [tx; ty] = Translation
-    // (1) [a b; c d] = Rotation * Shear(-phi) * Scale * Shear(phi)
-    // or
-    // (2) [a b; c d] = Rotation * [sx shx; shy sy]
+    // affine = [ A T ]
+    // A = [ a b; c d ]
+    // Translation T = [ tx; ty ]
+    // (1) A = Rotation * Shear(-phi) * [sx 0; 0 sy] * Shear(phi)
+    // (2) A = Rotation * [sx shx; shy sy]
+    // Use (2)
 
-    CvMat* RotationMatrix = cvCreateMat( 2, 3, CV_32FC1 );
-    CvMat* Rotation       = cvCreateMat( 2, 2, CV_32FC1 );
-    CvMat* Scale          = cvCreateMat( 2, 2, CV_32FC1 );
+    // T = [tx; ty]
+    cvmSet( affine, 0, 2, rect.x ); cvmSet( affine, 1, 2, rect.y );
 
-    // [tx; ty]
-    // Translation
-    cvmSet( affine, 0, 2, rect.x );
-    cvmSet( affine, 1, 2, rect.y );
-    // [a b; c d] = Rotation * [sx shx; shy sy]
-    // Rotation
-    cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, RotationMatrix );
-    cvmSet( Rotation, 0, 0, cvmGet( RotationMatrix, 0, 0 ) );
-    cvmSet( Rotation, 0, 1, cvmGet( RotationMatrix, 0, 1 ) );
-    cvmSet( Rotation, 1, 0, cvmGet( RotationMatrix, 1, 0 ) );
-    cvmSet( Rotation, 1, 1, cvmGet( RotationMatrix, 1, 1 ) );
-    // [sx shx; shy sy]
-    cvZero( Scale );
-    cvmSet( Scale, 0, 0, rect.width );
-    cvmSet( Scale, 1, 1, rect.height );
-    cvmSet( Scale, 0, 1, shear.x );
-    cvmSet( Scale, 1, 0, shear.y );
-    // [a b; c d] = Rotation * [sx shx; shy sy]
-    cvMatMul( Rotation, Scale, Scale );
-    cvmSet( affine, 0, 0, cvmGet( Scale, 0, 0 ) );
-    cvmSet( affine, 0, 1, cvmGet( Scale, 0, 1 ) );
-    cvmSet( affine, 1, 0, cvmGet( Scale, 1, 0 ) );
-    cvmSet( affine, 1, 1, cvmGet( Scale, 1, 1 ) );
+    // R = [cos -sin; sin cos]
+    R = cvCreateMat( 2, 2, affine->type );
+    /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+      cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, R ); */
+    c = cos( -M_PI / 180 * rotate );
+    s = sin( -M_PI / 180 * rotate );
+    cvmSet( R, 0, 0, c ); cvmSet( R, 0, 1, -s );
+    cvmSet( R, 1, 0, s ); cvmSet( R, 1, 1, c );
 
-    cvReleaseMat( &RotationMatrix );
-    cvReleaseMat( &Rotation );
-    cvReleaseMat( &Scale );
+    // S = [sx shx; shy sy]
+    S = cvCreateMat( 2, 2, affine->type );
+    cvmSet( S, 0, 0, rect.width ); cvmSet( S, 0, 1, shear.x );
+    cvmSet( S, 1, 0, shear.y );    cvmSet( S, 1, 1, rect.height );
+    
+    // A = R * S
+    A = cvGetCols( affine, &hdr, 0, 2 );
+    cvMatMul ( R, S, A );
+
+    cvReleaseMat( &R );
+    cvReleaseMat( &S );
     __END__;
 }
 
