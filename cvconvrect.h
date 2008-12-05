@@ -27,55 +27,53 @@
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #define CV_RECT_NORMAL 1
 #define CV_RECT_CENTER 2
 CvRect cvConvRect(const CvRect rect, double rotate, int from, int to);
 
 /**
-% cvuConvRect - (CV Utility) Convert a region of interest (Rect) format
-%
-% Synopsis
-%   [rect] = cvConvRect(rect, rotate, from, to);
-%
-% Inputs ([]s are optional)
-%   (vector) rect     [x; y; width; height]
-%   (scalar) rotate   rotation in degree. 
-%                     Positive values mean couter-clockwise rotation
-%   (scalar) from     
-%   (scalar) to       
-%                     CV_RECT_NORMAL - [x; y; width; height; xy_rotate]
-%                     where x, y are upper-left corner coordinates
-%                     and xy_rotate is rotation as (x,y) is center
-%                     CV_RECT_CENTER - [cx; cy; width; height; cxy_rotate]
-%                     where cx, cy are center coordinates
-%                     and cxy_rotate is rotation as (cx,cy) is center
-%                     3 - [x; y; width; height; cxy_rotate]
-%                     where x, y are center coordinates
-%                     and cxy_rotate is rotation as (cx,cy) is center
-%
-% Outputs ([]s are optional)
-%   (vector) rect    Converted representation
-*/
+ * Convert a rectangle format
+ *
+ * CV_RECT_NORMAL - [x; y; width; height; xy_rotate]
+ *                  where x, y are upper-left corner coordinates
+ *                  and xy_rotate is rotation as (x,y) is center
+ * CV_RECT_CENTER - [cx; cy; width; height; cxy_rotate]
+ *                  where cx, cy are center coordinates
+ *                  and cxy_rotate is rotation as (cx,cy) is center
+ *              3 - [x; y; width; height; cxy_rotate]
+ *                  where x, y are center coordinates
+ *                  and cxy_rotate is rotation as (cx,cy) is center
+ *
+ * @param rect      [x; y; width; height]
+ * @param rotate    rotation in degree. 
+ *                  Positive values mean couter-clockwise rotation
+ * @param from      CV_RECT_NORMAL or CV_RECT_CENTER or 3
+ * @param to        CV_RECT_NORMAL or CV_RECT_CENTER or 3
+ * @return converted rectangle format
+ *
+ */
 CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
 {
     CvRect ret = rect;
-    if( from == CV_RECT_NORMAL )
+    if( from == CV_RECT_NORMAL ) // [x y width height xy_rotate]
     {
-        // [x y width height xy_rotate]
-        double x = rect.x;
-        double y = rect.y;
-        double width = rect.width;
-        double height = rect.height;
-        double cx, cy;
+        double x, y, width, height, cx, cy;
+        x = rect.x;
+        y = rect.y;
+        width = rect.width;
+        height = rect.height;
         // [cx cy width height cxy_rotate]
         if( to == CV_RECT_CENTER || to == 3 ) {
-            CvMat* RMat = cvCreateMat( 2, 3, CV_32FC1 );
-            cv2DRotationMatrix( cvPoint2D32f( x, y ), rotate, 1.0, RMat );
-            cx = (2*x + width - 1)/2.0;
-            cy = (2*y + height - 1)/2.0;
-            ret.x = (int)(cvmGet( RMat, 0, 0 ) * cx + cvmGet( RMat, 0, 1 ) * cy + cvmGet( RMat, 0, 2 ));
-            ret.y = (int)(cvmGet( RMat, 1, 0 ) * cx + cvmGet( RMat, 1, 1 ) * cy + cvmGet( RMat, 1, 2 ));
+            CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+            cv2DRotationMatrix( cvPoint2D32f( x, y ), rotate, 1.0, R );
+            cx = ( 2*x + width - 1 ) / 2.0;
+            cy = ( 2*y + height - 1 ) / 2.0;
+            ret.x = (int)( cvmGet( R, 0, 0 ) * cx + cvmGet( R, 0, 1 ) * cy + cvmGet( R, 0, 2 ) );
+            ret.y = (int)( cvmGet( R, 1, 0 ) * cx + cvmGet( R, 1, 1 ) * cy + cvmGet( R, 1, 2 ) );
+            cvReleaseMat( &R );
         }
         // [x y width height cxy_rotate]
         if( to == 3 ) {
@@ -84,11 +82,11 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
     }
     else if( from == CV_RECT_CENTER ) // [cx; cy; width; height; cxy_rotate]
     { 
-        double cx = rect.x;
-        double cy = rect.y;
-        double width = rect.width;
-        double height = rect.height;
-        double x, y;
+        double x, y, width, height, cx, cy;
+        cx = rect.x;
+        cy = rect.y;
+        width = rect.width;
+        height = rect.height;
         // [x y width height cxy_rotate]
         if( to == 3 || to == CV_RECT_NORMAL ) {
             x = ( 2*cx + 1 - width ) / 2.0;
@@ -98,24 +96,24 @@ CvRect cvConvRect(const CvRect rect, double rotate, int from, int to)
         }
         // [x y width height xy_rotate]
         if( to == CV_RECT_NORMAL ) {
-            CvMat* RMat = cvCreateMat( 2, 3, CV_32FC1 );
-            cv2DRotationMatrix( cvPoint2D32f( cx, cy ), rotate, 1.0, RMat );
-            ret.x = (int)(cvmGet( RMat, 0, 0 ) * x + cvmGet( RMat, 0, 1 ) * y + cvmGet( RMat, 0, 2 ));
-            ret.y = (int)(cvmGet( RMat, 1, 0 ) * x + cvmGet( RMat, 1, 1 ) * y + cvmGet( RMat, 1, 2 ));
+            CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+            cv2DRotationMatrix( cvPoint2D32f( cx, cy ), rotate, 1.0, R );
+            ret.x = (int)( cvmGet( R, 0, 0 ) * x + cvmGet( R, 0, 1 ) * y + cvmGet( R, 0, 2 ) );
+            ret.y = (int)( cvmGet( R, 1, 0 ) * x + cvmGet( R, 1, 1 ) * y + cvmGet( R, 1, 2 ) );
+            cvReleaseMat( &R );
         }
     }
-    else if( from == 3 )
+    else if( from == 3 ) // [x; y; width; height; cxy_rotate]
     {
-        // [x; y; width; height; cxy_rotate]
-        double x = rect.x;
-        double y = rect.y;
-        double width = rect.width;
-        double height = rect.height;
-        double cx, cy;
+        double x, y, width, height, cx, cy;
+        cx = rect.x;
+        cy = rect.y;
+        width = rect.width;
+        height = rect.height;
         // [cx cy width height center_rotate]
         if( to == CV_RECT_CENTER || to == CV_RECT_NORMAL ) {
-            cx = (2*x + width - 1)/2.0;
-            cy = (2*y + height - 1)/2.0;
+            cx = ( 2*x + width - 1 ) / 2.0;
+            cy = ( 2*y + height - 1 ) / 2.0;
             ret.x = (int)cx;
             ret.y = (int)cy;
         }
