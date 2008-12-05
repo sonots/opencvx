@@ -30,29 +30,40 @@
 
 #include "cvcreateaffine.h"
 
-CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate = 0, CvPoint shear = cvPoint(0,0), 
-                             CvScalar color = CV_RGB(255, 255, 255), int thickness = 1, int line_type = 8, int shift = 0);
-CV_INLINE void cvShowImageAndRectangle( const char* w_name, const IplImage* img, const CvRect& rect, double rotate = 0, CvPoint shear = cvPoint(0,0),
-                                        CvScalar color = CV_RGB(255, 255, 0), int thickness = 1, int line_type = 8, int shift = 0);
+CVAPI(void) cvDrawRectangle( IplImage* img, 
+                             CvRect rect, 
+                             double rotate = 0, 
+                             CvPoint shear = cvPoint(0,0), 
+                             CvScalar color = CV_RGB(255, 255, 255), 
+                             int thickness = 1, 
+                             int line_type = 8,
+                             int shift = 0);
+CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
+                                     const CvRect& rect, double rotate = 0, 
+                                     CvPoint shear = cvPoint(0,0),
+                                     CvScalar color = CV_RGB(255, 255, 0), 
+                                     int thickness = 1, int line_type = 8, 
+                                     int shift = 0);
 
 /**
-// Draw an rotated and sheared rectangle
-//
-// @param IplImage* img             The image to be drawn rectangle
-// @param CvRect    rect            The translation (x, y) and scaling (width, height) parameter or the rectangle region
-// @param double    [rotate = 0]    The Rotation parameter in degree
-// @param CvPoint   [shear = cvPoint(0,0)]
-//                                  The shear deformation parameter shx and shy
-// @param CvScalar  [color  = CV_RGB(255, 255, 0)] 
-//                                  Line color (RGB) or brightness (grayscale image). 
-// @param int       [thickness = 1] Thickness of lines that make up the rectangle. Negative values, e.g. CV_FILLED, make the function to draw a filled rectangle. 
-// @param int       [line_type = 8] Type of the line, see cvLine description. 
-// @param int       [shift = 0]     Number of fractional bits in the point coordinates. 
-// @todo thickness, line_type, and shift are available only when rotate == 0 && shear == 0 currently. 
-// @return void
-//
-// @uses cvRectangle
-*/
+ * Draw an rotated and sheared rectangle
+ *
+ * @param img             The image to be drawn rectangle
+ * @param rect            Rectangle to be shown
+ * @param [rotate = 0]    Rotation degree of rectangle
+ * @param [shear = cvPoint(0,0)]
+ *                        The shear deformation parameter shx and shy
+ * @param [color  = CV_RGB(255, 255, 0)] 
+ *                        Line color (RGB) or brightness (grayscale image). 
+ * @param [thickness = 1] Thickness of lines that make up the rectangle. 
+ *                        Negative values, e.g. CV_FILLED, make the function 
+ *                        to draw a filled rectangle. 
+ * @param [line_type = 8] Type of the line, see cvLine description. 
+ * @param [shift = 0]     Number of fractional bits in the point coordinates. 
+ * @todo thickness, line_type, and shift are available only when rotate == 0 && shear == 0 currently. 
+ * @return void
+ * @uses cvRectangle
+ */
 CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint shear, 
                             CvScalar color, int thickness, int line_type, int shift)
 {
@@ -154,25 +165,28 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
 }
 
 /**
-// Show Image and Rectangle
-//
-// @param char*     w_name          Window name
-// @param IplImage* img             Image to be shown
-// @param CvRect    rect            Rectangle to be shown
-// @param double    [rotate = 0]    Rotation degree of rectangle
-// @param CvPoint   [shear = cvPoint(0,0)]
-//                                  The shear deformation parameter shx and shy
-// @param CvScalar  [color  = CV_RGB(255, 255, 0)] 
-//                                  Line color (RGB) or brightness (grayscale image). 
-// @todo: Below parameters are available only when rotate == 0 && shear == cvPoint(0,0) currently. 
-// @param int       [thickness = 1] Thickness of lines that make up the rectangle. Negative values, e.g. CV_FILLED, make the function to draw a filled rectangle. 
-// @param int       [line_type = 8] Type of the line, see cvLine description. 
-// @param int       [shift = 0]     Number of fractional bits in the point coordinates. 
-// @return void
-// @uses cvDrawRectangle
-*/
-CV_INLINE void cvShowImageAndRectangle( const char* w_name, const IplImage* img, const CvRect& rect, double rotate, CvPoint shear,
-                                       CvScalar color, int thickness, int line_type, int shift)
+ * Show Image and Rectangle
+ *
+ * @param w_name          Window name
+ * @param img             Image to be shown
+ * @param rect            Rectangle to be shown
+ * @param [rotate = 0]    Rotation degree of rectangle
+ * @param [shear = cvPoint(0,0)]
+ *                        The shear deformation parameter shx and shy
+ * @param [color  = CV_RGB(255, 255, 0)] 
+ *                        Line color (RGB) or brightness (grayscale image). 
+ * @param [thickness = 1] Thickness of lines that make up the rectangle. 
+ *                        Negative values, e.g. CV_FILLED, make the function 
+ *                        to draw a filled rectangle. 
+ * @param [line_type = 8] Type of the line, see cvLine description. 
+ * @param [shift = 0]     Number of fractional bits in the point coordinates. 
+ * @todo thickness, line_type, and shift are available only when rotate == 0 && shear == 0 currently. 
+ * @return void
+ * @uses cvDrawRectangle
+ */
+CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
+                                     const CvRect& rect, double rotate, CvPoint shear,
+                                     CvScalar color, int thickness, int line_type, int shift)
 {
     if( rect.width <= 0 || rect.height <= 0 ) { cvShowImage( w_name, img ); return; }
     IplImage* clone = cvCloneImage( img );
