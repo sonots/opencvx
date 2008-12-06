@@ -39,7 +39,10 @@ typedef struct CvRect32f {
                   /* rotation center is (x, y) coordinates */
 } CvRect32f;
 
-typedef struct CvBox32f {
+/* This is quivalent with CvBox2D, but I created this strubture because
+   CvBox2D parameters are too long such as box.center.x, box.size.width and
+   CvBox2D does not have a constructor cvBox2D(...). */
+typedef struct CvBox32f { 
     float cx;     /* center x coord of rectangle */
     float cy;     /* center y coord of center of rectangle */
     float width;  /* width of rectangle */
