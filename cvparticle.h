@@ -82,7 +82,7 @@ void cvParticleNormalize( CvParticle* p );
 int  cvParticleMaxParticle( const CvParticle* p );
 void cvParticleBound( CvParticle* p );
 
-void cvParticlePrint( const CvParticle* p, int particle_id );
+void cvParticlePrint( const CvParticle* p, int p_id = -1 );
 
 /*************************** Function Definitions ****************************/
 
@@ -90,17 +90,27 @@ void cvParticlePrint( const CvParticle* p, int particle_id );
  * Print states of a particle
  *
  * @param particle
- * @param particle_id
+ * @param p_id      particle id
  */
-void cvParticlePrint( const CvParticle*p, int particle_id )
+void cvParticlePrint( const CvParticle*p, int p_id )
 {
-    int i, k = 0;
-    for( i = 0; i < p->num_states; i++ )
+    if( p_id == -1 ) // print all
     {
-        printf( "%6.1f ", cvmGet( p->particles, i, particle_id ) );
+        int n;
+        for( n = 0; n < p->num_particles; n++ )
+        {
+            cvParticlePrint( p, n );
+        }
     }
-    printf( "\n" );
-    fflush( stdout );
+    else {
+        int i, k = 0;
+        for( i = 0; i < p->num_states; i++ )
+        {
+            printf( "%6.1f ", cvmGet( p->particles, i, p_id ) );
+        }
+        printf( "\n" );
+        fflush( stdout );
+    }
 }
 
 /**

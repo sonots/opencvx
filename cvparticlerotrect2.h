@@ -42,6 +42,8 @@ using namespace std;
 
 /********************** Definition of a particle *****************************/
 
+int num_states = 10;
+
 // Definition of meanings of 10 states.
 // This kinds of structures is not necessary to be defined, 
 // but I recommend to define them because it makes clear meanings of states
@@ -75,7 +77,7 @@ double dynamics[] = {
     0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
 };
 
-/********************** Function Definitions *********************************/
+/********************** Function Prototypes *********************************/
 
 // Functions for CvParticleState structure ( constructor, getter, setter )
 inline CvParticleState cvParticleState( double x, double y, double width, double height, double rotate = 0,
@@ -89,6 +91,7 @@ void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize );
 
 // Utility Functions
 void cvParticleStateDraw( const CvParticle* p, IplImage* frame, CvScalar color, int pid = -1 );
+void cvParticleStatePrint( const CvParticleState& state );
 
 /****************** Functions for CvParticleState structure ******************/
 
@@ -239,6 +242,21 @@ void cvParticleStateDraw( const CvParticle* p, IplImage* img, CvScalar color, in
         rect = cvConvRect( rect, rotate, CV_RECT_CENTER, CV_RECT_NORMAL );
         cvDrawRectangle( img, rect, rotate, cvPoint(0,0), color );
     }
+}
+
+void cvParticleStatePrint( const CvParticleState& state )
+{
+    printf( "x :%f ", state.x );
+    printf( "y :%f ", state.y );
+    printf( "width :%f ", state.width );
+    printf( "height :%f ", state.height );
+    printf( "rotate :%f\n", state.rotate );
+    printf( "xp:%f ", state.xp );
+    printf( "yp:%f ", state.yp );
+    printf( "widthp:%f ", state.widthp );
+    printf( "heightp:%f ", state.heightp );
+    printf( "rotatep:%f\n", state.rotatep );
+    fflush( stdout );
 }
 
 #endif
