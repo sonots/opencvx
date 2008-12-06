@@ -31,19 +31,18 @@
 #include <math.h>
 
 #include "cvcreateaffine.h"
-using namespace std; // max
+#include "cvrect32f.h"
 
 CVAPI(void) cvDrawRectangle( IplImage* img, 
-                             CvRect rect, 
-                             double rotate = 0, 
-                             CvPoint shear = cvPoint(0,0), 
+                             CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                             CvPoint2D32f shear = cvPoint2D32f(0,0), 
                              CvScalar color = CV_RGB(255, 255, 255), 
                              int thickness = 1, 
                              int line_type = 8,
                              int shift = 0);
 CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
-                                     const CvRect& rect, double rotate = 0, 
-                                     CvPoint shear = cvPoint(0,0),
+                                     CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                                     CvPoint2D32f shear = cvPoint2D32f(0,0),
                                      CvScalar color = CV_RGB(255, 255, 0), 
                                      int thickness = 1, int line_type = 8, 
                                      int shift = 0);
@@ -52,9 +51,10 @@ CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img,
  * Draw an rotated and sheared rectangle
  *
  * @param img             The image to be drawn rectangle
- * @param rect            Rectangle to be shown
- * @param [rotate = 0]    Rotation degree of rectangle
- * @param [shear = cvPoint(0,0)]
+ * @param [rect32f = cvRect32f(0,0,1,1,0)]
+ *                        Rectangle to be shown and
+ *                        Rotation degree of rectangle
+ * @param [shear = cvPoint2D32f(0,0)]
  *                        The shear deformation parameter shx and shy
  * @param [color  = CV_RGB(255, 255, 0)] 
  *                        Line color (RGB) or brightness (grayscale image). 
@@ -67,14 +67,21 @@ CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img,
  * @return void
  * @uses cvRectangle
  */
-CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint shear, 
-                            CvScalar color, int thickness, int line_type, int shift)
+CVAPI(void) cvDrawRectangle( IplImage* img, 
+                             CvRect32f rect32f,
+                             CvPoint2D32f shear,
+                             CvScalar color,
+                             int thickness,
+                             int line_type,
+                             int shift )
 {
+    CvRect rect  = cvRectFromRect32f( rect32f );
+    double angle = rect32f.angle;
     CV_FUNCNAME( "cvDrawRectangle" );
     __BEGIN__;
     CV_ASSERT( rect.width > 0 && rect.height > 0 );
 
-    if( rotate == 0 && shear.x == 0 && shear.y == 0 )
+    if( angle == 0 && shear.x == 0 && shear.y == 0 )
     {
         CvPoint pt1 = cvPoint( rect.x, rect.y );
         CvPoint pt2 = cvPoint( rect.x + rect.width - 1, rect.y + rect.height - 1 );
@@ -83,10 +90,10 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
     else if( shear.x == 0 && shear.y == 0 )
     {
         int x, y, ch, xp, yp;
-        double c = cos( -M_PI / 180 * rotate );
-        double s = sin( -M_PI / 180 * rotate );
+        double c = cos( -M_PI / 180 * angle );
+        double s = sin( -M_PI / 180 * angle );
         /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
-        cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, R );
+        cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), angle, 1.0, R );
         double c = cvmGet( R, 0, 0 );
         double s = cvmGet( R, 1, 0 );
         cvReleaseMat( &R );*/
@@ -126,14 +133,14 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
         CvMat* xy     = cvCreateMat( 3, 1, CV_32FC1 );
         CvMat* xyp    = cvCreateMat( 2, 1, CV_32FC1 );
         cvmSet( xy, 2, 0, 1.0 );
-        cvCreateAffine( affine, rect, rotate, shear );
+        cvCreateAffine( affine, rect32f, shear );
 
         for( x = 0; x < rect.width; x++ )
         {
-            cvmSet( xy, 0, 0, x / (double) rect.width );
+            cvmSet( xy, 0, 0, x / rect32f.width );
             for( y = 0; y < rect.height; y += max(1, rect.height - 1) )
             {
-                cvmSet( xy, 1, 0, y / (double) rect.height );
+                cvmSet( xy, 1, 0, y / rect32f.height );
                 cvMatMul( affine, xy, xyp );
                 xp = (int)( cvmGet( xyp, 0, 0 ) + 0.5 );
                 yp = (int)( cvmGet( xyp, 1, 0 ) + 0.5 );
@@ -146,10 +153,10 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
         }
         for( y = 0; y < rect.height; y++ )
         {
-            cvmSet( xy, 1, 0, y / (double) rect.height );
+            cvmSet( xy, 1, 0, y / rect32f.height );
             for( x = 0; x < rect.width; x += max( 1, rect.width - 1) )
             {
-                cvmSet( xy, 0, 0, x / (double) rect.width );
+                cvmSet( xy, 0, 0, x / rect32f.width );
                 cvMatMul( affine, xy, xyp );
                 xp = (int)( cvmGet( xyp, 0, 0 ) + 0.5 );
                 yp = (int)( cvmGet( xyp, 1, 0 ) + 0.5 );
@@ -172,9 +179,10 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
  *
  * @param w_name          Window name
  * @param img             Image to be shown
- * @param rect            Rectangle to be shown
- * @param [rotate = 0]    Rotation degree of rectangle
- * @param [shear = cvPoint(0,0)]
+ * @param [rect32f = cvRect32f(0,0,1,1,0)]
+ *                        Rectangle to be shown and
+ *                        Rotation degree of rectangle
+ * @param [shear = cvPoint2D32f(0,0)]
  *                        The shear deformation parameter shx and shy
  * @param [color  = CV_RGB(255, 255, 0)] 
  *                        Line color (RGB) or brightness (grayscale image). 
@@ -183,17 +191,20 @@ CVAPI(void) cvDrawRectangle( IplImage* img, CvRect rect, double rotate, CvPoint 
  *                        to draw a filled rectangle. 
  * @param [line_type = 8] Type of the line, see cvLine description. 
  * @param [shift = 0]     Number of fractional bits in the point coordinates. 
- * @todo thickness, line_type, and shift are available only when rotate == 0 && shear == 0 currently. 
+ * @todo thickness, line_type, and shift are available only when angle == 0 && shear == 0 currently. 
  * @return void
  * @uses cvDrawRectangle
  */
-CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
-                                     const CvRect& rect, double rotate, CvPoint shear,
+CVAPI(void) cvShowImageAndRectangle( const char* w_name, 
+                                     const IplImage* img,
+                                     CvRect32f rect32f,
+                                     CvPoint2D32f shear,
                                      CvScalar color, int thickness, int line_type, int shift)
 {
+    CvRect rect  = cvRectFromRect32f( rect32f );
     if( rect.width <= 0 || rect.height <= 0 ) { cvShowImage( w_name, img ); return; }
     IplImage* clone = cvCloneImage( img );
-    cvDrawRectangle( clone, rect, rotate, shear, color, thickness, line_type, shift );
+    cvDrawRectangle( clone, rect32f, shear, color, thickness, line_type, shift );
     cvShowImage( w_name, clone );
     cvReleaseImage( &clone );
 }

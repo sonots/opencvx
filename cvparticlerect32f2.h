@@ -36,7 +36,9 @@
 #define CV_PARTICLE_ROTRECT2_H
 
 #include "cvparticle.h"
-#include "cvconvrect.h"
+#include "cvdrawrectangle.h"
+#include "cvcropimageroi.h"
+#include "cvrect32f.h"
 #include <float.h>
 using namespace std;
 
@@ -52,12 +54,12 @@ typedef struct CvParticleState {
     double y;        // center coord of a rectangle
     double width;    // width of a rectangle
     double height;   // height of a rectangle
-    double rotate;   // rotation around center. degree
+    double angle;    // rotation around center. degree
     double xp;       // previous center coord of a rectangle
     double yp;       // previous center coord of a rectangle
     double widthp;   // previous width of a rectangle
     double heightp;  // previous height of a rectangle
-    double rotatep;  // previous rotation around center. degree
+    double anglep;   // previous rotation around center. degree
 } CvParticleState;
 
 // Definition of dynamics model
@@ -80,8 +82,8 @@ double dynamics[] = {
 /********************** Function Prototypes *********************************/
 
 // Functions for CvParticleState structure ( constructor, getter, setter )
-inline CvParticleState cvParticleState( double x, double y, double width, double height, double rotate = 0,
-                                        double xp = 0, double yp = 0, double widthp = 0, double heightp = 0, double rotatep =0 );
+inline CvParticleState cvParticleState( double x, double y, double width, double height, double angle = 0,
+                                        double xp = 0, double yp = 0, double widthp = 0, double heightp = 0, double anglep =0 );
 CvParticleState cvParticleStateGet( const CvParticle* p, int p_id );
 void cvParticleStateSet( const CvParticle* p, int p_id, CvParticleState &state );
 
@@ -98,11 +100,11 @@ void cvParticleStatePrint( const CvParticleState& state );
 /**
  * Constructor
  */
-inline CvParticleState cvParticleState( double x, double y, double width, double height, double rotate,
-                                        double xp, double yp, double widthp, double heightp, double rotatep )
+inline CvParticleState cvParticleState( double x, double y, double width, double height, double angle,
+                                        double xp, double yp, double widthp, double heightp, double anglep )
 {
-    CvParticleState state = { x, y, width, height, rotate, 
-                              xp, yp, widthp, heightp, rotatep };
+    CvParticleState state = { x, y, width, height, angle, 
+                              xp, yp, widthp, heightp, anglep };
     return state;
 }
 
@@ -119,12 +121,12 @@ CvParticleState cvParticleStateGet( const CvParticle* p, int p_id )
     s.y       = cvmGet( p->particles, 1, p_id );
     s.width   = cvmGet( p->particles, 2, p_id );
     s.height  = cvmGet( p->particles, 3, p_id );
-    s.rotate  = cvmGet( p->particles, 4, p_id );
+    s.angle   = cvmGet( p->particles, 4, p_id );
     s.xp      = cvmGet( p->particles, 5, p_id );
     s.yp      = cvmGet( p->particles, 6, p_id );
     s.widthp  = cvmGet( p->particles, 7, p_id );
     s.heightp = cvmGet( p->particles, 8, p_id );
-    s.rotatep = cvmGet( p->particles, 9, p_id );
+    s.anglep  = cvmGet( p->particles, 9, p_id );
     return s;
 }
 
@@ -142,12 +144,12 @@ void cvParticleStateSet( const CvParticle* p, int p_id, CvParticleState &state )
     cvmSet( p->particles, 1, p_id, state.y );
     cvmSet( p->particles, 2, p_id, state.width );
     cvmSet( p->particles, 3, p_id, state.height );
-    cvmSet( p->particles, 4, p_id, state.rotate );
+    cvmSet( p->particles, 4, p_id, state.angle );
     cvmSet( p->particles, 5, p_id, state.xp );
     cvmSet( p->particles, 6, p_id, state.yp );
     cvmSet( p->particles, 7, p_id, state.widthp );
     cvmSet( p->particles, 8, p_id, state.heightp );
-    cvmSet( p->particles, 9, p_id, state.rotatep );
+    cvmSet( p->particles, 9, p_id, state.anglep );
 }
 
 /*************************** Particle Filter Configuration *********************************/
@@ -167,7 +169,7 @@ void cvParticleStateConfig( CvParticle* p, CvSize imsize, CvParticleState& std )
         std.y,
         std.width,
         std.height,
-        std.rotate,
+        std.angle,
         0,
         0,
         0,
@@ -235,12 +237,12 @@ void cvParticleStateDraw( const CvParticle* p, IplImage* img, CvScalar color, in
             cvParticleStateDraw( p, img, color, i );
         }
     } else {
-        CvRect rect; double rotate;
+        CvRect32f rect32f;
+        CvBox32f box32f;
         CvParticleState s = cvParticleStateGet( p, pid );
-        rect = cvRect( cvRound( s.x ), cvRound( s.y ), cvRound( s.width ), cvRound( s.height ) );
-        rotate = s.rotate;
-        rect = cvConvRect( rect, rotate, CV_RECT_CENTER, CV_RECT_NORMAL );
-        cvDrawRectangle( img, rect, rotate, cvPoint(0,0), color );
+        box32f = cvBox32f( s.x, s.y, s.width, s.height, s.angle );
+        rect32f = cvRect32fFromBox32f( box32f );
+        cvDrawRectangle( img, rect32f, cvPoint2D32f(0,0), color );
     }
 }
 
@@ -250,12 +252,12 @@ void cvParticleStatePrint( const CvParticleState& state )
     printf( "y :%f ", state.y );
     printf( "width :%f ", state.width );
     printf( "height :%f ", state.height );
-    printf( "rotate :%f\n", state.rotate );
+    printf( "angle :%f\n", state.angle );
     printf( "xp:%f ", state.xp );
     printf( "yp:%f ", state.yp );
     printf( "widthp:%f ", state.widthp );
     printf( "heightp:%f ", state.heightp );
-    printf( "rotatep:%f\n", state.rotatep );
+    printf( "anglep:%f\n", state.anglep );
     fflush( stdout );
 }
 

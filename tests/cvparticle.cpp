@@ -15,6 +15,7 @@
 
 #include "../cvxmat.h"
 #include "../cvxrectangle.h"
+#include "../cvrect32f.h"
 #include "../cvcropimageroi.h"
 #include "../cvdrawrectangle.h"
 #include "../cvskincolorpeer.h"
@@ -23,7 +24,7 @@
 // General particle filter structure
 #include "../cvparticle.h"
 // Rotated rectangle + 2nd AR model particle filter
-#include "../cvparticlerotrect2.h"
+#include "../cvparticlebox2.h"
 
 /****************************** Global *****************************/
 
@@ -53,18 +54,17 @@ void cvParticleObserveLikelihood( CvParticle* p, IplImage* frame, IplImage *refe
 {
     int i;
     double likeli;
-    CvRect rect;
-    double rotate;
     IplImage *patch;
     IplImage *resize = cvCreateImage( feature_size, frame->depth, frame->nChannels );
     for( i = 0; i < p->num_particles; i++ ) 
     {
         CvParticleState s = cvParticleStateGet( p, i );
-        rect   = cvRect( cvRound( s.x ), cvRound( s.y ), cvRound( s.width ), cvRound( s.height ) );
-        rotate = s.rotate;
+        CvBox32f box32f = cvBox32f( s.x, s.y, s.width, s.height, s.angle );
+        CvRect32f rect32f = cvRect32fFromBox32f( box32f );
+        CvRect rect = cvRectFromRect32f( rect32f );
         
         patch = cvCreateImage( cvSize(rect.width,rect.height), frame->depth, frame->nChannels );
-        cvCropImageROI( frame, patch, rect, rotate );
+        cvCropImageROI( frame, patch, rect32f );
         cvResize( patch, resize );
 
         // log likeli. kinds of Gaussian model
@@ -124,9 +124,10 @@ int main( int argc, char** argv )
     CvParticleState s;
     CvParticle *init_particle;
     init_particle = cvCreateParticle( num_states, 1, 1 );
-    region = cvConvRect( region, 0.0, CV_RECT_NORMAL, CV_RECT_CENTER );
-    s = cvParticleState( region.x, region.y, region.width, region.height, 0.0,
-                         region.x, region.y, region.width, region.height, 0.0 );
+    CvRect32f region32f = cvRect32fFromRect( region );
+    CvBox32f box = cvBox32fFromRect32f( region32f ); // centerize
+    s = cvParticleState( box.cx, box.cy, box.width, box.height, 0.0,
+                         box.cx, box.cy, box.width, box.height, 0.0 );
     cvParticleStateSet( init_particle, 0, s );
     cvParticleInit( particle, init_particle );
     cvReleaseParticle( &init_particle );
@@ -134,7 +135,7 @@ int main( int argc, char** argv )
     // template 
     reference = cvCreateImage( feature_size, frame->depth, frame->nChannels );
     tmp = cvCreateImage( cvSize(region.width,region.height), frame->depth, frame->nChannels );
-    cvCropImageROI( frame, tmp, region );
+    cvCropImageROI( frame, tmp, region32f );
     cvResize( tmp, reference );
     cvReleaseImage( &tmp );
 

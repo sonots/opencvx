@@ -31,11 +31,11 @@
 #include <stdio.h>
 #include <math.h>
 using namespace std;
+#include "cvrect32f.h"
 #include "cvcreateaffine.h"
 #include "cvdrawrectangle.h"
 #include "cvcropimageroi.h"
 #include "cvpointnorm.h"
-#include "cvconvrect.h"
 
 /**
 // Print cvRect parameters

@@ -31,13 +31,14 @@
 #include <math.h>
 
 #include "cvcreateaffine.h"
-using namespace std; // max
+#include "cvrect32f.h"
 
-CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, 
-                            double rotate = 0, CvPoint shear = cvPoint(0,0) );
+CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, 
+                            CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                            CvPoint2D32f shear = cvPoint2D32f(0,0) );
 CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig, 
-                                   const CvRect rect, double rotate = 0, 
-                                   CvPoint shear = cvPoint(0,0) );
+                            CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                            CvPoint2D32f shear = cvPoint2D32f(0,0) );
 
 /**
  * Crop image with rotated and sheared rectangle
@@ -46,22 +47,24 @@ CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig,
  *
  * @param img          The target image
  * @param dst          The cropped image
- * @param rect         The rectangle region to crop
- * @param [rotate = 0] The rotation angle in degree
- * @param [shear = cvPoint(0,0)]
+ * @param [rect32f = cvRect32f(0,0,1,1,0)]
+ *                     The rectangle region (x,y,width,height) to crop and 
+ *                     the rotation angle in degree
+ * @param [shear = cvPoint2D32f(0,0)]
  *                     The shear deformation parameter shx and shy
  * @return void
  */
-CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double rotate, CvPoint shear )
+CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect32f rect32f, CvPoint2D32f shear )
 {
+    CvRect rect  = cvRectFromRect32f( rect32f );
+    double angle = rect32f.angle;
     CV_FUNCNAME( "cvCropImageROI" );
     __BEGIN__;
     CV_ASSERT( rect.width > 0 && rect.height > 0 );
     CV_ASSERT( dst->width == rect.width );
     CV_ASSERT( dst->height == rect.height );
 
-
-    if( rotate == 0 && shear.x == 0 && shear.y == 0 && 
+    if( angle == 0 && shear.x == 0 && shear.y == 0 && 
         rect.x >= 0 && rect.y >= 0 && 
         rect.x + rect.width < img->width && rect.y + rect.height < img->height )
     {
@@ -72,10 +75,10 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
     else if( shear.x == 0 && shear.y == 0 )
     {
         int x, y, ch, xp, yp;
-        double c = cos( -M_PI / 180 * rotate );
-        double s = sin( -M_PI / 180 * rotate );
+        double c = cos( -M_PI / 180 * angle );
+        double s = sin( -M_PI / 180 * angle );
         /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
-        cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, R );
+        cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), angle, 1.0, R );
         double c = cvmGet( R, 0, 0 );
         double s = cvmGet( R, 1, 0 );
         cvReleaseMat( &R );*/
@@ -102,16 +105,16 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
         CvMat* affine = cvCreateMat( 2, 3, CV_32FC1 );
         CvMat* xy     = cvCreateMat( 3, 1, CV_32FC1 );
         CvMat* xyp    = cvCreateMat( 2, 1, CV_32FC1 );
-        cvCreateAffine( affine, rect, rotate, shear );
+        cvCreateAffine( affine, rect32f, shear );
         cvmSet( xy, 2, 0, 1.0 );
         cvZero( dst );
 
         for( x = 0; x < rect.width; x++ )
         {
-            cvmSet( xy, 0, 0, x / (double) rect.width );
+            cvmSet( xy, 0, 0, x / rect32f.width );
             for( y = 0; y < rect.height; y++ )
             {
-                cvmSet( xy, 1, 0, y / (double) rect.height );
+                cvmSet( xy, 1, 0, y / rect32f.height );
                 cvMatMul( affine, xy, xyp );
                 xp = (int)( cvmGet( xyp, 0, 0 ) + 0.5 );
                 yp = (int)( cvmGet( xyp, 1, 0 ) + 0.5 );
@@ -134,19 +137,21 @@ CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect rect, double ro
  * Crop and show the Cropped Image
  *
  * @param w_name       Window name
- * @param orig         Image to be cropped
- * @param rect         The rectangle region to crop
- * @param [rotate = 0] The rotation angle in degree
- * @param [shear = cvPoint(0,0)]
+ * @param img          Image to be cropped
+ * @param [rect32f = cvRect32f(0,0,1,1,0)]
+ *                     The rectangle region (x,y,width,height) to crop and 
+ *                     the rotation angle in degree
+ * @param [shear = cvPoint2D32f(0,0)]
  *                     The shear deformation parameter shx and shy
  * @return void
  * @uses cvCropImageROI
  */
-CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig, const CvRect rect, double rotate, CvPoint shear )
+CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* img, CvRect32f rect32f, CvPoint2D32f shear )
 {
+    CvRect rect = cvRectFromRect32f( rect32f );
     if( rect.width <= 0 || rect.height <= 0 ) return;
-    IplImage* crop = cvCreateImage( cvSize( rect.width, rect.height ), orig->depth, orig->nChannels );
-    cvCropImageROI( orig, crop, rect, rotate, shear );
+    IplImage* crop = cvCreateImage( cvSize( rect.width, rect.height ), img->depth, img->nChannels );
+    cvCropImageROI( img, crop, rect32f, shear );
     cvShowImage( w_name, crop );
     cvReleaseImage( &crop );
 }

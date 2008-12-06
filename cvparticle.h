@@ -40,8 +40,6 @@
 #include "cvsetrow.h"
 #include "cvsetcol.h"
 #include "cvlogsum.h"
-#include "cvdrawrectangle.h"
-#include "cvconvrect.h"
 
 /******************************* Structures **********************************/
 

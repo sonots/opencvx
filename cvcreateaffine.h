@@ -30,26 +30,31 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect = cvRect(0,0,1,1), 
-                            double rotate = 0, CvPoint shear = cvPoint(0,0) );
+#include "cvrect32f.h"
+
+CVAPI(void) cvCreateAffine( CvMat* affine, 
+                            CvRect32f rect = cvRect32f(0,0,1,1,0), 
+                            CvPoint2D32f shear = cvPoint2D32f(0,0) );
 
 /**
-// Create an affine transform matrix
-//
-// @param affine                   The 2 x 3 CV_32FC1|CV_64FC1 affine matrix to be created
-// @param [rect = cvRect(0,0,1,1)] The translation (x, y) and scaling (width, height) parameter
-// @param [rotate = 0]             The Rotation parameter in degree
-// @param [shear = cvPoint(0,0)]   The shear deformation parameter shx and shy
-// @return void
-// @Book{Hartley2004,
-//    author = "Hartley, R.~I. and Zisserman, A.",
-//    title = "Multiple View Geometry in Computer Vision",
-//    edition = "Second",
-//    year = "2004",
-//    publisher = "Cambridge University Press, ISBN: 0521540518"
-// } 
-*/
-CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect, double rotate, CvPoint shear )
+ * Create an affine transform matrix
+ *
+ * @param affine    The 2 x 3 CV_32FC1|CV_64FC1 affine matrix to be created
+ * @param [rect = cvRect32f(0,0,1,1,0)]
+ *                  The translation (x, y) and scaling (width, height) and
+ *                  rotation (angle) paramenter in degree
+ * @param [shear = cvPoint2D32f(0,0)]
+ *                  The shear deformation parameter shx and shy
+ * @return void
+ * @Book{Hartley2004,
+ *    author = "Hartley, R.~I. and Zisserman, A.",
+ *    title = "Multiple View Geometry in Computer Vision",
+ *    edition = "Second",
+ *    year = "2004",
+ *    publisher = "Cambridge University Press, ISBN: 0521540518"
+ * } 
+ */
+CVAPI(void) cvCreateAffine( CvMat* affine, CvRect32f rect, CvPoint2D32f shear )
 {
     double c, s;
     CvMat *R, *S, *A, hdr;
@@ -71,9 +76,9 @@ CVAPI(void) cvCreateAffine( CvMat* affine, CvRect rect, double rotate, CvPoint s
     // R = [cos -sin; sin cos]
     R = cvCreateMat( 2, 2, affine->type );
     /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
-      cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rotate, 1.0, R ); */
-    c = cos( -M_PI / 180 * rotate );
-    s = sin( -M_PI / 180 * rotate );
+      cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), rect.angle, 1.0, R ); */
+    c = cos( -M_PI / 180 * rect.angle );
+    s = sin( -M_PI / 180 * rect.angle );
     cvmSet( R, 0, 0, c ); cvmSet( R, 0, 1, -s );
     cvmSet( R, 1, 0, s ); cvmSet( R, 1, 1, c );
 
