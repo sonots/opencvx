@@ -39,8 +39,8 @@ typedef struct CvRect32f {
                   /* rotation center is (x, y) coordinates */
 } CvRect32f;
 
-/* This is quivalent with CvBox2D, but I created this strubture because
-   CvBox2D parameters are too long such as box.center.x, box.size.width and
+/* This is quivalent with CvBox2D, but I wanted this structure because
+   CvBox2D's parameters are too long such as box.center.x, box.size.width and
    CvBox2D does not have a constructor cvBox2D(...). */
 typedef struct CvBox32f { 
     float cx;     /* center x coord of rectangle */
@@ -56,13 +56,42 @@ typedef struct CvBox32f {
 CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 );
 CV_INLINE CvBox32f  cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 );
 
-CV_INLINE CvRect32f cvRect32fFromRect( CvRect& rect );
-CV_INLINE CvRect    cvRectFromRect32f( CvRect32f& rect );
-CV_INLINE CvBox32f  cvBox32fFromBox2D( CvBox2D& box );
-CV_INLINE CvBox2D   cvBox2DFromBox32f( CvBox32f& box );
+CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect );
+CV_INLINE CvRect    cvRectFromRect32f( CvRect32f rect );
+CV_INLINE CvBox32f  cvBox32fFromBox2D( CvBox2D box );
+CV_INLINE CvBox2D   cvBox2DFromBox32f( CvBox32f box );
 
-CVAPI(CvBox32f)     cvBox32fFromRect32f( CvRect32f &rect );
-CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f &box );
+CVAPI(CvBox32f)     cvBox32fFromRect32f( CvRect32f rect );
+CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
+
+#define cvBox32fFromRect(rect) (cvBox32fFromRect32f(cvRect32fFromRect(rect)))
+#define cvBox2DFromRect(rect) (cvBox2DFromBox32f(cvBox32fFromRect(rect)))
+#define cvRectFromBox32f(box) (cvRectFromRect32f(cvRect32fFromBox32f(box)))
+#define cvRectFromBox2D(box) (cvRectFromBox32f(cvBox32fFromBox2D(box)))
+#define cvBox2DFromRect32f(rect) (cvBox2DFromBox32f(cvBox32fFromRect32f(rect)))
+#define cvRect32fFromBox2D(box) (cvRect32fFromBox32f(cvBox32fFromBox2D(box)))
+
+#define cvPrintRect32f(rect)                                          \
+    printf( "x:%f y:%f width:%f height:%f angle:%f\n",                \
+            rect.x, rect.y, rect.width, rect.height, rect.angle );    \
+    fflush( stdout );
+#define cvPrintBox32f(box)                                         \
+    printf( "cx:%f cy:%f width:%f height:%f angle:%f\n",           \
+            box.cx, box.cy, box.width, box.height, box.angle );    \
+    fflush( stdout );
+#ifndef cvPrintBox2D
+#define cvPrintBox2D(box)                                               \
+    printf( "cx:%f cy:%f width:%f height:%f angle:%f\n",                \
+            box.center.x, box.center.y, box.size.width,                 \
+            box.size.height, box.angle );                               \
+    fflush( stdout );
+#endif
+#ifndef cvPrintRect
+#define cvPrintRect(rect)                                 \
+    printf( "x:%d y:%d width:%d height:%d",               \
+            rect.x, rect.y, rect.width, rect.height );    \
+    fflush( stdout );
+#endif
 
 /******************* Function Implementations ***************************/
 
@@ -78,25 +107,25 @@ CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, floa
     return box;
 }
 
-CV_INLINE CvRect32f cvRect32fFromRect( CvRect& rect )
+CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect )
 {
     return cvRect32f( rect.x, rect.y, rect.width, rect.height );
 }
 
-CV_INLINE CvRect cvRectFromRect32f( CvRect32f& rect )
+CV_INLINE CvRect cvRectFromRect32f( CvRect32f rect )
 {
     return cvRect( cvRound( rect.x ), cvRound( rect.y ),
                    cvRound( rect.width ), cvRound( rect.height ) );
 }
 
-CV_INLINE CvBox32f cvBox32fFromBox2D( CvBox2D& box )
+CV_INLINE CvBox32f cvBox32fFromBox2D( CvBox2D box )
 {
     return cvBox32f( box.center.x, box.center.y,
                      box.size.width, box.size.height,
                      box.angle );
 }
 
-CV_INLINE CvBox2D cvBox2DFromBox32f( CvBox32f& box )
+CV_INLINE CvBox2D cvBox2DFromBox32f( CvBox32f box )
 {
     CvBox2D box2d;
     box2d.center.x = box.cx;
@@ -107,7 +136,7 @@ CV_INLINE CvBox2D cvBox2DFromBox32f( CvBox32f& box )
     return box2d;
 }
 
-CVAPI(CvBox32f) cvBox32fFromRect32f( CvRect32f &rect )
+CVAPI(CvBox32f) cvBox32fFromRect32f( CvRect32f rect )
 {
     float cx, cy;
     CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
@@ -120,7 +149,7 @@ CVAPI(CvBox32f) cvBox32fFromRect32f( CvRect32f &rect )
     return cvBox32f( cx, cy, rect.width, rect.height, rect.angle );
 }
 
-CVAPI(CvRect32f) cvRect32fFromBox32f( CvBox32f &box )
+CVAPI(CvRect32f) cvRect32fFromBox32f( CvBox32f box )
 {
     float x, y;
     CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
