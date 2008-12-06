@@ -75,8 +75,8 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
                              int line_type,
                              int shift )
 {
-    CvRect rect  = cvRectFromRect32f( rect32f );
-    double angle = rect32f.angle;
+    CvRect rect = cvRectFromRect32f( rect32f );
+    float angle = rect32f.angle;
     CV_FUNCNAME( "cvDrawRectangle" );
     __BEGIN__;
     CV_ASSERT( rect.width > 0 && rect.height > 0 );

@@ -56,8 +56,8 @@ CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig,
  */
 CVAPI(void) cvCropImageROI( IplImage* img, IplImage* dst, CvRect32f rect32f, CvPoint2D32f shear )
 {
-    CvRect rect  = cvRectFromRect32f( rect32f );
-    double angle = rect32f.angle;
+    CvRect rect = cvRectFromRect32f( rect32f );
+    float angle = rect32f.angle;
     CV_FUNCNAME( "cvCropImageROI" );
     __BEGIN__;
     CV_ASSERT( rect.width > 0 && rect.height > 0 );
