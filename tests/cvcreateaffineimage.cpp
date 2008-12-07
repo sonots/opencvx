@@ -14,7 +14,7 @@
 #include "highgui.h"
 #include "../cvxmat.h"
 #include "../cvcreateaffine.h"
-#include "../cvaffineimage.h"
+#include "../cvcreateaffineimage.h"
 
 int main( int argc, char** argv )
 {
@@ -29,19 +29,26 @@ int main( int argc, char** argv )
     cvCreateAffine( affine, cvRect32f( 0, 0, 1, 1/2.0, 10 ), cvPoint2D32f( 0, 0 ) );
     IplImage* transformed;
 
-    transformed = cvAffineImage( img, affine, NULL, CV_AFFINE_SAME );
+    transformed = cvCreateAffinedImage( img, affine, CV_AFFINE_SAME );
     cvNamedWindow( "hoge" );
     cvShowImage( "hoge", transformed );
     cvWaitKey( 0 );
     cvReleaseImage( &transformed );
 
     CvPoint origin;
-    transformed = cvAffineImage( img, affine, &origin, CV_AFFINE_FULL );
+    transformed = cvCreateAffineImage( img, affine, CV_AFFINE_FULL, &origin );
     cvNamedWindow( "hoge" );
     cvShowImage( "hoge", transformed );
     printf( "origin.x = %d origin.y = %d\n", origin.x, origin.y );
     cvWaitKey( 0 );
     cvReleaseImage( &transformed );
+
+    IplImage *mask = cvCreateAffineMask( img, affine, CV_AFFINE_FULL );
+    cvNamedWindow( "hoge" );
+    //cvShowImage( "hoge", mask ); // 1 is 1/255...
+    printf( "origin.x = %d origin.y = %d\n", origin.x, origin.y );
+    cvWaitKey( 0 );
+    cvReleaseImage( &mask );
 
     cvReleaseMat( &affine );
 }
