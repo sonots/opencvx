@@ -28,9 +28,9 @@
 #include "cv.h"
 #include "cvaux.h"
 
-CV_INLINE void cvSetRows( const CvArr* subarr, CvArr* arr, 
+CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
                          int start_row, int end_row, int delta_row = 1 );
-CV_INLINE void cvSetRow( const CvArr* subarr, CvArr* arr, int row );
+#define cvSetRow(src, dst, row) (cvSetRows( src, dst, row, row + 1))
 
 /**
  * Set array row or row span
@@ -43,37 +43,48 @@ CV_INLINE void cvSetRow( const CvArr* subarr, CvArr* arr, int row );
  * // Write on submat
  * </code>
  *
- * @param subarr    Input sub array
- * @param arr       Target array
+ * @param src       Source array
+ * @param dst       Target array. Either of array must be size of setting rows.
  * @param start_row Zero-based index of the starting row (inclusive) of the span. 
  * @param end_row   Zero-based index of the ending row (exclusive) of the span. 
  * @param [delta_row = 1]
  *                  Index step in the row span. That is, the function extracts every 
  *                  delta_row-th row from start_row and up to (but not including) end_row. 
  * @return void
- * @see cvSetRow( subarr, arr, row ) // cvSetRows( subarr, arr, row, row + 1 )
+ * @see cvSetRow( src, dst, row ) // cvSetCols( src, dst, row, row + 1 )
  */
-CV_INLINE void cvSetRows( const CvArr* subarr, CvArr* arr, 
+CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
                          int start_row, int end_row, int delta_row )
 {
     int coi;
-    CvMat *submat = (CvMat*)subarr, submatstub;
-    CvMat *mat = (CvMat*)arr, matstub;
+    CvMat *srcmat = (CvMat*)src, srcmatstub;
+    CvMat *dstmat = (CvMat*)dst, dstmatstub;
     CvMat *refmat, refmathdr;
+    int rows;
     CV_FUNCNAME( "cvSetRows" );
     __BEGIN__;
-    if( !CV_IS_MAT(mat) )
+    if( !CV_IS_MAT(dstmat) )
     {
-        CV_CALL( mat = cvGetMat( mat, &matstub, &coi ) );
+        CV_CALL( dstmat = cvGetMat( dstmat, &dstmatstub, &coi ) );
         if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
     }
-    if( !CV_IS_MAT(submat) )
+    if( !CV_IS_MAT(srcmat) )
     {
-        CV_CALL( submat = cvGetMat( submat, &submatstub, &coi ) );
+        CV_CALL( srcmat = cvGetMat( srcmat, &srcmatstub, &coi ) );
         if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
     }
-    refmat = cvGetRows( mat, &refmathdr, start_row, end_row, delta_row );
-    cvCopy( submat, refmat );
+    rows = cvFloor( ( end_row - start_row ) / delta_row );
+    CV_ASSERT( srcmat->rows == rows || dstmat->rows == rows );
+    if( srcmat->rows == rows )
+    {
+        refmat = cvGetRows( dstmat, &refmathdr, start_row, end_row, delta_row );
+        cvCopy( srcmat, refmat );
+    }
+    else
+    {
+        refmat = cvGetRows( srcmat, &refmathdr, start_row, end_row, delta_row );
+        cvCopy( refmat, dstmat );
+    }
     __END__;
 }
 /*
@@ -123,20 +134,5 @@ CVAPI( void ) cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end
     __END__;
 }
 */
-
-/**
-* Set array row
-* 
-* @param subarr Input sub array
-* @param arr Target array
-* @param row Zero-based index of the row. 
-* @return void
-* @uses cvSetRows
-*/
-CV_INLINE void cvSetRow( const CvArr* subarr, CvArr* arr, int row )
-{
-    cvSetRows( subarr, arr, row, row + 1 );
-}
-
 
 #endif

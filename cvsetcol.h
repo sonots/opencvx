@@ -28,9 +28,9 @@
 #include "cv.h"
 #include "cvaux.h"
 
-CV_INLINE void cvSetCols( const CvArr* subarr, CvArr* arr, 
+CV_INLINE void cvSetCols( const CvArr* src, CvArr* dst,
                           int start_col, int end_col );
-CV_INLINE void cvSetCol( const CvArr* subarr, CvArr* arr, int col );
+#define cvSetCol(src, dst, col) (cvSetCols( src, dst, col, col + 1))
 
 /**
  * Set array col or col span
@@ -43,41 +43,52 @@ CV_INLINE void cvSetCol( const CvArr* subarr, CvArr* arr, int col );
  * // Write on submat
  * </code>
  *
- * @param subarr    Input sub array
- * @param arr       Target array
+ * @param src       Source array
+ * @param dst       Target array. Either of array must be size of setting cols.
  * @param start_col Zero-based index of the starting col (inclusive) of the span. 
  * @param end_col   Zero-based index of the ending col (exclusive) of the span. 
  * @return void
- * @see cvSetCol( subarr, arr, col ) // cvSetCols( subarr, arr, col, col + 1 )
-*/
-CV_INLINE void cvSetCols( const CvArr* subarr, CvArr* arr, 
+ * @see cvSetCol( src, dst, col ) // cvSetCols( src, dst, col, col + 1 )
+ */
+CV_INLINE void cvSetCols( const CvArr* src, CvArr* dst,
                           int start_col, int end_col )
 {
     int coi;
-    CvMat *submat = (CvMat*)subarr, submatstub;
-    CvMat *mat = (CvMat*)arr, matstub;
+    CvMat *srcmat = (CvMat*)src, srcmatstub;
+    CvMat *dstmat = (CvMat*)dst, dstmatstub;
     CvMat *refmat, refmathdr;
+    int cols;
     CV_FUNCNAME( "cvSetCols" );
     __BEGIN__;
-    if( !CV_IS_MAT(mat) )
+    if( !CV_IS_MAT(dstmat) )
     {
-        CV_CALL( mat = cvGetMat( mat, &matstub, &coi ) );
+        CV_CALL( dstmat = cvGetMat( dstmat, &dstmatstub, &coi ) );
         if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
     }
-    if( !CV_IS_MAT(submat) )
+    if( !CV_IS_MAT(srcmat) )
     {
-        CV_CALL( submat = cvGetMat( submat, &submatstub, &coi ) );
+        CV_CALL( srcmat = cvGetMat( srcmat, &srcmatstub, &coi ) );
         if (coi != 0) CV_ERROR_FROM_CODE(CV_BadCOI);
     }
-    refmat = cvGetCols( mat, &refmathdr, start_col, end_col );
-    cvCopy( submat, refmat );
+    cols = end_col - start_col;
+    CV_ASSERT( srcmat->cols == cols || dstmat->cols == cols );
+    if( srcmat->cols == cols )
+    {
+        refmat = cvGetCols( dstmat, &refmathdr, start_col, end_col );
+        cvCopy( srcmat, refmat );
+    }
+    else
+    {
+        refmat = cvGetCols( srcmat, &refmathdr, start_col, end_col );
+        cvCopy( refmat, dstmat );
+    }
     __END__;
 }
 
 /*
 CVAPI( void ) cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end_col )
 {
-    CV_FUNCNAME( "cvSetCols" );
+CV_FUNCNAME( "cvSetCols" );
     __BEGIN__;
     int col, row, elem;
     int coi = 0;
@@ -115,21 +126,6 @@ CVAPI( void ) cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end
     __END__;
 }
 */
-
-/**
-* Set array col
-* 
-* @param subarr Input sub array
-* @param arr Target array
-* @param col Zero-based index of the col. 
-* @return void
-* @uses cvSetCols
-*/
-CV_INLINE void cvSetCol( const CvArr* subarr, CvArr* arr, int col )
-{
-    cvSetCols( subarr, arr, col, col + 1 );
-}
-
 
 #endif
 
