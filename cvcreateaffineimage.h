@@ -96,6 +96,7 @@ CVAPI(IplImage*) cvCreateAffineImage( const IplImage* src, const CvMat* affine,
     CV_ASSERT( src->depth == IPL_DEPTH_8U );
     CV_ASSERT( affine->rows == 2 && affine->cols == 3 );
 
+    // cvBoxPoints supports only rotation (no shear deform)
     // original 4 corner
     pt[0].x = 0;              pt[0].y = 0;
     pt[1].x = src->width - 1; pt[1].y = 0;

@@ -57,7 +57,7 @@ CVAPI(void) cvPutImageROI( const IplImage* src,
  * @param [mask = NULL] The mask image
  * @param [circumscribe = 0]
  *                     Put a circular (ellipsoidal) image as a circumscribed 
- *                     circle (ellipsoid) rather than a inscribed cicle (ellipsoid)
+ *                     circle (ellipsoid) rather than a inscribed circle (ellipsoid)
  * @return void
  */
 CVAPI(void) cvPutImageROI( const IplImage* src,
