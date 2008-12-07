@@ -27,14 +27,20 @@
 
 #include "cv.h"
 #include "cvaux.h"
+#include "cvcore.h"
 #include "highgui.h"
 #include <stdio.h>
+#define _USE_MATH_DEFINES
 #include <math.h>
 using namespace std;
+
 #include "cvrect32f.h"
 #include "cvcreateaffine.h"
 #include "cvdrawrectangle.h"
 #include "cvcropimageroi.h"
 #include "cvpointnorm.h"
+#include "cvinvaffine.h"
+#include "cvcreateaffineimage.h"
+#include "cvputimageroi.h"
 
 #endif
