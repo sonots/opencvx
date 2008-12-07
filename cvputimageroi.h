@@ -38,7 +38,7 @@ CVAPI(void) cvPutImageROI( const IplImage* src,
                            IplImage* dst,
                            CvRect32f rect32f = cvRect32f(0,0,1,1,0),
                            CvPoint2D32f shear = cvPoint2D32f(0,0),
-                           IplImage* mask = NULL,
+                           const IplImage* mask = NULL,
                            bool circumscribe = 0 );
 
 /**
@@ -61,26 +61,23 @@ CVAPI(void) cvPutImageROI( const IplImage* src,
                            IplImage* dst, 
                            CvRect32f rect32f, 
                            CvPoint2D32f shear,
-                           IplImage* mask,
+                           const IplImage* mask,
                            bool circumscribe )
 {
     CvRect rect;
     float tx, ty, sx, sy, angle;
-    IplImage* _mask;
+    IplImage* _src = NULL;
+    IplImage* _mask = NULL;
     CV_FUNCNAME( "cvPutImageROI" );
     __BEGIN__;
     rect = cvRectFromRect32f( rect32f );
+    angle = rect32f.angle;
+
     CV_ASSERT( rect.width > 0 && rect.height > 0 );
     CV_ASSERT( src->depth == dst->depth );
     CV_ASSERT( src->nChannels == dst->nChannels );
-    if( mask == NULL )
-    {
-        _mask = cvCreateImage( cvGetSize(src), IPL_DEPTH_8U, 1 );
-        cvSet( _mask, cvScalar(1) );
-    } else {
-        _mask = mask;
-        CV_ASSERT( src->width == _mask->width && src->height == _mask->height );
-    }
+    if( mask != NULL )
+        CV_ASSERT( src->width == mask->width && src->height == mask->height );
 
     if( circumscribe )
     {
@@ -104,37 +101,69 @@ CVAPI(void) cvPutImageROI( const IplImage* src,
         rect = cvRectFromRect32f( rect32f );
     }
 
-    CvMat* affine = cvCreateMat( 2, 3, CV_32FC1 );
-    tx = 0;
-    ty = 0;
-    sx = rect32f.width / (float)src->width;
-    sy = rect32f.height / (float)src->height;
-    angle = rect32f.angle;
-    cvCreateAffine( affine, cvRect32f( tx, ty, sx, sy, angle ), shear );
-
-    CvPoint origin;
-    IplImage* srctrans = cvCreateAffineImage( src, affine, CV_AFFINE_FULL, &origin, CV_RGB(0,0,0) );
-    IplImage* masktrans  = cvCreateAffineImage( _mask, affine, CV_AFFINE_FULL, NULL, cvScalar(0) );
-    for( int xp = 0; xp < srctrans->width; xp++ )
+    _src = (IplImage*)src;
+    _mask = (IplImage*)mask;
+    if( rect.width != src->width && rect.height != src->height )
     {
-        int x = xp + rect.x + origin.x;
-        for( int yp = 0; yp < srctrans->height; yp++ )
+        _src = cvCreateImage( cvSize( rect.width, rect.height ), src->depth, src->nChannels );
+        cvResize( src, _src );
+        if( mask != NULL )
         {
-            int y = yp + rect.y + origin.y;
-            if( x < 0 || x >= dst->width || y < 0 || y >= dst->height ) continue;
-            if( CV_IMAGE_ELEM( masktrans, uchar, yp, xp ) == 0 ) continue;
-            for( int ch = 0; ch < srctrans->nChannels; ch++ )
-            {
-                dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
-                    = srctrans->imageData[srctrans->widthStep * yp + xp * srctrans->nChannels + ch];
-            }
+            _mask = cvCreateImage( cvSize( rect.width, rect.height ), mask->depth, mask->nChannels );
+            cvResize( mask, _mask );
         }
     }
-    if( mask == NULL )
+
+    if( angle == 0 && shear.x == 0 && shear.y == 0 && 
+        rect.x >= 0 && rect.y >= 0 && 
+        rect.x + rect.width < dst->width && rect.y + rect.height < dst->height )
+    {
+        cvSetImageROI( dst, rect );
+        cvCopy( _src, dst, _mask );
+        cvResetImageROI( dst );
+    }
+    else
+    {
+        if( _mask == NULL )
+        {
+            _mask = cvCreateImage( cvGetSize(_src), IPL_DEPTH_8U, 1 );
+            cvSet( _mask, cvScalar(1) );
+        }
+
+        CvMat* affine = cvCreateMat( 2, 3, CV_32FC1 );
+        tx = 0;
+        ty = 0;
+        sx = rect32f.width / (float)_src->width;
+        sy = rect32f.height / (float)_src->height;
+        angle = rect32f.angle;
+        cvCreateAffine( affine, cvRect32f( tx, ty, sx, sy, angle ), shear );
+        
+        CvPoint origin;
+        IplImage* srctrans = cvCreateAffineImage( _src, affine, CV_AFFINE_FULL, &origin, CV_RGB(0,0,0) );
+        IplImage* masktrans  = cvCreateAffineImage( _mask, affine, CV_AFFINE_FULL, NULL, cvScalar(0) );
+        for( int xp = 0; xp < srctrans->width; xp++ )
+        {
+            int x = xp + rect.x + origin.x;
+            for( int yp = 0; yp < srctrans->height; yp++ )
+            {
+                int y = yp + rect.y + origin.y;
+                if( x < 0 || x >= dst->width || y < 0 || y >= dst->height ) continue;
+                if( CV_IMAGE_ELEM( masktrans, uchar, yp, xp ) == 0 ) continue;
+                for( int ch = 0; ch < srctrans->nChannels; ch++ )
+                {
+                    dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
+                        = srctrans->imageData[srctrans->widthStep * yp + xp * srctrans->nChannels + ch];
+                }
+            }
+        }
+        cvReleaseMat( &affine );
+        cvReleaseImage( &srctrans );
+        cvReleaseImage( &masktrans );
+    }
+    if( mask != _mask )
         cvReleaseImage( &_mask );
-    cvReleaseMat( &affine );
-    cvReleaseImage( &srctrans );
-    cvReleaseImage( &masktrans );
+    if( src != _src )
+        cvReleaseImage( &_src );
     __END__;
 }
 

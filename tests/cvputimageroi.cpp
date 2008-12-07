@@ -10,6 +10,7 @@
 #include "cvaux.h"
 #include "highgui.h"
 #include <stdio.h>
+#include "../cvxmat.h"
 #include "../cvputimageroi.h"
 
 int main(int argc, char** argv)
@@ -32,6 +33,7 @@ int main(int argc, char** argv)
                              45) );
     cvNamedWindow( "After" );
     cvShowImage( "After", img );
+
     cvPutImageROI( patch, img, 
                    cvRect32f(img->width/2.0, img->height/2.0,
                              img->width/4.0, img->height/4.0,
@@ -41,5 +43,16 @@ int main(int argc, char** argv)
                    true );
     cvNamedWindow( "After2" );
     cvShowImage( "After2", img );
+
+    cvPutImageROI( patch, img, 
+                   cvRect32f( 0, 0, patch->width / 2.0, patch->height / 2.0) );
+    cvNamedWindow( "After3" );
+    cvShowImage( "After3", img );
+
+    cvPutImageROI( patch, img, 
+                   cvRect32f( 0, 0, patch->width, patch->height ) );
+    cvNamedWindow( "After4" );
+    cvShowImage( "After4", img );
+
     cvWaitKey( 0 );
 }
