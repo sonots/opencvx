@@ -72,23 +72,23 @@ CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
 #define cvRect32fFromBox2D(box) (cvRect32fFromBox32f(cvBox32fFromBox2D(box)))
 
 #define cvPrintRect32f(rect)                                          \
-    printf( "x:%f y:%f width:%f height:%f angle:%f\n",                \
+    printf( "x=%f y=%f width=%f height=%f angle=%f\n",                \
             rect.x, rect.y, rect.width, rect.height, rect.angle );    \
     fflush( stdout );
 #define cvPrintBox32f(box)                                         \
-    printf( "cx:%f cy:%f width:%f height:%f angle:%f\n",           \
+    printf( "cx=%f cy=%f width=%f height=%f angle=%f\n",           \
             box.cx, box.cy, box.width, box.height, box.angle );    \
     fflush( stdout );
 #ifndef cvPrintBox2D
 #define cvPrintBox2D(box)                                               \
-    printf( "cx:%f cy:%f width:%f height:%f angle:%f\n",                \
+    printf( "cx=%f cy=%f width=%f height=%f angle=%f\n",                \
             box.center.x, box.center.y, box.size.width,                 \
             box.size.height, box.angle );                               \
     fflush( stdout );
 #endif
 #ifndef cvPrintRect
 #define cvPrintRect(rect)                                 \
-    printf( "x:%d y:%d width:%d height:%d",               \
+    printf( "x=%d y=%d width=%d height=%d",               \
             rect.x, rect.y, rect.width, rect.height );    \
     fflush( stdout );
 #endif

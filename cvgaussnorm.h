@@ -32,6 +32,18 @@
 
 #include "cvmatelemcn.h"
 
+// @todo
+// void cvMatGaussNorm( const CvMat* samples, CvMat* dst );
+// #define cvGaussNorm( sample, dst ) cvMatGaussNorm( sample, dst )
+// void cvImgGaussNorm( const IplImage* img, IplImage* normed ) {
+//    IplImage* sample, samplehdr;
+//    IplImage* dst, dsthdr;
+//    sample = cvReshape( img, &samplehdr, 1, img->nChannels );
+//    dst = cvReshape( normed, &dsthdr, 1, dst->nChannels );
+//    // make sure how it is reshaped
+//    cvMatGaussNorm( sample, dst );
+// }
+
 void cvImgGaussNorm( const CvArr* img, CvArr* normed );
 
 /**
