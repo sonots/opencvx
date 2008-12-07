@@ -44,6 +44,8 @@ CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig,
  * Crop image with rotated and sheared rectangle
  *
  * IplImage* dst = cvCreateImage( cvSize( rect.width, rect.height ), img->depth, img->nChannels );
+ * Use CvBox32f to define rotation center as the center of rectangle,
+ * and use cvRect32fBox32( box32f ) to pass argument. 
  *
  * @param img          The target image
  * @param dst          The cropped image

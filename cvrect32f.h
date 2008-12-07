@@ -56,7 +56,7 @@ typedef struct CvBox32f {
 CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 );
 CV_INLINE CvBox32f  cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 );
 
-CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect );
+CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle = 0 );
 CV_INLINE CvRect    cvRectFromRect32f( CvRect32f rect );
 CV_INLINE CvBox32f  cvBox32fFromBox2D( CvBox2D box );
 CV_INLINE CvBox2D   cvBox2DFromBox32f( CvBox32f box );
@@ -107,9 +107,9 @@ CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, floa
     return box;
 }
 
-CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect )
+CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle )
 {
-    return cvRect32f( rect.x, rect.y, rect.width, rect.height );
+    return cvRect32f( rect.x, rect.y, rect.width, rect.height, angle );
 }
 
 CV_INLINE CvRect cvRectFromRect32f( CvRect32f rect )

@@ -44,11 +44,14 @@ CVAPI(void) cvPutImageROI( const IplImage* src,
 /**
  * Put a source image on the specified region on a target image 
  *
+ * Use CvBox32f to define rotation center as the center of rectangle,
+ * and use cvRect32fBox32( box32f ) to pass argument. 
+ *
  * @param src          The source image
  * @param dst          The target image
  * @param [rect32f = cvRect32f(0,0,1,1,0)]
  *                     The rectangle region (x,y,width,height) to put
- *                     the rotation angle in degree where roation center is (x,y)
+ *                     the rotation angle in degree where the rotation center is (x,y)
  * @param [shear = cvPoint2D32f(0,0)]
  *                     The shear deformation parameter shx and shy
  * @param [mask = NULL] The mask image

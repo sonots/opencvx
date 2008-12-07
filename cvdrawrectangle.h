@@ -50,10 +50,13 @@ CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img,
 /**
  * Draw an rotated and sheared rectangle
  *
+ * Use CvBox32f to define rotation center as the center of rectangle,
+ * and use cvRect32fBox32( box32f ) to pass argument. 
+ *
  * @param img             The image to be drawn rectangle
  * @param [rect32f = cvRect32f(0,0,1,1,0)]
- *                        Rectangle to be shown and
- *                        Rotation degree of rectangle
+ *                        The rectangle (x,y,width,height) to be shown and
+ *                        the rotation angle in degree where the rotation center is (x,y)
  * @param [shear = cvPoint2D32f(0,0)]
  *                        The shear deformation parameter shx and shy
  * @param [color  = CV_RGB(255, 255, 0)] 
