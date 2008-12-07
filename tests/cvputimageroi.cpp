@@ -32,5 +32,14 @@ int main(int argc, char** argv)
                              45) );
     cvNamedWindow( "After" );
     cvShowImage( "After", img );
+    cvPutImageROI( patch, img, 
+                   cvRect32f(img->width/2.0, img->height/2.0,
+                             img->width/4.0, img->height/4.0,
+                             45),
+                   cvPoint2D32f(0,0),
+                   NULL,
+                   true );
+    cvNamedWindow( "After2" );
+    cvShowImage( "After2", img );
     cvWaitKey( 0 );
 }
