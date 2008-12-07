@@ -139,26 +139,34 @@ CV_INLINE CvBox2D cvBox2DFromBox32f( CvBox32f box )
 CVAPI(CvBox32f) cvBox32fFromRect32f( CvRect32f rect )
 {
     float cx, cy;
-    CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
-    cv2DRotationMatrix( cvPoint2D32f( rect.x, rect.y ), rect.angle, 1.0, R );
+    // x + ( x + width - 1 ) / 2 = cx
     cx = ( 2 * rect.x + rect.width - 1 ) / 2.0;
     cy = ( 2 * rect.y + rect.height - 1 ) / 2.0;
-    cx = cvmGet( R, 0, 0 ) * cx + cvmGet( R, 0, 1 ) * cy + cvmGet( R, 0, 2 );
-    cy = cvmGet( R, 1, 0 ) * cx + cvmGet( R, 1, 1 ) * cy + cvmGet( R, 1, 2 );
-    cvReleaseMat( &R );
+    if( rect.angle != 0 )
+    {
+        CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+        cv2DRotationMatrix( cvPoint2D32f( rect.x, rect.y ), rect.angle, 1.0, R );
+        cx = cvmGet( R, 0, 0 ) * cx + cvmGet( R, 0, 1 ) * cy + cvmGet( R, 0, 2 );
+        cy = cvmGet( R, 1, 0 ) * cx + cvmGet( R, 1, 1 ) * cy + cvmGet( R, 1, 2 );
+        cvReleaseMat( &R );
+    }
     return cvBox32f( cx, cy, rect.width, rect.height, rect.angle );
 }
 
 CVAPI(CvRect32f) cvRect32fFromBox32f( CvBox32f box )
 {
     float x, y;
-    CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
-    cv2DRotationMatrix( cvPoint2D32f( box.cx, box.cy ), box.angle, 1.0, R );
+    // x + ( x + width - 1 ) / 2 = cx
     x = ( 2 * box.cx + 1 - box.width ) / 2.0;
     y = ( 2 * box.cy + 1 - box.height ) / 2.0;
-    x = cvmGet( R, 0, 0 ) * x + cvmGet( R, 0, 1 ) * y + cvmGet( R, 0, 2 );
-    y = cvmGet( R, 1, 0 ) * x + cvmGet( R, 1, 1 ) * y + cvmGet( R, 1, 2 );
-    cvReleaseMat( &R );
+    if( box.angle != 0.0 )
+    {
+        CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
+        cv2DRotationMatrix( cvPoint2D32f( box.cx, box.cy ), box.angle, 1.0, R );
+        x = cvmGet( R, 0, 0 ) * x + cvmGet( R, 0, 1 ) * y + cvmGet( R, 0, 2 );
+        y = cvmGet( R, 1, 0 ) * x + cvmGet( R, 1, 1 ) * y + cvmGet( R, 1, 2 );
+        cvReleaseMat( &R );
+    }
     return cvRect32f( x, y, box.width, box.height, box.angle );
 }
 
