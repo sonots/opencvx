@@ -51,7 +51,7 @@ CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig,
  * @param dst          The cropped image
  * @param [rect32f = cvRect32f(0,0,1,1,0)]
  *                     The rectangle region (x,y,width,height) to crop and 
- *                     the rotation angle in degree
+ *                     the rotation angle in degree where the rotation center is (x,y)
  * @param [shear = cvPoint2D32f(0,0)]
  *                     The shear deformation parameter shx and shy
  * @return void
