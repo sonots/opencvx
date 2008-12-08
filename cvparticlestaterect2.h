@@ -82,8 +82,16 @@ double dynamics[] = {
 /********************** Function Prototypes *********************************/
 
 // Functions for CvParticleState structure ( constructor, getter, setter )
-inline CvParticleState cvParticleState( double x, double y, double width, double height, double angle = 0,
-                                        double xp = 0, double yp = 0, double widthp = 0, double heightp = 0, double anglep =0 );
+inline CvParticleState cvParticleState( double x, 
+                                        double y, 
+                                        double width, 
+                                        double height, 
+                                        double angle = 0,
+                                        double xp = 0, 
+                                        double yp = 0, 
+                                        double widthp = 0, 
+                                        double heightp = 0,
+                                        double anglep =0 );
 CvParticleState cvParticleStateGet( const CvParticle* p, int p_id );
 void cvParticleStateSet( const CvParticle* p, int p_id, CvParticleState &state );
 
@@ -97,11 +105,22 @@ void cvParticleStatePrint( const CvParticleState& state );
 
 /****************** Functions for CvParticleState structure ******************/
 
+// This kinds of state definitions are not necessary, 
+// but helps readability of codes for sure.
+
 /**
  * Constructor
  */
-inline CvParticleState cvParticleState( double x, double y, double width, double height, double angle,
-                                        double xp, double yp, double widthp, double heightp, double anglep )
+inline CvParticleState cvParticleState( double x, 
+                                        double y, 
+                                        double width, 
+                                        double height, 
+                                        double angle,
+                                        double xp, 
+                                        double yp, 
+                                        double widthp, 
+                                        double heightp, 
+                                        double anglep )
 {
     CvParticleState state = { x, y, width, height, angle, 
                               xp, yp, widthp, heightp, anglep };

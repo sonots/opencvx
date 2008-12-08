@@ -327,7 +327,7 @@ void cvParticleInit( CvParticle* p, const CvParticle* init )
     if( init )
     {
         int *num_copy;
-        CvMat init_state;
+        CvMat init_particle;
 
         int divide = p->num_particles / init->num_particles;
         int remain = p->num_particles - divide * init->num_particles;
@@ -340,10 +340,10 @@ void cvParticleInit( CvParticle* p, const CvParticle* init )
         k = 0;
         for( i = 0; i < init->num_particles; i++ )
         {
-            cvGetCol( init->particles, &init_state, i );
+            cvGetCol( init->particles, &init_particle, i );
             for( j = 0; j < num_copy[i]; j++ )
             {
-                cvSetCol( &init_state, p->particles, k++ );
+                cvSetCol( &init_particle, p->particles, k++ );
             }
         }
 

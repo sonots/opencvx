@@ -22,15 +22,20 @@
 #include <time.h>
 
 // General particle filter structure
+// cvParticleXXX are functions in this
 #include "../cvparticle.h"
-// Rotated rectangle + 2nd AR model particle filter
-#include "../cvparticlebox2.h"
+// Rotated rectangle + 2nd AR model state model
+// cvParticleStateXXX are functions in this
+#include "../cvparticlestaterect2.h"
+// Template matching observertion model
+// cvParticleObserveXXX are functions in this
+#include "../cvparticleobservetemplate.h"
 
 /****************************** Global *****************************/
 
-extern int num_states; // @cvparticlerotrect2.h
+extern int num_states; // @cvparticlestaterect2.h
+extern CvSize feature_size; // @cvparticleobservetemplate.h
 int num_particles = 1000;
-CvSize feature_size = cvSize(24, 24);
 
 /******************************* Structures ************************/
 
@@ -45,38 +50,6 @@ typedef struct IcvMouseParam {
 
 void icvGetRegion( IplImage*, CvRect* );
 void icvMouseCallback( int, int, int, int, void* );
-void cvParticleObserveLikelihood( CvParticle* p, IplImage* cur_frame, IplImage *pre_frame );
-
-/*************************** Observation model *********************/
-
-// kinds of template matching based likelihood measurement
-void cvParticleObserveLikelihood( CvParticle* p, IplImage* frame, IplImage *reference )
-{
-    int i;
-    double likeli;
-    IplImage *patch;
-    IplImage *resize = cvCreateImage( feature_size, frame->depth, frame->nChannels );
-    for( i = 0; i < p->num_particles; i++ ) 
-    {
-        CvParticleState s = cvParticleStateGet( p, i );
-        CvBox32f box32f = cvBox32f( s.x, s.y, s.width, s.height, s.angle );
-        CvRect32f rect32f = cvRect32fFromBox32f( box32f );
-        CvRect rect = cvRectFromRect32f( rect32f );
-        
-        patch = cvCreateImage( cvSize(rect.width,rect.height), frame->depth, frame->nChannels );
-        cvCropImageROI( frame, patch, rect32f );
-        cvResize( patch, resize );
-
-        // log likeli. kinds of Gaussian model
-        // exp( -d^2 / sigma^2 )
-        // sigma can be omitted because common param does not affect ML estimate
-        likeli = -cvNorm( resize, reference, CV_L2 ); 
-        cvmSet( p->probs, 0, i, likeli );
-        
-        cvReleaseImage( &patch );
-    }
-    cvReleaseImage( &resize );
-}
 
 /**************************** Main ********************************/
 int main( int argc, char** argv )
