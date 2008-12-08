@@ -29,7 +29,6 @@
 #define CV_PARTICLE_OBSERVE_TEMPLATE_H
 
 #include "cvparticle.h"
-#include "cvparticlestaterect2.h"
 #include "cvrect32f.h"
 #include "cvcropimageroi.h"
 using namespace std;
