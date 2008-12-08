@@ -30,7 +30,13 @@
 
 CV_INLINE void cvSetCols( const CvArr* src, CvArr* dst,
                           int start_col, int end_col );
-#define cvSetCol(src, dst, col) (cvSetCols( src, dst, col, col + 1))
+
+//#define cvSetCol(src, dst, col) (cvSetCols( src, dst, col, col + 1))
+// trouble with cvSetCol(src,dst,col++)
+CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col )
+{
+    cvSetCols( src, dst, col, col+1 );
+}
 
 /**
  * Set array col or col span

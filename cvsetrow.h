@@ -30,7 +30,13 @@
 
 CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
                          int start_row, int end_row, int delta_row = 1 );
-#define cvSetRow(src, dst, row) (cvSetRows( src, dst, row, row + 1))
+
+//#define cvSetRow(src, dst, row) (cvSetRows( src, dst, row, row + 1))
+// trouble with cvSetRow(src,dst,row++)
+CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row )
+{
+    cvSetRows( src, dst, row, row+1 );
+}
 
 /**
  * Set array row or row span
@@ -51,7 +57,7 @@ CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
  *                  Index step in the row span. That is, the function extracts every 
  *                  delta_row-th row from start_row and up to (but not including) end_row. 
  * @return void
- * @see cvSetRow( src, dst, row ) // cvSetCols( src, dst, row, row + 1 )
+ * @see cvSetRow( src, dst, row ) // cvSetRows( src, dst, row, row + 1 )
  */
 CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
                          int start_row, int end_row, int delta_row )
