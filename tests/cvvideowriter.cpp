@@ -25,11 +25,12 @@ main (int argc, char **argv)
   if ( argc == 1 || (argc >= 2 && strlen (argv[1]) == 1 && isdigit (argv[1][0])) )
   {
     capture = cvCreateCameraCapture (argc == 2 ? argv[1][0] - '0' : 0);
-    fps     = cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
+    fps     = 20.0;
     width   = 320;
     height  = 240;
-    cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_WIDTH, width);
-    cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_HEIGHT, height);
+    //fps     = cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
+    //cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_WIDTH, width);
+    //cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_HEIGHT, height);
   }
   else if ( argc >= 2 )
   {
@@ -42,9 +43,11 @@ main (int argc, char **argv)
 
   printf ("Write to cap.avi. Finish with Esc.\n");
   // FourCC http://www.fourcc.org/codecs.php
-  writer = cvCreateVideoWriter( "cap.avi", 
-                                CV_FOURCC('M','J','P','G'),
-                                fps, cvSize((int)width,(int)height) );
+  //writer = cvCreateVideoWriter( "cap.avi", 
+  //                              CV_FOURCC('D','I','V','X'),
+  //                              fps, cvSize((int)width,(int)height) );
+  writer = cvCreateVideoWriter( "cap.avi", -1,
+      fps, cvSize((int)width,(int)height) );
 
   //cvInitFont (&font, CV_FONT_HERSHEY_COMPLEX, 0.7, 0.7);
   cvNamedWindow ("Capture", CV_WINDOW_AUTOSIZE);
