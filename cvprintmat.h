@@ -32,7 +32,7 @@
 
 CV_INLINE void cvPrintMatProperty( const CvMat* mat );
 CV_INLINE void cvPrintImageProperty( const IplImage* img );
-CV_INLINE void cvPrintMat( const CvArr* arr );
+CV_INLINE void cvPrintMat( const CvArr* arr, bool transpose = false );
 
 /**
 * Print CvMat Property
@@ -72,7 +72,7 @@ CV_INLINE void cvPrintImageProperty( const IplImage* img )
 * @param arr array
 * @return void
 */
-CV_INLINE void cvPrintMat( const CvArr* arr )
+CV_INLINE void cvPrintMat( const CvArr* arr, bool transpose )
 {
     CV_FUNCNAME( "cvPrintMat" );
     __BEGIN__;
@@ -81,6 +81,7 @@ CV_INLINE void cvPrintMat( const CvArr* arr )
     CvMat matstub, *mat = (CvMat*)arr;
     int depth, nChannels;
     CvScalar value;
+    int rows, cols;
     if( !CV_IS_MAT( mat ) )
     {
         CV_CALL( mat = cvGetMat( mat, &matstub, &coi ) ); // i.e. IplImage to CvMat
@@ -88,11 +89,14 @@ CV_INLINE void cvPrintMat( const CvArr* arr )
     }
     depth = CV_MAT_DEPTH( mat->type );
     nChannels = CV_MAT_CN( mat->type );
-    for( row = 0; row < mat->rows; row++ )
+    rows = !transpose ? mat->rows : mat->cols;
+    cols = !transpose ? mat->cols : mat->rows;
+    
+    for( row = 0; row < rows; row++ )
     {
-        for( col = 0; col < mat->cols; col++ )
+        for( col = 0; col < cols; col++ )
         {
-            value = cvGet2D( mat, row, col );
+            value = cvGet2D( mat, !transpose ? row : col, !transpose ? col : row );
             if( nChannels > 1 )
             {
                 printf( "(%lf", value.val[0] );
