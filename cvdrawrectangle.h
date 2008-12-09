@@ -105,8 +105,8 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
         {
             for( y = 0; y < rect.height; y += max(1, rect.height - 1) )
             {
-                xp = (int)( c * x + -s * y + 0.5 ) + rect.x;
-                yp = (int)( s * x + c * y + 0.5 ) + rect.y;
+                xp = cvRound( c * x + -s * y ) + rect.x;
+                yp = cvRound( s * x + c * y ) + rect.y;
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
                 for( ch = 0; ch < img->nChannels; ch++ )
                 {
@@ -119,8 +119,8 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
         {
             for( x = 0; x < rect.width; x += max( 1, rect.width - 1) )
             {
-                xp = (int)( c * x + -s * y + 0.5 ) + rect.x;
-                yp = (int)( s * x + c * y + 0.5 ) + rect.y;
+                xp = cvRound( c * x + -s * y ) + rect.x;
+                yp = cvRound( s * x + c * y ) + rect.y;
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
                 for( ch = 0; ch < img->nChannels; ch++ )
                 {
@@ -145,8 +145,8 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
             {
                 cvmSet( xy, 1, 0, y / rect32f.height );
                 cvMatMul( affine, xy, xyp );
-                xp = (int)( cvmGet( xyp, 0, 0 ) + 0.5 );
-                yp = (int)( cvmGet( xyp, 1, 0 ) + 0.5 );
+                xp = cvRound( cvmGet( xyp, 0, 0 ) );
+                yp = cvRound( cvmGet( xyp, 1, 0 ) );
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
                 for( ch = 0; ch < img->nChannels; ch++ )
                 {
@@ -161,8 +161,8 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
             {
                 cvmSet( xy, 0, 0, x / rect32f.width );
                 cvMatMul( affine, xy, xyp );
-                xp = (int)( cvmGet( xyp, 0, 0 ) + 0.5 );
-                yp = (int)( cvmGet( xyp, 1, 0 ) + 0.5 );
+                xp = cvRound( cvmGet( xyp, 0, 0 ) );
+                yp = cvRound( cvmGet( xyp, 1, 0 ) );
                 if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
                 for( ch = 0; ch < img->nChannels; ch++ )
                 {
