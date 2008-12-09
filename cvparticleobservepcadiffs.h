@@ -34,22 +34,23 @@
 #include "cvcropimageroi.h"
 #include "cvpcadiffs.h"
 #include "cvgaussnorm.h"
+#include <iostream>
 using namespace std;
 
 /********************************* Globals ******************************************/
 CvSize feature_size = cvSize(24, 24);
-string data_dir = ".";
+string data_dir = "";
 string data_pcaval = "pcaval.xml";
 string data_pcavec = "pcavec.xml";
 string data_pcaavg = "pcaavg.xml";
 
 /******************************* Globals in this file ******************************/
-CvMat **eigenvalues;
-CvMat **eigenvectors;
-CvMat **eigenavg;
+CvMat *eigenvalues;
+CvMat *eigenvectors;
+CvMat *eigenavg;
 
 /****************************** Function Prototypes ********************************/
-void cvParticleObserveInitilize();
+void cvParticleObserveInitialize();
 void cvParticleObserveFinalize();
 void icvPreprocess( const IplImage* patch, CvMat *mat );
 void icvGetFeatures( const CvParticle* p, const IplImage* frame, CvMat* features );
@@ -60,11 +61,24 @@ void cvParticleObserveLikelihood( CvParticle* p, IplImage* cur_frame, IplImage *
 /**
  * Initialization
  */
-void cvParticleObserveInitilize()
+void cvParticleObserveInitialize()
 {
-    eigenvalues = (CvMat*)cvLoad( (data_dir + data_pcaval).c_str() );
-    eigenvectors = (CvMat*)cvLoad( (data_dir + data_pcavec).c_str() );
-    eigenavg = (CvMat*)cvLoad( (data_dir + data_pcaavg).c_str() );
+    string filename;
+    filename = data_dir + data_pcaval;
+    if( (eigenvalues = (CvMat*)cvLoad( filename.c_str() )) == NULL ) {
+        cerr << filename << " was not loadable" << endl << flush;
+        exit( 1 );
+    }
+    filename = data_dir + data_pcavec;
+    if( (eigenvectors = (CvMat*)cvLoad( filename.c_str() )) == NULL ) {
+        cerr << filename << " was not loadable" << endl << flush;
+        exit( 1 );
+    }
+    filename = data_dir + data_pcaavg;
+    if( (eigenavg = (CvMat*)cvLoad( filename.c_str() )) == NULL ) {
+        cerr << filename << " was not loadable" << endl << flush;
+        exit( 1 );
+    }
 }
 
 /**
@@ -82,13 +96,22 @@ void cvParticleObserveFinalize()
  */
 void icvPreprocess( const IplImage* patch, CvMat *mat )
 {
-    IplImage *resize = cvCreateImage( cvSize(mat->rows, mat->cols), IPL_DEPTH_8U, 1 );
+    IplImage *gry;
+    if( patch->nChannels != 1 ) {
+        gry = cvCreateImage( cvGetSize(patch), patch->depth, 1 );
+        cvCvtColor( patch, gry, CV_BGR2GRAY );
+    } else {
+        gry = (IplImage*)patch;
+    }
+    IplImage *resize = cvCreateImage( cvSize(mat->rows, mat->cols), patch->depth, 1 );
 
-    cvResize( patch, resize );
+    cvResize( gry, resize );
     cvConvert( resize, mat );
     cvImgGaussNorm( mat, mat );
 
     cvReleaseImage( &resize );
+    if( gry != patch )
+        cvReleaseImage( &gry );
 }
 
 /**

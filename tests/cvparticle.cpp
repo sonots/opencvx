@@ -18,7 +18,6 @@
 #include "../cvrect32f.h"
 #include "../cvcropimageroi.h"
 #include "../cvdrawrectangle.h"
-#include "../cvskincolorpeer.h"
 #include <time.h>
 
 // General particle filter structure

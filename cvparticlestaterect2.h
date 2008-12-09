@@ -256,11 +256,9 @@ void cvParticleStateDraw( const CvParticle* p, IplImage* img, CvScalar color, in
             cvParticleStateDraw( p, img, color, i );
         }
     } else {
-        CvRect32f rect32f;
-        CvBox32f box32f;
         CvParticleState s = cvParticleStateGet( p, pid );
-        box32f = cvBox32f( s.x, s.y, s.width, s.height, s.angle );
-        rect32f = cvRect32fFromBox32f( box32f );
+        CvBox32f box32f = cvBox32f( s.x, s.y, s.width, s.height, s.angle );
+        CvRect32f rect32f = cvRect32fFromBox32f( box32f );
         cvDrawRectangle( img, rect32f, cvPoint2D32f(0,0), color );
     }
 }
