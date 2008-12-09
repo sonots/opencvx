@@ -32,8 +32,11 @@
 
 /****************************** Global *****************************/
 
-extern int num_states; // @cvparticlestaterect2.h
-extern CvSize feature_size; // @cvparticleobservetemplate.h
+//cvparticlestaterect2.h
+extern int num_states; 
+//cvparticleobservetemplate.h
+extern int num_observes;
+extern CvSize feature_size;
 int num_particles = 1000;
 
 /******************************* Structures ************************/
@@ -81,7 +84,7 @@ int main( int argc, char** argv )
 
     // configure particle filter
     bool logprob = true;
-    CvParticle *particle = cvCreateParticle( num_states, 1, num_particles, logprob );
+    CvParticle *particle = cvCreateParticle( num_states, num_observes, num_particles, logprob );
     CvParticleState std = cvParticleState (
         3.0,
         3.0,

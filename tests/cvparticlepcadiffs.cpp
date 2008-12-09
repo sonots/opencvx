@@ -64,6 +64,7 @@
 // cvparticlestaterect2.h
 extern int num_states;
 // cvparticleobservepcadiffs.h
+extern int num_observes;
 extern CvSize feature_size;
 extern string data_dir;
 extern string data_pcaval;
@@ -126,7 +127,7 @@ int main( int argc, char** argv )
 
     // configure particle filter
     bool logprob = true;
-    CvParticle *particle = cvCreateParticle( num_states, 1, num_particles, logprob );
+    CvParticle *particle = cvCreateParticle( num_states, num_observes, num_particles, logprob );
     CvParticleState std = cvParticleState (
         3.0,
         3.0,

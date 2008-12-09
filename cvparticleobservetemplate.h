@@ -33,7 +33,11 @@
 #include "cvcropimageroi.h"
 using namespace std;
 
+/********************* Globals **********************************/
+int num_observes = 1;
 CvSize feature_size = cvSize(24, 24);
+
+/******************** Function Prototypes **********************/
 void cvParticleObserveLikelihood( CvParticle* p, IplImage* cur_frame, IplImage *pre_frame );
 
 /**

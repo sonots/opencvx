@@ -38,6 +38,7 @@
 using namespace std;
 
 /********************************* Globals ******************************************/
+int    num_observes = 1;
 CvSize feature_size = cvSize(24, 24);
 string data_dir = "";
 string data_pcaval = "pcaval.xml";
