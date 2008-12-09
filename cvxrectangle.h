@@ -39,6 +39,8 @@ using namespace std;
 #include "cvdrawrectangle.h"
 #include "cvcropimageroi.h"
 #include "cvpointnorm.h"
+#include "cvrectpoints.h"
+#include "cvpointrecttest.h"
 #include "cvinvaffine.h"
 #include "cvcreateaffineimage.h"
 #include "cvputimageroi.h"
