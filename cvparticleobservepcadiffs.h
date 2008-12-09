@@ -66,17 +66,17 @@ void cvParticleObserveInitialize()
     string filename;
     filename = data_dir + data_pcaval;
     if( (eigenvalues = (CvMat*)cvLoad( filename.c_str() )) == NULL ) {
-        cerr << filename << " was not loadable" << endl << flush;
+        cerr << filename << " is not loadable." << endl << flush;
         exit( 1 );
     }
     filename = data_dir + data_pcavec;
     if( (eigenvectors = (CvMat*)cvLoad( filename.c_str() )) == NULL ) {
-        cerr << filename << " was not loadable" << endl << flush;
+        cerr << filename << " is not loadable." << endl << flush;
         exit( 1 );
     }
     filename = data_dir + data_pcaavg;
     if( (eigenavg = (CvMat*)cvLoad( filename.c_str() )) == NULL ) {
-        cerr << filename << " was not loadable" << endl << flush;
+        cerr << filename << " is not loadable." << endl << flush;
         exit( 1 );
     }
 }
