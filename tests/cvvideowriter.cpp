@@ -16,41 +16,52 @@ main (int argc, char **argv)
 {
   CvCapture *capture = 0;
   IplImage *frame = 0;
-  CvVideoWriter *vw;
-  double w = 320, h = 240;
+  CvVideoWriter *writer;
   int c, num = 0;
   CvFont font;
   //char str[64];
 
-  // (1)コマンド引数によって指定された番号のカメラに対するキャプチャ構造体を作成する
-  if (argc == 1 || (argc == 2 && strlen (argv[1]) == 1 && isdigit (argv[1][0])))
-    capture = cvCaptureFromCAM (argc == 2 ? argv[1][0] - '0' : 0);
+  double fps, width, height;
+  if ( argc == 1 || (argc >= 2 && strlen (argv[1]) == 1 && isdigit (argv[1][0])) )
+  {
+    capture = cvCreateCameraCapture (argc == 2 ? argv[1][0] - '0' : 0);
+    fps     = cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
+    width   = 320;
+    height  = 240;
+    cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_WIDTH, width);
+    cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_HEIGHT, height);
+  }
+  else if ( argc >= 2 )
+  {
+    capture = cvCaptureFromFile(argv[1]);
+    fps     = cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
+    width   = cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH);
+    height  = cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT);
+  }
+  printf ("fps=%f width=%f height=%f\n", fps, width, height);
 
-  // (2)キャプチャサイズを設定する
-  cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_WIDTH, w);
-  cvSetCaptureProperty (capture, CV_CAP_PROP_FRAME_HEIGHT, h);
-
-  // (3)ビデオライタ構造体を作成する
   printf ("Write to cap.avi. Finish with Esc.\n");
-  vw = cvCreateVideoWriter ("cap.avi", CV_FOURCC ('X', 'V', 'I', 'D'), 15, cvSize ((int) w, (int) h));
+  // FourCC http://www.fourcc.org/codecs.php
+  writer = cvCreateVideoWriter( "cap.avi", 
+                                CV_FOURCC('M','J','P','G'),
+                                fps, cvSize((int)width,(int)height) );
 
-  cvInitFont (&font, CV_FONT_HERSHEY_COMPLEX, 0.7, 0.7);
+  //cvInitFont (&font, CV_FONT_HERSHEY_COMPLEX, 0.7, 0.7);
   cvNamedWindow ("Capture", CV_WINDOW_AUTOSIZE);
 
-  // (4)カメラから画像をキャプチャし，ファイルに書き出す
   while (1) {
     frame = cvQueryFrame (capture);
+    if( frame == NULL ) break;
     //snprintf (str, 64, "%03d[frame]", num);
     //cvPutText (frame, str, cvPoint (10, 20), &font, CV_RGB (0, 255, 100));
-    cvWriteFrame (vw, frame);
+    cvWriteFrame (writer, frame);
     cvShowImage ("Capture", frame);
     num++;
     c = cvWaitKey (10);
-    if (c == '\x1b')
+    if (c == 'q') // exit
       break;
   }
-  // (5)書き込みを終了し，構造体を解放する
-  cvReleaseVideoWriter (&vw);
+  cvReleaseVideoWriter (&writer);
   cvReleaseCapture (&capture);
   cvDestroyWindow ("Capture");
 
