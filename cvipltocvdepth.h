@@ -34,9 +34,15 @@ CVAPI(int) cvIplToCvDepth(int depth);
  *
  * Below codes would be useful as a reference:
  * <code>
- * int depth = CV_MAT_DEPTH(mat->type);
- * int nChannels = CV_MAT_CN(mat->type);
- * int type  = CV_MAKETYPE(depth, nChannels);
+ * int depth, nChannels, type;
+ * depth     = CV_MAT_DEPTH(mat->type);
+ * depth     = img->depth;
+ * nChannels = CV_MAT_CN(mat->type);
+ * nChannels = img->nChannels;
+ * type      = CV_MAKETYPE(depth, nChannels);
+ * type      = mat->type;
+ * type      = cvElemType(mat);
+ * type      = cvElemType(img);
  * </code>
  *
  * @param int IplImage depth
