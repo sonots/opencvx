@@ -47,7 +47,7 @@ CvScalar cvLogSum( const CvArr *arr )
 {
     IplImage* img = (IplImage*)arr, imgstub;
     IplImage *tmp, *tmp2;
-    int row, col, ch;
+    int ch;
     CvScalar sumval;
     CvScalar minval, maxval;
     CV_FUNCNAME( "cvLogSum" );

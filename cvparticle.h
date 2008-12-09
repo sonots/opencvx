@@ -102,7 +102,7 @@ void cvParticlePrint( const CvParticle*p, int p_id )
         }
     }
     else {
-        int i, k = 0;
+        int i;
         for( i = 0; i < p->num_states; i++ )
         {
             printf( "%6.1f ", cvmGet( p->particles, i, p_id ) );
@@ -298,7 +298,6 @@ void cvParticleBound( CvParticle* p )
     int row, col;
     double lower, upper;
     bool circular;
-    int depend;
     CvMat* stateparticles, hdr;
     float state;
     // @todo:     np.width   = (double)MAX( 2.0, MIN( maxX - 1 - x, width ) );
@@ -334,7 +333,7 @@ void cvParticleBound( CvParticle* p )
  */
 void cvParticleTransition( CvParticle* p )
 {
-    int i, j;
+    int i;
     CvMat* transits = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
     CvMat* noises   = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
     CvMat* noise, noisehdr;
@@ -486,12 +485,12 @@ void cvReleaseParticle( CvParticle** particle )
     p = *particle;
     if( !p ) EXIT;
     
-    cvReleaseMat( &p->dynamics );
-    cvReleaseMat( &p->std );
-    cvReleaseMat( &p->bound );
-    cvReleaseMat( &p->particles );
-    cvReleaseMat( &p->probs );
-    cvFree( &p );
+    CV_CALL( cvReleaseMat( &p->dynamics ) );
+    CV_CALL( cvReleaseMat( &p->std ) );
+    CV_CALL( cvReleaseMat( &p->bound ) );
+    CV_CALL( cvReleaseMat( &p->particles ) );
+    CV_CALL( cvReleaseMat( &p->probs ) );
+    CV_CALL( cvFree( &p ) );
     __END__;
 }
 
