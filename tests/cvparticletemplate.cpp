@@ -38,6 +38,8 @@ extern int num_states;
 extern int num_observes;
 extern CvSize feature_size;
 int num_particles = 1000;
+char export_filename[2048];
+const char* export_format = "%s_%04d.png";
 
 /******************************* Structures ************************/
 
@@ -57,6 +59,7 @@ void icvMouseCallback( int, int, int, int, void* );
 int main( int argc, char** argv )
 {
     IplImage *frame, *reference, *tmp;
+    int frame_num = 0;
     char* vid_file;
     CvCapture* video;
 
@@ -122,20 +125,28 @@ int main( int argc, char** argv )
         cvParticleObserveLikelihood( particle, frame, reference );
 
         // draw all particles
-        cvParticleStateDraw( particle, frame, CV_RGB(0,0,255), -1 );
-        // draw most probable particles
-        int maxp = cvParticleMaxParticle( particle ); 
-        cvParticleStateDraw( particle, frame, CV_RGB(255,0,0), maxp );
-        printf( "Most probable particle's state w/ prob:" );
-        double maxprob = cvmGet( particle->particle_probs, 0, maxp );
-        printf( "%f\n", logprob ? exp( maxprob ) : maxprob );
-        cvParticlePrint( particle, maxp );
+        for( int i = 0; i < particle->num_particles; i++ )
+        {
+            CvParticleState s = cvParticleStateGet( particle, i );
+            cvParticleStateDraw( s, frame, CV_RGB(0,0,255) );
+        }
+        // draw most probable particle
+        printf( "Most probable particle's state\n" );
+        int maxp_id = cvParticleMaxParticle( particle );
+        CvParticleState maxs = cvParticleStateGet( particle, maxp_id );
+        cvParticleStateDraw( maxs, frame, CV_RGB(255,0,0) );
+        cvParticleStatePrint( maxs );
 
         // resampling
         cvParticleResample( particle );
-        //cvPrintMat( particle->particle_probs );
 
         cvShowImage( "Show", frame );
+        // save pictures
+        sprintf( export_filename, export_format, vid_file, frame_num );
+        printf( "Export: %s\n", export_filename ); fflush( stdout );
+        cvSaveImage( export_filename, frame );
+
+        frame_num++;
         char c = cvWaitKey( 1000 );
         if(c == '\x1b')
             break;
