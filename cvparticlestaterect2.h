@@ -92,15 +92,17 @@ inline CvParticleState cvParticleState( double x,
                                         double widthp = 0, 
                                         double heightp = 0,
                                         double anglep =0 );
+CvParticleState cvParticleStateFromMat( const CvMat* state );
+void cvParticleStateToMat( const CvParticleState &state, CvMat* state_mat );
 CvParticleState cvParticleStateGet( const CvParticle* p, int p_id );
-void cvParticleStateSet( const CvParticle* p, int p_id, CvParticleState &state );
+void cvParticleStateSet( CvParticle* p, int p_id, const CvParticleState &state );
 
 // Particle Filter configuration
 void cvParticleStateConfig( CvParticle* p, CvSize imsize, CvParticleState& std );
 void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize );
 
 // Utility Functions
-void cvParticleStateDraw( const CvParticle* p, IplImage* frame, CvScalar color, int pid = -1 );
+void cvParticleStateDraw( const CvParticleState& state, IplImage* frame, CvScalar color );
 void cvParticleStatePrint( const CvParticleState& state );
 
 /****************** Functions for CvParticleState structure ******************/
@@ -128,47 +130,73 @@ inline CvParticleState cvParticleState( double x,
 }
 
 /**
- * Get a state (particle)
+ * Convert a matrix state representation to a state structure
+ *
+ * @param state     num_states x 1 matrix
+ */
+CvParticleState cvParticleStateFromMat( const CvMat* state )
+{
+    CvParticleState s;
+    s.x       = cvmGet( state, 0, 0 );
+    s.y       = cvmGet( state, 1, 0 );
+    s.width   = cvmGet( state, 2, 0 );
+    s.height  = cvmGet( state, 3, 0 );
+    s.angle   = cvmGet( state, 4, 0 );
+    s.xp      = cvmGet( state, 5, 0 );
+    s.yp      = cvmGet( state, 6, 0 );
+    s.widthp  = cvmGet( state, 7, 0 );
+    s.heightp = cvmGet( state, 8, 0 );
+    s.anglep  = cvmGet( state, 9, 0 );
+    return s;
+}
+
+/**
+ * Convert a state structure to CvMat
+ *
+ * @param state        A CvParticleState structure
+ * @param state_mat    num_states x 1 matrix
+ * @return void
+ */
+void cvParticleStateToMat( const CvParticleState& state, CvMat* state_mat )
+{
+    cvmSet( state_mat, 0, 0, state.x );
+    cvmSet( state_mat, 1, 0, state.y );
+    cvmSet( state_mat, 2, 0, state.width );
+    cvmSet( state_mat, 3, 0, state.height );
+    cvmSet( state_mat, 4, 0, state.angle );
+    cvmSet( state_mat, 5, 0, state.xp );
+    cvmSet( state_mat, 6, 0, state.yp );
+    cvmSet( state_mat, 7, 0, state.widthp );
+    cvmSet( state_mat, 8, 0, state.heightp );
+    cvmSet( state_mat, 9, 0, state.anglep );
+}
+
+/**
+ * Get a state from a particle filter structure
  *
  * @param p         particle filter struct
  * @param p_id      particle id
  */
 CvParticleState cvParticleStateGet( const CvParticle* p, int p_id )
 {
-    CvParticleState s;
-    s.x       = cvmGet( p->particles, 0, p_id );
-    s.y       = cvmGet( p->particles, 1, p_id );
-    s.width   = cvmGet( p->particles, 2, p_id );
-    s.height  = cvmGet( p->particles, 3, p_id );
-    s.angle   = cvmGet( p->particles, 4, p_id );
-    s.xp      = cvmGet( p->particles, 5, p_id );
-    s.yp      = cvmGet( p->particles, 6, p_id );
-    s.widthp  = cvmGet( p->particles, 7, p_id );
-    s.heightp = cvmGet( p->particles, 8, p_id );
-    s.anglep  = cvmGet( p->particles, 9, p_id );
-    return s;
+    CvMat* state, hdr;
+    state = cvGetCol( p->particles, &hdr, p_id );
+    return cvParticleStateFromMat( state );
 }
 
 /**
- * Set a state (particle)
+ * Set a state to a particle filter structure
  *
+ * @param state     A CvParticleState structure
  * @param p         particle filter struct
  * @param p_id      particle id
- * @param state     A CvParticleState structure
  * @return void
  */
-void cvParticleStateSet( const CvParticle* p, int p_id, CvParticleState &state )
+void cvParticleStateSet( CvParticle* p, int p_id, const CvParticleState& state )
 {
-    cvmSet( p->particles, 0, p_id, state.x );
-    cvmSet( p->particles, 1, p_id, state.y );
-    cvmSet( p->particles, 2, p_id, state.width );
-    cvmSet( p->particles, 3, p_id, state.height );
-    cvmSet( p->particles, 4, p_id, state.angle );
-    cvmSet( p->particles, 5, p_id, state.xp );
-    cvmSet( p->particles, 6, p_id, state.yp );
-    cvmSet( p->particles, 7, p_id, state.widthp );
-    cvmSet( p->particles, 8, p_id, state.heightp );
-    cvmSet( p->particles, 9, p_id, state.anglep );
+    CvMat* state_mat, hdr;
+    state_mat = cvGetCol( p->particles, &hdr, p_id );
+    cvParticleStateToMat( state, state_mat );
 }
 
 /*************************** Particle Filter Configuration *********************************/
@@ -240,41 +268,25 @@ void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize )
 
 /***************************** Utility Functions ****************************************/
 
-/**
- * Draw a particle or particles by rectangle on given image
- *
- * @param particle
- * @param img        image to be drawn
- * @param color      color of rectangle
- * @param [pid = -1] particle id. If -1, all particles are drawn
- */
-void cvParticleStateDraw( const CvParticle* p, IplImage* img, CvScalar color, int pid )
+void cvParticleStateDraw( const CvParticleState& state, IplImage* img, CvScalar color )
 {
-    if( pid == -1 ) { // draw all particles
-        int i;
-        for( i = 0; i < p->num_particles; i++ ) {
-            cvParticleStateDraw( p, img, color, i );
-        }
-    } else {
-        CvParticleState s = cvParticleStateGet( p, pid );
-        CvBox32f box32f = cvBox32f( s.x, s.y, s.width, s.height, s.angle );
-        CvRect32f rect32f = cvRect32fFromBox32f( box32f );
-        cvDrawRectangle( img, rect32f, cvPoint2D32f(0,0), color );
-    }
+    CvBox32f box32f = cvBox32f( state.x, state.y, state.width, state.height, state.angle );
+    CvRect32f rect32f = cvRect32fFromBox32f( box32f );
+    cvDrawRectangle( img, rect32f, cvPoint2D32f(0,0), color );
 }
 
 void cvParticleStatePrint( const CvParticleState& state )
 {
-    printf( "x :%f ", state.x );
-    printf( "y :%f ", state.y );
-    printf( "width :%f ", state.width );
-    printf( "height :%f ", state.height );
-    printf( "angle :%f\n", state.angle );
-    printf( "xp:%f ", state.xp );
-    printf( "yp:%f ", state.yp );
-    printf( "widthp:%f ", state.widthp );
-    printf( "heightp:%f ", state.heightp );
-    printf( "anglep:%f\n", state.anglep );
+    printf( "x :%.2f ", state.x );
+    printf( "y :%.2f ", state.y );
+    printf( "width :%.2f ", state.width );
+    printf( "height :%.2f ", state.height );
+    printf( "angle :%.2f\n", state.angle );
+    printf( "xp:%.2f ", state.xp );
+    printf( "yp:%.2f ", state.yp );
+    printf( "widthp:%.2f ", state.widthp );
+    printf( "heightp:%.2f ", state.heightp );
+    printf( "anglep:%.2f\n", state.anglep );
     fflush( stdout );
 }
 

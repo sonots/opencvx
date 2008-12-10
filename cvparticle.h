@@ -60,7 +60,8 @@ typedef struct CvParticle {
     CvMat* particles;  // num_states x num_particles. linked with probs. 
     CvMat* probs;      // num_observes x num_particles. linked with particles.
     CvMat* particle_probs; // 1 x num_particles. marginalization respect to observation models
-    CvMat* observe_probs;  // num_observes x 1.  marginalization respect to tracking states
+    CvMat* observe_probs;  // num_observes x 1. marginalization respect to tracking states
+    CvMat* observe_priors; // num_observes x 1. prior probabilities for observation states.
 } CvParticle;
 
 /**************************** Function Prototypes ****************************/
@@ -76,7 +77,6 @@ void cvParticleResample( CvParticle* p, bool marginal = true );
 void cvParticleTransition( CvParticle* p );
 
 void cvParticleMarginalize( CvParticle* p );
-void cvParticleNormalize( CvParticle* p );
 int  cvParticleMaxParticle( const CvParticle* p );
 CvMat* cvParticleMeanParticle( const CvParticle* p );
 void cvParticleBound( CvParticle* p );
@@ -131,7 +131,6 @@ void cvParticleResample( CvParticle* p, bool marginal )
     if( marginal )
     {
         cvParticleMarginalize( p );
-        cvParticleNormalize( p );
     }
 
     k = 0;
@@ -177,43 +176,43 @@ int cvParticleMaxParticle( const CvParticle* p )
  * Get mean state
  *
  * @param particle
- * @param meanstate num_states x 1, CV_32FC1 or CV_64FC1
+ * @param mean num_states x 1, CV_32FC1 or CV_64FC1
  * @return CvMat*
  */
-void cvParticleMeanParticle( const CvParticle* p, CvMat* meanstate )
+void cvParticleMeanParticle( const CvParticle* p, CvMat* mean )
 {
     CvMat* probs = NULL;
-    CvMat* mul = NULL;
-    CvMat* state, statehdr;
+    CvMat* prod_i = NULL;
+    CvMat* particles_i, hdr;
     int i, j;
     CvScalar avg;
     CV_FUNCNAME( "cvParticleMeanParticle" );
     __BEGIN__;
-    CV_ASSERT( meanstate->rows == p->num_states && meanstate->cols == 1 );
+    CV_ASSERT( mean->rows == p->num_states && mean->cols == 1 );
     if( !p->logprob )
     {
-        probs = p->observe_probs;
+        probs = p->particle_probs;
     }
     else
     {
-        probs = cvCreateMat( 1, p->num_particles, CV_64FC1 );
+        probs = cvCreateMat( 1, p->num_particles, p->particle_probs->type );
         cvExp( p->particle_probs, probs );
     }
-    mul = cvCreateMat( 1, p->num_particles, CV_64FC1 );
 
+    prod_i = cvCreateMat( 1, p->num_particles, probs->type );
     for( i = 0; i < p->num_states; i++ )
     {
-        state = cvGetRow( p->particles, &statehdr, i );
-        // cvMul( state, probs, mul ); // must be same type (not 32F and 64F)
+        particles_i = cvGetRow( p->particles, &hdr, i );
+        //cvMul( probs, particles_i, prod_i ); // mat->type must be all same
         for( j = 0; j < p->num_particles; j++ )
         {
-            cvmSet( mul, 0, j, cvmGet( state, 0, j ) * cvmGet( probs, 0, j ) );
+            cvmSet( prod_i, 0, j, cvmGet( probs, 0, j ) * cvmGet( particles_i, 0, j ) );
         }
-        avg = cvSum( mul );
-        cvmSet( meanstate, i, 0, avg.val[0] );
+        avg = cvSum( prod_i );
+        cvmSet( mean, i, 0, avg.val[0] );
     }
+    cvReleaseMat( &prod_i );
 
-    cvReleaseMat( &mul );
     if( probs != p->particle_probs )
         cvReleaseMat( &probs );
     __END__;
@@ -221,70 +220,77 @@ void cvParticleMeanParticle( const CvParticle* p, CvMat* meanstate )
 
 /**
  * Create particle_probs, and observe_probs by marginalizing
+ * Do normalization too
  *
  * @param particle
  * @todo priors
  */
 void cvParticleMarginalize( CvParticle* p )
 {
-    if( p->logprob )
+    if( !p->logprob )
     {
-        int np, no;
-        CvScalar logsum;
-        CvMat *particle_prob, *observe_prob, hdr;
-        // number of particles of the same state represents priors
-        for( np = 0; np < p->num_particles; np++ )
         {
-            particle_prob = cvGetCol( p->probs, &hdr, np );
-            logsum = cvLogSum( particle_prob );
-            cvmSet( p->particle_probs, 0, np, logsum.val[0] );
+            // let transition states be t, observation states be i, observation be z
+            // p(t|z) = alpha p(z|t) p(t)
+            // p(t) comes from sampling methods => \sum_t particle->(z|t)
+            // p(z|t) = \int p(z|t,i) p(i|t) di = (now) \int p(z|t,i) p(i) di
+            CvMat* probs_n, hdr;
+            CvMat* weighted_probs_n = cvCreateMat( p->num_observes, 1, CV_64FC1 );
+            CvScalar avg_n;
+            for( int n = 0; n < p->num_particles; n++ ) {
+                probs_n = cvGetCol( p->probs, &hdr, n );
+                cvMul( probs_n, p->observe_priors, weighted_probs_n );
+                avg_n = cvSum( weighted_probs_n );
+                cvmSet( p->particle_probs, 0, n, avg_n.val[0] );
+            }
+            cvReleaseMat( &weighted_probs_n );
+            // normalize alpha
+            CvScalar sum = cvSum( p->particle_probs );
+            cvScale( p->particle_probs, p->particle_probs, 1.0 / sum.val[0] );
         }
-        // @todo: priors
-        for( no = 0; no < p->num_observes; no++ )
         {
-            observe_prob = cvGetRow( p->probs, &hdr, no );
-            logsum = cvLogSum( particle_prob );
-            cvmSet( p->observe_probs, no, 0, logsum.val[0] );
+            // p(i|z) = alpha p(z|i) p(i)
+            // p(z|i) = \int p(z|t,i)p(t|i) dt = \int p(z|t,i) p(t) dt
+            // p(t) comes from sampling methods => p(z|i) = \sum_t particle->probs
+            cvReduce( p->probs, p->observe_probs, CV_REDUCE_SUM );
+            cvMul( p->observe_probs, p->observe_priors, p->observe_probs );
+            // normalize alpha
+            CvScalar sum = cvSum( p->observe_probs );
+            cvScale( p->observe_probs, p->observe_probs, 1.0 / sum.val[0] );
         }
     }
-    else
+    else // log version
     {
-        // number of particles of the same state represents priors
-        cvReduce( p->probs, p->particle_probs, -1, CV_REDUCE_SUM );
-        // @todo: priors
-        cvReduce( p->probs, p->observe_probs, -1, CV_REDUCE_SUM );
-    }
-}
-
-/**
- * Normalize particle_probs and observe_probs so they sum to 1.0
- *
- * @param particle
- */
-void cvParticleNormalize( CvParticle* p )
-{
-    // normalize particle_probs
-    if( p->logprob )
-    {
-        CvScalar logsum = cvLogSum( p->particle_probs );
-        cvSubS( p->particle_probs, logsum, p->particle_probs );
-    } 
-    else
-    {
-        CvScalar sum = cvSum( p->particle_probs );
-        cvScale( p->particle_probs, p->particle_probs, 1.0 / sum.val[0] );
-    }
-
-    // normalize observe_probs
-    if( p->logprob )
-    {
-        CvScalar logsum = cvLogSum( p->observe_probs );
-        cvSubS( p->observe_probs, logsum, p->observe_probs );
-    } 
-    else
-    {
-        CvScalar sum = cvSum( p->observe_probs );
-        cvScale( p->observe_probs, p->observe_probs, 1.0 / sum.val[0] );
+        // translate Mul -> Sum, Sum -> LogSum
+        // 1/val -> -val
+        {
+            CvMat* probs_n, hdr;
+            CvMat* weighted_probs_n = cvCreateMat( p->num_observes, 1, CV_64FC1 );
+            CvScalar avg_n;
+            for( int n = 0; n < p->num_particles; n++ ) {
+                probs_n = cvGetCol( p->probs, &hdr, n );
+                cvAdd( probs_n, p->observe_priors, weighted_probs_n ); // observe_priors also log prob
+                avg_n = cvLogSum( weighted_probs_n );
+                cvmSet( p->particle_probs, 0, n, avg_n.val[0] );
+            }
+            cvReleaseMat( &weighted_probs_n );
+            // normalize alpha
+            CvScalar sum = cvLogSum( p->particle_probs );
+            cvSubS( p->particle_probs, sum, p->particle_probs );
+        }
+        {
+            CvMat* probs_i, hdr;
+            for( int i = 0; i < p->num_observes; i++ )
+            {
+                probs_i = cvGetRow( p->probs, &hdr, i );
+                CvScalar logsum = cvLogSum( probs_i );
+                cvmSet( p->observe_probs, i, 0, logsum.val[0] );
+            }
+            cvAdd( p->observe_probs, p->observe_priors, p->observe_probs ); // observe_priors also log prob
+            // normalize alpha
+            CvScalar sum = cvLogSum( p->observe_probs );
+            cvSubS( p->observe_probs, sum, p->observe_probs );
+        }
     }
 }
 
@@ -524,6 +530,7 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
     p->probs         = cvCreateMat( num_observes, num_particles, CV_64FC1 );
     p->particle_probs = cvCreateMat( 1, num_particles, CV_64FC1 );
     p->observe_probs  = cvCreateMat( num_observes, 1, CV_64FC1 );
+    p->observe_priors = cvCreateMat( num_observes, 1, CV_64FC1 );
     p->logprob        = logprob;
 
     // Default dynamics: next state = curr state + noise
@@ -531,6 +538,10 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
     cvSet( p->std, cvScalar(1.0) );
 
     cvZero( p->bound );
+    if( p->logprob )
+        cvSet( p->observe_priors, cvScalar( log( 1.0 / num_observes ) ) ); // uniform
+    else
+        cvSet( p->observe_priors, cvScalar( 1.0 / num_observes ) ); // uniform
 
     __END__;
     return p;

@@ -59,7 +59,6 @@ int main( int argc, char** argv )
     IplImage *frame, *reference, *tmp;
     char* vid_file;
     CvCapture* video;
-    int i;
 
     // arg_parse
     if( argc > 1 ) {

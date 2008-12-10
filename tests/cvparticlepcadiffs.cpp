@@ -71,6 +71,8 @@ extern string data_pcaval;
 extern string data_pcaavg;
 extern string data_pcavec;
 int num_particles = 1000;
+char export_filename[2048];
+const char* export_format = "%s_%04d.png";
 
 /******************************* Structures ************************/
 
@@ -92,7 +94,7 @@ int main( int argc, char** argv )
     IplImage *frame, *reference, *tmp;
     char* vid_file;
     CvCapture* video;
-    int i;
+    int frame_num = 0;
 
     // arg_parse
     if( argc == 1 ) {
@@ -160,33 +162,38 @@ int main( int argc, char** argv )
         cvParticleObserveLikelihood( particle, frame );
 
         // draw all particles
-        cvParticleStateDraw( particle, frame, CV_RGB(0,0,255), -1 );
-        // draw most probable particles
-        int maxp = cvParticleMaxParticle( particle ); 
-        cvParticleStateDraw( particle, frame, CV_RGB(255,0,0), maxp );
-        printf( "Most probable particle's state w/ prob:" );
-        double maxprob = cvmGet( particle->particle_probs, 0, maxp );
-        printf( "%f\n", logprob ? exp( maxprob ) : maxprob );
-        cvParticlePrint( particle, maxp );
-
-        // mean 
+        for( int i = 0; i < particle->num_particles; i++ )
+        {
+            CvParticleState s = cvParticleStateGet( particle, i );
+            cvParticleStateDraw( s, frame, CV_RGB(0,0,255) );
+        }
+        // draw most probable particle
+        printf( "Most probable particle's state\n" );
+        int maxp_id = cvParticleMaxParticle( particle );
+        CvParticleState maxs = cvParticleStateGet( particle, maxp_id );
+        cvParticleStateDraw( maxs, frame, CV_RGB(255,0,0) );
+        cvParticleStatePrint( maxs );
+        
+        // marginalization and normalization beforehand to get mean
         cvParticleMarginalize( particle );
-        cvParticleNormalize( particle );
+
+        // draw mean particle's state
         printf( "Mean particle's state\n");
         cvParticleMeanParticle( particle, meanp );
-        cvPrintMat( meanp, true );
-        CvRect32f meanp_rect = cvRect32fFromBox32f (
-            cvBox32f( cvmGet( meanp, 0, 0 ), cvmGet( meanp, 1, 0 ),
-                      cvmGet( meanp, 2, 0 ), cvmGet( meanp, 3, 0 ),
-                      cvmGet( meanp, 4, 0 ) ) );
-        cvDrawRectangle( frame, meanp_rect, cvPoint2D32f(0,0), CV_RGB(0,255,0) );
-        
+        CvParticleState means = cvParticleStateFromMat( meanp );
+        cvParticleStateDraw( means, frame, CV_RGB(255,0,0) );
+        cvParticleStatePrint( means );
+
         // resampling
-        cvParticleResample( particle, false ); 
-        // flag is whether to do marginal and normalize, now it is done already
-        //cvPrintMat( particle->particle_probs );
+        cvParticleResample( particle, false );
+        // flag flase is whether to do marginal and normalize, now it is done already
 
         cvShowImage( "Show", frame );
+        // save pictures
+        sprintf( export_filename, export_format, vid_file, frame_num );
+        printf( "Export: %s\n", export_filename ); fflush( stdout );
+        cvSaveImage( export_filename, frame );
+
         char c = cvWaitKey( 1000 );
         if(c == '\x1b')
             break;

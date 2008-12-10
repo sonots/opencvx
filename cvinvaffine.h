@@ -48,7 +48,6 @@ CVAPI(void) cvInvAffine( const CvMat* affine, CvMat* invaffine )
     
     CvMat* Affine = cvCreateMat( 3, 3, affine->type );
     CvMat* InvAffine = cvCreateMat( 3, 3, affine->type );
-    CvMat invaffinehdr;
     cvSetIdentity( Affine );
     cvSetRows( affine, Affine, 0, 2 );
     cvInv( Affine, InvAffine );

@@ -27,7 +27,7 @@
 
 #include "cv.h"
 #include "cvaux.h"
-#include "cvcore.h"
+#include "cxcore.h"
 #include "highgui.h"
 #include <stdio.h>
 #define _USE_MATH_DEFINES

@@ -46,7 +46,7 @@ using namespace std;
 
 int num_states = 5;
 
-// Definition of meanings of 10 states.
+// Definition of meanings of 5 states.
 // This kinds of structures is not necessary to be defined, 
 // but I recommend to define them because it makes clear meanings of states
 typedef struct CvParticleState {
@@ -59,14 +59,13 @@ typedef struct CvParticleState {
 
 // Definition of dynamics model
 // new_particle = cvMatMul( dynamics, particle ) + noise
-// curr_x =: curr_x + dx + noise = curr_x + (curr_x - prev_x) + noise
-// prev_x =: curr_x
+// curr_x =: curr_x + noise
 double dynamics[] = {
-    2, 0, 0, 0, 0, 
-    0, 2, 0, 0, 0, 
-    0, 0, 2, 0, 0, 
-    0, 0, 0, 2, 0, 
-    0, 0, 0, 0, 2, 
+    1, 0, 0, 0, 0, 
+    0, 1, 0, 0, 0, 
+    0, 0, 1, 0, 0, 
+    0, 0, 0, 1, 0, 
+    0, 0, 0, 0, 1, 
 };
 
 /********************** Function Prototypes *********************************/
@@ -77,15 +76,17 @@ inline CvParticleState cvParticleState( double x,
                                         double width, 
                                         double height, 
                                         double angle = 0 );
+CvParticleState cvParticleStateFromMat( const CvMat* state );
+void cvParticleStateToMat( const CvParticleState &state, CvMat* state_mat );
 CvParticleState cvParticleStateGet( const CvParticle* p, int p_id );
-void cvParticleStateSet( const CvParticle* p, int p_id, CvParticleState &state );
+void cvParticleStateSet( CvParticle* p, int p_id, const CvParticleState &state );
 
 // Particle Filter configuration
 void cvParticleStateConfig( CvParticle* p, CvSize imsize, CvParticleState& std );
 void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize );
 
 // Utility Functions
-void cvParticleStateDraw( const CvParticle* p, IplImage* frame, CvScalar color, int pid = -1 );
+void cvParticleStateDraw( const CvParticleState& state, IplImage* frame, CvScalar color );
 void cvParticleStatePrint( const CvParticleState& state );
 
 /****************** Functions for CvParticleState structure ******************/
@@ -102,42 +103,68 @@ inline CvParticleState cvParticleState( double x,
                                         double height, 
                                         double angle )
 {
-    CvParticleState state = { x, y, width, height, angle };
+    CvParticleState state = { x, y, width, height, angle }; 
     return state;
 }
 
 /**
- * Get a state (particle)
+ * Convert a matrix state representation to a state structure
+ *
+ * @param state     num_states x 1 matrix
+ */
+CvParticleState cvParticleStateFromMat( const CvMat* state )
+{
+    CvParticleState s;
+    s.x       = cvmGet( state, 0, 0 );
+    s.y       = cvmGet( state, 1, 0 );
+    s.width   = cvmGet( state, 2, 0 );
+    s.height  = cvmGet( state, 3, 0 );
+    s.angle   = cvmGet( state, 4, 0 );
+    return s;
+}
+
+/**
+ * Convert a state structure to CvMat
+ *
+ * @param state        A CvParticleState structure
+ * @param state_mat    num_states x 1 matrix
+ * @return void
+ */
+void cvParticleStateToMat( const CvParticleState& state, CvMat* state_mat )
+{
+    cvmSet( state_mat, 0, 0, state.x );
+    cvmSet( state_mat, 1, 0, state.y );
+    cvmSet( state_mat, 2, 0, state.width );
+    cvmSet( state_mat, 3, 0, state.height );
+    cvmSet( state_mat, 4, 0, state.angle );
+}
+
+/**
+ * Get a state from a particle filter structure
  *
  * @param p         particle filter struct
  * @param p_id      particle id
  */
 CvParticleState cvParticleStateGet( const CvParticle* p, int p_id )
 {
-    CvParticleState s;
-    s.x       = cvmGet( p->particles, 0, p_id );
-    s.y       = cvmGet( p->particles, 1, p_id );
-    s.width   = cvmGet( p->particles, 2, p_id );
-    s.height  = cvmGet( p->particles, 3, p_id );
-    s.angle   = cvmGet( p->particles, 4, p_id );
-    return s;
+    CvMat* state, hdr;
+    state = cvGetCol( p->particles, &hdr, p_id );
+    return cvParticleStateFromMat( state );
 }
 
 /**
- * Set a state (particle)
+ * Set a state to a particle filter structure
  *
+ * @param state     A CvParticleState structure
  * @param p         particle filter struct
  * @param p_id      particle id
- * @param state     A CvParticleState structure
  * @return void
  */
-void cvParticleStateSet( const CvParticle* p, int p_id, CvParticleState &state )
+void cvParticleStateSet( CvParticle* p, int p_id, const CvParticleState& state )
 {
-    cvmSet( p->particles, 0, p_id, state.x );
-    cvmSet( p->particles, 1, p_id, state.y );
-    cvmSet( p->particles, 2, p_id, state.width );
-    cvmSet( p->particles, 3, p_id, state.height );
-    cvmSet( p->particles, 4, p_id, state.angle );
+    CvMat* state_mat, hdr;
+    state_mat = cvGetCol( p->particles, &hdr, p_id );
+    cvParticleStateToMat( state, state_mat );
 }
 
 /*************************** Particle Filter Configuration *********************************/
@@ -157,7 +184,7 @@ void cvParticleStateConfig( CvParticle* p, CvSize imsize, CvParticleState& std )
         std.y,
         std.width,
         std.height,
-        std.angle,
+        std.angle
     };
     CvMat stdmat = cvMat( p->num_states, 1, CV_64FC1, stdarr );
 
@@ -169,7 +196,7 @@ void cvParticleStateConfig( CvParticle* p, CvSize imsize, CvParticleState& std )
         0, imsize.height - 1, false,
         1, imsize.width, false,
         1, imsize.height, false,
-        0, 360, true,
+        0, 360, true
     };
     CvMat boundmat = cvMat( p->num_states, 3, CV_64FC1, boundarr );
     cvParticleSetDynamics( p, &dynamicsmat );
@@ -199,40 +226,21 @@ void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize )
 
 /***************************** Utility Functions ****************************************/
 
-/**
- * Draw a particle or particles by rectangle on given image
- *
- * @param particle
- * @param img        image to be drawn
- * @param color      color of rectangle
- * @param [pid = -1] particle id. If -1, all particles are drawn
- */
-void cvParticleStateDraw( const CvParticle* p, IplImage* img, CvScalar color, int pid )
+void cvParticleStateDraw( const CvParticleState& state, IplImage* img, CvScalar color )
 {
-    if( pid == -1 ) { // draw all particles
-        int i;
-        for( i = 0; i < p->num_particles; i++ ) {
-            cvParticleStateDraw( p, img, color, i );
-        }
-    } else {
-        CvRect32f rect32f;
-        CvBox32f box32f;
-        CvParticleState s = cvParticleStateGet( p, pid );
-        box32f = cvBox32f( s.x, s.y, s.width, s.height, s.angle );
-        rect32f = cvRect32fFromBox32f( box32f );
-        cvDrawRectangle( img, rect32f, cvPoint2D32f(0,0), color );
-    }
+    CvBox32f box32f = cvBox32f( state.x, state.y, state.width, state.height, state.angle );
+    CvRect32f rect32f = cvRect32fFromBox32f( box32f );
+    cvDrawRectangle( img, rect32f, cvPoint2D32f(0,0), color );
 }
 
 void cvParticleStatePrint( const CvParticleState& state )
 {
-    printf( "x :%f ", state.x );
-    printf( "y :%f ", state.y );
-    printf( "width :%f ", state.width );
-    printf( "height :%f ", state.height );
-    printf( "angle :%f\n", state.angle );
+    printf( "x :%.2f ", state.x );
+    printf( "y :%.2f ", state.y );
+    printf( "width :%.2f ", state.width );
+    printf( "height :%.2f ", state.height );
+    printf( "angle :%.2f\n", state.angle );
     fflush( stdout );
 }
 
 #endif
-
