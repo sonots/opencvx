@@ -112,6 +112,7 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
     CvMat *samples0 = cvCreateMat( D, N, type ); // mean subtracted samples
     CvMat *subsamples0, subsamples0hdr;
     CvScalar rho;
+    CvMat *_proj;
     CV_FUNCNAME( "cvMatPcaDiffs" );
     __BEGIN__;
     CV_ASSERT( CV_IS_MAT(samples) );
@@ -137,7 +138,7 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
             cvmSet( samples0, d, n, cvmGet( samples, d, n ) - cvmGet( avg, d, 0 ) );
         }
     }
-    CvMat *_proj = cvCreateMat( M, N, type );
+    _proj = cvCreateMat( M, N, type );
     cvMatMul( _eigenvectors, samples0, _proj );
     cvT( _proj, proj );
     cvReleaseMat( &_proj );
