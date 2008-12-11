@@ -42,6 +42,7 @@
 #include "cvlogsum.h"
 #include "cvweightedmean.h"
 #include "cvanglemean.h"
+#include "cvrandgauss.h"
 
 /******************************* Structures **********************************/
 

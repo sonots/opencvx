@@ -103,7 +103,7 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
 
         for( x = 0; x < rect.width; x++ )
         {
-            for( y = 0; y < rect.height; y += max(1, rect.height - 1) )
+            for( y = 0; y < rect.height; y += MAX(1, rect.height - 1) )
             {
                 xp = cvRound( c * x + -s * y ) + rect.x;
                 yp = cvRound( s * x + c * y ) + rect.y;
@@ -117,7 +117,7 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
 
         for( y = 0; y < rect.height; y++ )
         {
-            for( x = 0; x < rect.width; x += max( 1, rect.width - 1) )
+            for( x = 0; x < rect.width; x += MAX( 1, rect.width - 1) )
             {
                 xp = cvRound( c * x + -s * y ) + rect.x;
                 yp = cvRound( s * x + c * y ) + rect.y;
@@ -141,7 +141,7 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
         for( x = 0; x < rect.width; x++ )
         {
             cvmSet( xy, 0, 0, x / rect32f.width );
-            for( y = 0; y < rect.height; y += max(1, rect.height - 1) )
+            for( y = 0; y < rect.height; y += MAX(1, rect.height - 1) )
             {
                 cvmSet( xy, 1, 0, y / rect32f.height );
                 cvMatMul( affine, xy, xyp );
@@ -157,7 +157,7 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
         for( y = 0; y < rect.height; y++ )
         {
             cvmSet( xy, 1, 0, y / rect32f.height );
-            for( x = 0; x < rect.width; x += max( 1, rect.width - 1) )
+            for( x = 0; x < rect.width; x += MAX( 1, rect.width - 1) )
             {
                 cvmSet( xy, 0, 0, x / rect32f.width );
                 cvMatMul( affine, xy, xyp );

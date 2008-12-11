@@ -49,7 +49,7 @@ void cvSkinColorPeer( const IplImage* img, IplImage* mask )
             r = img->imageData[img->widthStep * y + x * 3 + 2];
 
             if( r > 95 && g > 40 && b > 20 && 
-                max( r, max( g, b ) ) - min( r, min( g, b ) ) > 15 &&
+                MAX( r, MAX( g, b ) ) - MIN( r, MIN( g, b ) ) > 15 &&
                 abs( r - g ) > 15 && r > g && r > b )
             {
                 mask->imageData[mask->widthStep * y + x] = 1;
