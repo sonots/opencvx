@@ -259,8 +259,8 @@ void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize )
         double y      = cvmGet( p->particles, 1, np );
         double width  = cvmGet( p->particles, 2, np );
         double height = cvmGet( p->particles, 3, np );
-        width = min( width, imsize.width - x ); // another state x is used
-        height = min( height, imsize.height - y ); // another state y is used
+        width = MIN( width, imsize.width - x ); // another state x is used
+        height = MIN( height, imsize.height - y ); // another state y is used
         cvmSet( p->particles, 2, np, width );
         cvmSet( p->particles, 3, np, height );
     }
