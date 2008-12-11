@@ -40,14 +40,16 @@ CVAPI(void) cvInvAffine( const CvMat* affine, CvMat* invaffine );
  */
 CVAPI(void) cvInvAffine( const CvMat* affine, CvMat* invaffine )
 {
+    CvMat* Affine;
+    CvMat* InvAffine;
     CV_FUNCNAME( "cvCreateAffine" );
     __BEGIN__;
     CV_ASSERT( affine->rows == 2 && affine->cols == 3 );
     CV_ASSERT( invaffine->rows == 2 && invaffine->cols == 3 );
     CV_ASSERT( affine->type == invaffine->type );
     
-    CvMat* Affine = cvCreateMat( 3, 3, affine->type );
-    CvMat* InvAffine = cvCreateMat( 3, 3, affine->type );
+    Affine = cvCreateMat( 3, 3, affine->type );
+    InvAffine = cvCreateMat( 3, 3, affine->type );
     cvSetIdentity( Affine );
     cvSetRows( affine, Affine, 0, 2 );
     cvInv( Affine, InvAffine );
