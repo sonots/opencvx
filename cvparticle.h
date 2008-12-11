@@ -176,19 +176,17 @@ int cvParticleMaxParticle( const CvParticle* p )
  * Get mean state
  *
  * @param particle
- * @param mean num_states x 1, CV_32FC1 or CV_64FC1
+ * @param meanp num_states x 1, CV_32FC1 or CV_64FC1
  * @return CvMat*
  */
-void cvParticleMeanParticle( const CvParticle* p, CvMat* mean )
+void cvParticleMeanParticle( const CvParticle* p, CvMat* meanp )
 {
     CvMat* probs = NULL;
-    CvMat* prod_i = NULL;
     CvMat* particles_i, hdr;
     int i, j;
-    CvScalar avg;
     CV_FUNCNAME( "cvParticleMeanParticle" );
     __BEGIN__;
-    CV_ASSERT( mean->rows == p->num_states && mean->cols == 1 );
+    CV_ASSERT( meanp->rows == p->num_states && meanp->cols == 1 );
     if( !p->logprob )
     {
         probs = p->particle_probs;
@@ -199,19 +197,34 @@ void cvParticleMeanParticle( const CvParticle* p, CvMat* mean )
         cvExp( p->particle_probs, probs );
     }
 
-    prod_i = cvCreateMat( 1, p->num_particles, probs->type );
     for( i = 0; i < p->num_states; i++ )
     {
-        particles_i = cvGetRow( p->particles, &hdr, i );
-        //cvMul( probs, particles_i, prod_i ); // mat->type must be all same
-        for( j = 0; j < p->num_particles; j++ )
+        int circular = (int) cvmGet( p->bound, i, 2 );
+        if( !circular ) // usual mean
         {
-            cvmSet( prod_i, 0, j, cvmGet( probs, 0, j ) * cvmGet( particles_i, 0, j ) );
+            double mean = 0;
+            particles_i = cvGetRow( p->particles, &hdr, i );
+            for( j = 0; j < p->num_particles; j++ )
+            {
+                mean += cvmGet( probs, 0, j ) * cvmGet( particles_i, 0, j );
+            }
+            cvmSet( meanp, i, 0, mean );
         }
-        avg = cvSum( prod_i );
-        cvmSet( mean, i, 0, avg.val[0] );
+        else // wrapped mean (angle)
+        {
+            double wrap = ( cvmGet( p->bound, i, 1 ) - cvmGet( p->bound, i, 0 ) ) / 2.0;
+
+            particles_i = cvGetRow( p->particles, &hdr, i );
+            double mean_cos = 0;
+            double mean_sin = 0;
+            for( j = 0; j < p->num_particles; j++ )
+            {
+                mean_cos += cvmGet( probs, 0, j ) * cos( cvmGet( particles_i, 0, j ) * M_PI / wrap );
+                mean_sin += cvmGet( probs, 0, j ) * sin( cvmGet( particles_i, 0, j ) * M_PI / wrap );
+            }
+            cvmSet( meanp, i, 0, atan( mean_sin / mean_cos ) * wrap / M_PI );
+        }
     }
-    cvReleaseMat( &prod_i );
 
     if( probs != p->particle_probs )
         cvReleaseMat( &probs );
@@ -303,7 +316,7 @@ void cvParticleBound( CvParticle* p )
 {
     int row, col;
     double lower, upper;
-    bool circular;
+    int circular;
     CvMat* stateparticles, hdr;
     float state;
     // @todo:     np.width   = (double)MAX( 2.0, MIN( maxX - 1 - x, width ) );
@@ -311,7 +324,7 @@ void cvParticleBound( CvParticle* p )
     {
         lower = cvmGet( p->bound, row, 0 );
         upper = cvmGet( p->bound, row, 1 );
-        circular = (bool) cvmGet( p->bound, row, 2 );
+        circular = (int) cvmGet( p->bound, row, 2 );
         if( lower == upper ) continue; // no bound flag
         if( circular ) {
             for( col = 0; col < p->num_particles; col++ ) {
