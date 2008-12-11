@@ -40,6 +40,8 @@
 #include "cvsetrow.h"
 #include "cvsetcol.h"
 #include "cvlogsum.h"
+#include "cvweightedmean.h"
+#include "cvanglemean.h"
 
 /******************************* Structures **********************************/
 
@@ -54,6 +56,7 @@ typedef struct CvParticle {
     CvRNG  rng;        // Random seed
     CvMat* std;        // num_states x 1. Standard deviation for gaussian noise
                        // Set standard deviation == 0 for no noise
+    CvMat* stds;       // num_states x num_particles, either of std and stds is used.
     CvMat* bound;      // num_states x 3 (lowerbound, upperbound, circular flag 0 or 1)
                        // Set lowerbound == upperbound to express no bound
     // particle states
@@ -183,7 +186,7 @@ void cvParticleMeanParticle( const CvParticle* p, CvMat* meanp )
 {
     CvMat* probs = NULL;
     CvMat* particles_i, hdr;
-    int i, j;
+    int i;
     CV_FUNCNAME( "cvParticleMeanParticle" );
     __BEGIN__;
     CV_ASSERT( meanp->rows == p->num_states && meanp->cols == 1 );
@@ -202,27 +205,16 @@ void cvParticleMeanParticle( const CvParticle* p, CvMat* meanp )
         int circular = (int) cvmGet( p->bound, i, 2 );
         if( !circular ) // usual mean
         {
-            double mean = 0;
             particles_i = cvGetRow( p->particles, &hdr, i );
-            for( j = 0; j < p->num_particles; j++ )
-            {
-                mean += cvmGet( probs, 0, j ) * cvmGet( particles_i, 0, j );
-            }
-            cvmSet( meanp, i, 0, mean );
+            CvScalar mean = cvWeightedMean( particles_i, probs );
+            cvmSet( meanp, i, 0, mean.val[0] );
         }
         else // wrapped mean (angle)
         {
-            double wrap = ( cvmGet( p->bound, i, 1 ) - cvmGet( p->bound, i, 0 ) ) / 2.0;
-
+            double wrap = cvmGet( p->bound, i, 1 ) - cvmGet( p->bound, i, 0 );
             particles_i = cvGetRow( p->particles, &hdr, i );
-            double mean_cos = 0;
-            double mean_sin = 0;
-            for( j = 0; j < p->num_particles; j++ )
-            {
-                mean_cos += cvmGet( probs, 0, j ) * cos( cvmGet( particles_i, 0, j ) * M_PI / wrap );
-                mean_sin += cvmGet( probs, 0, j ) * sin( cvmGet( particles_i, 0, j ) * M_PI / wrap );
-            }
-            cvmSet( meanp, i, 0, atan( mean_sin / mean_cos ) * wrap / M_PI );
+            CvScalar mean = cvAngleMean( particles_i, probs, wrap );
+            cvmSet( meanp, i, 0, mean.val[0] );
         }
     }
 
@@ -352,7 +344,7 @@ void cvParticleBound( CvParticle* p )
  */
 void cvParticleTransition( CvParticle* p )
 {
-    int i;
+    int i, j;
     CvMat* transits = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
     CvMat* noises   = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
     CvMat* noise, noisehdr;
@@ -362,16 +354,33 @@ void cvParticleTransition( CvParticle* p )
     cvMatMul( p->dynamics, p->particles, transits );
     
     // noise generation
-    for( i = 0; i < p->num_states; i++ )
+    if( p->stds == NULL )
     {
-        std    = cvmGet( p->std, i, 0 );
-        noise = cvGetRow( noises, &noisehdr, i );
-        if( std == 0.0 )
-            cvZero( noise );
-        else
-            cvRandArr( &p->rng, noise, CV_RAND_NORMAL, cvScalar(0), cvScalar( std ) );
+        for( i = 0; i < p->num_states; i++ )
+        {
+            std = cvmGet( p->std, i, 0 );
+            noise = cvGetRow( noises, &noisehdr, i );
+            if( std == 0.0 )
+                cvZero( noise );
+            else
+                cvRandArr( &p->rng, noise, CV_RAND_NORMAL, cvScalar(0), cvScalar( std ) );
+        }
     }
-    
+    else
+    {
+        for( i = 0; i < p->num_states; i++ )
+        {
+            for( j = 0; j < p->num_particles; j++ )
+            {
+                std = cvmGet( p->stds, i, j );
+                if( std == 0.0 )
+                    cvmSet( noises, i, j, 0.0 );
+                else
+                    cvmSet( noises, i, j, cvRandGauss( &p->rng, std ) );
+            }
+        }
+    }
+
     // dynamics + noise
     cvAdd( transits, noises, p->particles );
 
@@ -545,6 +554,7 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
     p->observe_probs  = cvCreateMat( num_observes, 1, CV_64FC1 );
     p->observe_priors = cvCreateMat( num_observes, 1, CV_64FC1 );
     p->logprob        = logprob;
+    p->stds           = NULL;
 
     // Default dynamics: next state = curr state + noise
     cvSetIdentity( p->dynamics, cvScalar(1.0) );
