@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -30,6 +30,9 @@
 
 /******************* Structure Definitions ***************************/
 
+/**
+ * Floating Rectangle Structure
+ */
 typedef struct CvRect32f {
     float x;      /* left x coord of rectangle */
     float y;      /* top y coord of rectangle */
@@ -39,9 +42,13 @@ typedef struct CvRect32f {
                   /* rotation center is (x, y) coordinates */
 } CvRect32f;
 
-/* This is quivalent with CvBox2D, but I wanted this structure because
-   CvBox2D's parameters are too long such as box.center.x, box.size.width and
-   CvBox2D does not have a constructor cvBox2D(...). */
+/**
+ * Center Coordinate Floating Rectangle Structure
+ *
+ * This is quivalent with CvBox2D, but I wanted this structure because
+ * CvBox2D's parameters are too long such as box.center.x, box.size.width and
+ * CvBox2D does not have a constructor cvBox2D(...). 
+ */
 typedef struct CvBox32f { 
     float cx;     /* center x coord of rectangle */
     float cy;     /* center y coord of center of rectangle */
@@ -95,37 +102,55 @@ CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
 
 /******************* Function Implementations ***************************/
 
-CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle )
+/**
+ * Constructure
+ */
+CvRect32f cvRect32f( float x, float y, float width, float height, float angle )
 {
     CvRect32f rect = { x, y, width, height, angle };
     return rect;
 }
 
-CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, float angle )
+/**
+ * Constructor
+ */
+CvBox32f cvBox32f( float cx, float cy, float width, float height, float angle )
 {
     CvBox32f box = { cx, cy, width, height, angle };
     return box;
 }
 
-CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle )
+/**
+ * conversion
+ */
+CvRect32f cvRect32fFromRect( CvRect rect, float angle )
 {
     return cvRect32f( rect.x, rect.y, rect.width, rect.height, angle );
 }
 
-CV_INLINE CvRect cvRectFromRect32f( CvRect32f rect )
+/**
+ * conversion
+ */
+CvRect cvRectFromRect32f( CvRect32f rect )
 {
     return cvRect( cvRound( rect.x ), cvRound( rect.y ),
                    cvRound( rect.width ), cvRound( rect.height ) );
 }
 
-CV_INLINE CvBox32f cvBox32fFromBox2D( CvBox2D box )
+/**
+ * conversion
+ */
+CvBox32f cvBox32fFromBox2D( CvBox2D box )
 {
     return cvBox32f( box.center.x, box.center.y,
                      box.size.width, box.size.height,
                      box.angle );
 }
 
-CV_INLINE CvBox2D cvBox2DFromBox32f( CvBox32f box )
+/**
+ * conversion
+ */
+CvBox2D cvBox2DFromBox32f( CvBox32f box )
 {
     CvBox2D box2d;
     box2d.center.x = box.cx;
@@ -136,7 +161,12 @@ CV_INLINE CvBox2D cvBox2DFromBox32f( CvBox32f box )
     return box2d;
 }
 
-CVAPI(CvBox32f) cvBox32fFromRect32f( CvRect32f rect )
+/**
+ * conversion
+ *
+ * Convert upper-left coordinate to center coordinate of the rectangle
+ */
+CvBox32f cvBox32fFromRect32f( CvRect32f rect )
 {
     CvPoint2D32f c;
     // x + ( x + width - 1 ) / 2 = cx
@@ -154,7 +184,12 @@ CVAPI(CvBox32f) cvBox32fFromRect32f( CvRect32f rect )
     return cvBox32f( c.x, c.y, rect.width, rect.height, rect.angle );
 }
 
-CVAPI(CvRect32f) cvRect32fFromBox32f( CvBox32f box )
+/**
+ * conversion
+ *
+ * Convert center coordinate to upper-left coordinate of the rectangle
+ */
+CvRect32f cvRect32fFromBox32f( CvBox32f box )
 {
     CvPoint2D32f l;
     // x + ( x + width - 1 ) / 2 = cx

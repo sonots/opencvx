@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -38,6 +38,7 @@ CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, 
 * Concatinate arrays
 *
 * Example)
+* @code
 *    IplImage* img    = cvCreateImage( cvSize(4,4), IPL_DEPTH_8U, 1 ); // width(cols), height(rows)
 *    IplImage* subimg = cvCreateImage( cvSize(1,4), IPL_DEPTH_8U, 1 );
 *    IplImage* catimg = cvCreateImage( cvSize(5,4), IPL_DEPTH_8U, 1 );
@@ -45,6 +46,7 @@ CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, 
 *    cvSet( subimg, cvScalar(0) );
 *    cvHcat( img, subimg, catimg ); // 4x4 + 4x1 = 4x5
 *    cvMatPrint( catimg );
+* @endcode
 *
 * @param src1 Input array 1
 * @param src2 Input array 2
@@ -53,8 +55,7 @@ CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, 
 * @see cvHcat( src1, src2, dst ) // cvCat( src1, src2, dst, 0 )
 * @see cvVcat( src1, src2, dst ) // cvCat( src1, src2, dst, 1 )
 */
-//CV_IMPL void
-CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, int dim )
+void cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, int dim )
 {
     int coi = 0;
     CvMat *src1 = (CvMat*)src1arr, src1stub;

@@ -1,5 +1,5 @@
-/**
-// cvskincolorgauss.h
+/** @file */
+/* cvskincolorgauss.h
 //
 // Copyright (c) 2008, Naotoshi Seo. All rights reserved.
 //
@@ -20,7 +20,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5 );
+CVAPI(void) cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5 );
 
 /**
 // cvSkinColorGauss - Skin Color Detection with a Gaussian model
@@ -32,6 +32,7 @@ void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5
 //     supports more than 95% region of Gaussian PDF. 
 // 
 // References)
+// @verbatim
 //  [1] @INPROCEEDINGS{Yang98skin-colormodeling,
 //     author = {Jie Yang and Weier Lu and Alex Waibel},
 //     title = {Skin-color modeling and adaptation},
@@ -44,6 +45,7 @@ void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5
 //  Proceedings 1999 IEEE Computer Society Conference
 //  on Computer Vision and Pattern Recognition (Cat. No
 //  PR00149), IEEE Comput. Soc. Part vol. 2, 1999.
+// @endverbatim
 */
 void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor )
 {

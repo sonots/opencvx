@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -31,20 +31,20 @@
 CVAPI(void) cvClosing( const CvArr* src, CvArr* dst, IplConvKernel* element = NULL, int iterations = 1 );
 
 /**
-// cvClosing - closing morphological operation
-//
-// closing operation would help to fill disconnected contour
-//
-// @param src Input Array
-// @param dst Output Array
-// @param [element = NULL] Kernel shape. see cvErode or cvDilate
-// @param [iterations = 1]
-// @return void
-//
-// References)
-//  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
+ * cvClosing - closing morphological operation
+ *
+ * closing operation would help to fill disconnected contour
+ *
+ * @param src Input Array
+ * @param dst Output Array
+ * @param [element = NULL] Kernel shape. see cvErode or cvDilate
+ * @param [iterations = 1]
+ * @return void
+ *
+ * References)
+ *  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
 */
-CVAPI(void) cvClosing( const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations )
+void cvClosing( const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations )
 {
     cvDilate( dst, dst, element, iterations );
     cvErode( src, dst, element, iterations );

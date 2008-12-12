@@ -1,5 +1,5 @@
-/**
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)umd.edu>
 * 

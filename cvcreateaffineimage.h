@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -52,7 +52,7 @@ CV_INLINE IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine
  *                  the transformed image origin). 
  *                  Useful when CV_AFFINE_FULL is used.
  */
-CV_INLINE IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine, 
+IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine, 
                                         int flags, CvPoint* origin )
 {
     IplImage* orig = cvCreateImage( cvGetSize(src), IPL_DEPTH_8U, 1 );
@@ -78,7 +78,7 @@ CV_INLINE IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine
  * @see cvWarpAffine - this does not support CV_AFFINE_FULL, but supports
  *                     several interpolation methods and so on.
  */
-CVAPI(IplImage*) cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
+IplImage* cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
                                 int flags, CvPoint* origin,
                                 CvScalar color )
 {

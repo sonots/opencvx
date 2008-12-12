@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -30,7 +30,7 @@
 
 #include <time.h>
 
-clock_t cvWaitFps( double frame_per_sec, clock_t start = 0 );
+CVAPI(clock_t) cvWaitFps( double frame_per_sec, clock_t start = 0 );
 
 /**
  * Wait amount of seconds per frame totally. 

@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -51,7 +51,7 @@ CV_INLINE double cvPointRectTest( const CvRect& rect, CvPoint2D32f pt,
  * @return double
  * @uses cvPointPolygonTest
  */
-CVAPI(double) cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
+double cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
                                   int measure_dist, CvPoint2D32f shear )
 {
     CvPoint2D32f points[4];
@@ -90,7 +90,7 @@ CVAPI(double) cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt,
  * @return double
  * @uses cvPointPolygonTest
  */
-CV_INLINE double cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, 
+double cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, 
                                   int measure_dist )
 {
     return cvPointRect32fTest( cvRect32fFromRect( rect ), pt, measure_dist );

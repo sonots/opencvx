@@ -1,5 +1,5 @@
-/**
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -33,7 +33,7 @@ CVAPI(int) cvIplToCvDepth(int depth);
  * Convert IplImage depth to CvMat depth
  *
  * Below codes would be useful as a reference:
- * <code>
+ * @code
  * int depth, nChannels, type;
  * depth     = CV_MAT_DEPTH(mat->type);
  * depth     = img->depth;
@@ -43,7 +43,7 @@ CVAPI(int) cvIplToCvDepth(int depth);
  * type      = mat->type;
  * type      = cvElemType(mat);
  * type      = cvElemType(img);
- * </code>
+ * @endcode
  *
  * @param int IplImage depth
  * @return int cvMat depth
@@ -51,7 +51,7 @@ CVAPI(int) cvIplToCvDepth(int depth);
  * @reference ./cxcore/src/cxtables.cpp
  * @see cvCvToIplDepth(mat->type)
  */
-CVAPI(int) cvIplToCvDepth(int depth)
+int cvIplToCvDepth(int depth)
 {
     /*
     #define CV_8U   0

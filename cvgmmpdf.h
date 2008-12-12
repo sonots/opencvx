@@ -1,18 +1,26 @@
-/** @file
-// cvgmmpdf.h (Gaussian Mixture Model)
-//
-// Copyright (c) 2008, Naotoshi Seo. All rights reserved.
-//
-// The program is free to use for non-commercial academic purposes,
-// but for course works, you must understand what is going inside to 
-// use. The program can be used, modified, or re-distributed for any 
-// purposes only if you or one of your group understand not only 
-// programming codes but also theory and math behind (if any). 
-// Please contact the authors if you are interested in using the 
-// program without meeting the above conditions.
-//
-// @requirements cvgausspdf.h
-*/
+/** @file */
+/* The MIT License
+ * 
+ * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 #ifndef CV_GMMPDF_INCLUDED
 #define CV_GMMPDF_INCLUDED
 
@@ -26,10 +34,14 @@
 
 #include "cvgausspdf.h"
 
+CVAPI(void) cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs, bool normalize = false );
+CVAPI(double) cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs = NULL, bool normalize = false );
+
 /**
 // cvMatGmmPdf - compute gaussian mixture pdf for a set of sample vectors
 //
 // Example)
+// @code
 //    const int D = 2;
 //    const int N = 3;
 //    const int K = 2;
@@ -55,6 +67,7 @@
 //    cvMatPrint( probs );
 //    cvReleaseMat( &probs );
 //    cvFree( &covs );
+// @endcode
 //
 // @param samples   D x N data vector (Note: not N x D for clearness of matrix operation)
 // @param means     D x K mean vector
@@ -64,7 +77,7 @@
 // @param [normalize = false] Compute normalization term or not
 // @uses cvMatGaussPdf
 */
-void cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs, bool normalize = false )
+void cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs, bool normalize )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -125,7 +138,7 @@ void cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, const 
 // @return double prob
 // @uses cvMatGmmPdf
 */
-double cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs = NULL, bool normalize = false )
+double cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs, bool normalize )
 {
     double prob;
     CvMat* _probs;

@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -38,7 +38,7 @@ CVAPI(void) cvSandwichFill( const IplImage* src, IplImage* dst );
 // @see cvSmooth( src, dst, CV_MEDIAN, 3 )
 // @see cvClosing( src, dst, NULL, 3 )
 */
-CVAPI(void) cvSandwichFill( const IplImage* src, IplImage* dst )
+void cvSandwichFill( const IplImage* src, IplImage* dst )
 {
     cvCopy( src, dst );
     for( int y = 0; y < dst->height; y++ )

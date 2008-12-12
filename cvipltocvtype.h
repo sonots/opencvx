@@ -1,5 +1,5 @@
-/**
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -24,8 +24,8 @@
 #ifndef CV_IPLTOCVDEPTH_INCLUDED
 #define CV_IPLTOCVDEPTH_INCLUDED
 
-
 #include "cv.h"
+#include "cvipltocvdepth.h"
 
 CV_INLINE int cvIplToCvType(int ipl_depth, int nChannels);
 
@@ -36,7 +36,7 @@ CV_INLINE int cvIplToCvType(int ipl_depth, int nChannels);
  * @param nChannels Number of channels. img->nChannels
  * @return int      CvMat type. mat->type
  */
-CV_INLINE int cvIplToCvType(int ipl_depth, int nChannels)
+int cvIplToCvType(int ipl_depth, int nChannels)
 {
     int cvmat_depth = cvIplToCvDepth( ipl_depth );
     return CV_MAKETYPE( cvmat_depth, nChannels );

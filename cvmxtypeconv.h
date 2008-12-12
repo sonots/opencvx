@@ -1,10 +1,10 @@
-/**
+/** @file
 * OpenCV versus Matlab C Library (MEX) interfaces
 *     verified under OpenCV 1.00 and Matlab 2007b
 *
 * Type conversion
-*
-* The MIT License
+*/
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -38,7 +38,6 @@
 /************** Definitions *******************************/
 #define cvmxCvToIplDepth(type) (cvCvToIplDepth(type))
 #define cvmxIplToCvDepth(depth) (cvIplToCvDepth(depth))
-CVAPI(int)          cvmxIplToCvDepth(int depth);
 CVAPI(mxClassID)    cvmxClassIDFromIplDepth(int depth);
 CVAPI(int)          cvmxClassIDToIplDepth(mxClassID classid);
 CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type);
@@ -102,7 +101,7 @@ CV_INLINE int       cvmxClassIDToCvDepth(mxClassID classid);
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-CVAPI(mxClassID) cvmxClassIDFromIplDepth(int depth)
+mxClassID cvmxClassIDFromIplDepth(int depth)
 {
     static const unsigned char ClassIDFromIplDepth[] =
     {
@@ -128,7 +127,7 @@ CVAPI(mxClassID) cvmxClassIDFromIplDepth(int depth)
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-CVAPI(int) cvmxClassIDToIplDepth(mxClassID classid)
+int cvmxClassIDToIplDepth(mxClassID classid)
 {
     static const signed int ClassIDToIplDepth[] = {
         0,
@@ -163,7 +162,7 @@ CVAPI(int) cvmxClassIDToIplDepth(mxClassID classid)
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type)
+mxClassID cvmxClassIDFromCvDepth(int type)
 {
     return cvmxClassIDFromIplDepth(cvCvToIplDepth(type));
 }
@@ -182,7 +181,7 @@ CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type)
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-CV_INLINE int cvmxClassIDToCvDepth(mxClassID classid)
+int cvmxClassIDToCvDepth(mxClassID classid)
 {
     return cvmxIplToCvDepth(cvmxClassIDToIplDepth(classid));
 }

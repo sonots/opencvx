@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -30,10 +30,12 @@
 
 CV_INLINE void cvSetCols( const CvArr* src, CvArr* dst,
                           int start_col, int end_col );
+CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col );
 
-//#define cvSetCol(src, dst, col) (cvSetCols( src, dst, col, col + 1))
-// trouble with cvSetCol(src,dst,col++)
-CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col )
+/**
+ * #define cvSetCol(src, dst, col) (cvSetCols( src, dst, col, col + 1))
+ */
+void cvSetCol( const CvArr* src, CvArr* dst, int col )
 {
     cvSetCols( src, dst, col, col+1 );
 }
@@ -43,11 +45,11 @@ CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col )
  *
  * Following code is faster than using this function because it does not 
  * require cvCopy()
- * <code>
+ * @code
  * CvMat* submat, submathdr;
  * submat = cvGetCols( mat, &submathdr, start_col, end_col, delta_col );
  * // Write on submat
- * </code>
+ * @endcode
  *
  * @param src       Source array
  * @param dst       Target array. Either of array must be size of setting cols.
@@ -56,7 +58,7 @@ CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col )
  * @return void
  * @see cvSetCol( src, dst, col ) // cvSetCols( src, dst, col, col + 1 )
  */
-CV_INLINE void cvSetCols( const CvArr* src, CvArr* dst,
+void cvSetCols( const CvArr* src, CvArr* dst,
                           int start_col, int end_col )
 {
     int coi;

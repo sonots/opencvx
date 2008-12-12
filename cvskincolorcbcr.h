@@ -1,7 +1,5 @@
-/**
-// cvskincolorcbcr.h
-//
-// Copyright (c) 2008, Naotoshi Seo. All rights reserved.
+/** @file 
+/* Copyright (c) 2008, Naotoshi Seo. All rights reserved.
 //
 // The program is free to use for non-commercial academic purposes,
 // but for course works, you must understand what is going inside to 
@@ -20,7 +18,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL );
+CVAPI(void) cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL );
 
 /**
 // cvSkinColorCbCr - Skin Color Detection in (Cb, Cr) space by [1][2]
@@ -30,12 +28,14 @@ void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NUL
 // @param [dist = NULL] The distortion valued array rather than mask if you want
 // 
 // References)
+// @verbatim
 //  [1] R.L. Hsu, M. Abdel-Mottaleb, A.K. Jain, "Face Detection in Color Images," 
 //  IEEE Transactions on Pattern Analysis and Machine Intelligence ,vol. 24, no. 5,  
 //  pp. 696-706, May, 2002. (Original)
 //  [2] P. Peer, J. Kovac, J. and F. Solina, ”Human skin colour
 //  clustering for face detection”, In: submitted to EUROCON –
 //  International Conference on Computer as a Tool , 2003. (Tuned)
+// @endverbatim
 */
 void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr )
 {

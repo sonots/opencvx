@@ -1,10 +1,10 @@
-/**
+/** @file
 * OpenCV versus Matlab C Library (MEX) interfaces
 *     verified under OpenCV 1.00 and Matlab 2007b
 *
 * Matrix conversion
-*
-* The MIT License
+*/
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -52,7 +52,7 @@ CVAPI(CvMat*)       cvmxArrayToCvMat(const mxArray* mxarr);
 * @param CvArr* arr
 * @return mxArray*
 */
-CVAPI(mxArray*) cvmxArrayFromCvArr(const CvArr* arr)
+mxArray* cvmxArrayFromCvArr(const CvArr* arr)
 {
     CV_FUNCNAME( "cvmxArraFromCvArr" );
     IplImage imghdr, *img = (IplImage*)arr;
@@ -118,7 +118,7 @@ CVAPI(mxArray*) cvmxArrayFromCvArr(const CvArr* arr)
 * @param mxArray* mxarr
 * @return IplImage*
 */
-CVAPI(IplImage*) cvmxArrayToIplImage(const mxArray* mxarr)
+IplImage* cvmxArrayToIplImage(const mxArray* mxarr)
 {
     CV_FUNCNAME( "cvmxArrayToCvArr" );
     IplImage *img = NULL;
@@ -181,7 +181,7 @@ CVAPI(IplImage*) cvmxArrayToIplImage(const mxArray* mxarr)
 * @param mxArray* mxarr
 * @return CvMat*
 */
-CVAPI(CvMat*) cvmxArrayToCvMat(const mxArray* mxarr)
+CvMat* cvmxArrayToCvMat(const mxArray* mxarr)
 {
     IplImage* img = cvmxArrayToIplImage(mxarr);
     CvMat *mat = cvCreateMat(img->height, img->width, CV_MAKETYPE(cvmxIplToCvDepth(img->depth), img->nChannels));

@@ -1,5 +1,5 @@
-/**
-// cvskincolorgmm.h
+/** @file */
+/* cvskincolorgmm.h
 //
 // Copyright (c) 2008, Naotoshi Seo. All rights reserved.
 //
@@ -23,7 +23,7 @@
 #include "cvxmat.h"
 #include "cvgmmpdf.h"
 
-void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.0, IplImage* probs = NULL );
+CVAPI(void) cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.0, IplImage* probs = NULL );
 
 /**
 // cvSkinColorGMM - Skin Color Detection with GMM model
@@ -38,6 +38,7 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.
 // @param [probs = NULL] The likelihood-ratio valued array rather than mask if you want
 // 
 // References)
+// @verbatim
 //  @article{606260,
 //      author = {Michael J. Jones and James M. Rehg},
 //      title = {Statistical color models with application to skin detection},
@@ -51,6 +52,7 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.
 //      publisher = {Kluwer Academic Publishers},
 //      address = {Hingham, MA, USA},
 //  }
+// @endverbatim
 */
 void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold, IplImage* probs )
 {

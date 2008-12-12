@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -60,7 +60,7 @@ CVAPI(void) cvPutImageROI( const IplImage* src,
  *                     circle (ellipsoid) rather than a inscribed circle (ellipsoid)
  * @return void
  */
-CVAPI(void) cvPutImageROI( const IplImage* src,
+void cvPutImageROI( const IplImage* src,
                            IplImage* dst, 
                            CvRect32f rect32f, 
                            CvPoint2D32f shear,

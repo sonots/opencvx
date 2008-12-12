@@ -1,6 +1,5 @@
-/**
-// cvskincolorpeer.h
-//
+/** @file */
+/*
 // Copyright (c) 2008, Naotoshi Seo. All rights reserved.
 //
 // The program is free to use for non-commercial academic purposes,
@@ -19,7 +18,7 @@
 #include "cvaux.h"
 using namespace std;
 
-void cvSkinColorPeer( const IplImage* img, IplImage* mask );
+CVAPI(void) cvSkinColorPeer( const IplImage* img, IplImage* mask );
 
 /**
 // cvSkinColorPeer - Skin Color Detection by Peer, et.al [1]
@@ -28,12 +27,14 @@ void cvSkinColorPeer( const IplImage* img, IplImage* mask );
 // @param mask Generated mask image. 1 for skin and 0 for others
 // 
 // References)
+// @verbatim
 //  [1] P. Peer, J. Kovac, J. and F. Solina, ”Human skin colour
 //  clustering for face detection”, In: submitted to EUROCON –
 //  International Conference on Computer as a Tool , 2003.
 //     (R>95)^(G>40)^(B>20)^
 //     (max{R,G,B}-min{R,G,B}>15)^
 //     (|R -G|>15)^(R>G)^(R>B)
+// @endverbatim
 */
 void cvSkinColorPeer( const IplImage* img, IplImage* mask )
 {

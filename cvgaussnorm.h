@@ -1,5 +1,5 @@
-/** @file
- * The MIT License
+/** @file */
+/* The MIT License
  * 
  * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
  * 
@@ -44,7 +44,7 @@
 //    cvMatGaussNorm( sample, dst );
 // }
 
-void cvImgGaussNorm( const CvArr* img, CvArr* normed );
+CVAPI(void) cvImgGaussNorm( const CvArr* img, CvArr* normed );
 
 /**
 // cvImgGaussNorm - Zero mean and unit covariance normalization of an image

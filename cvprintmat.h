@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -40,7 +40,7 @@ CV_INLINE void cvPrintMat( const CvArr* arr, bool transpose = false );
 * @param mat
 * @return void
 */
-CV_INLINE void cvPrintMatProperty( const CvMat* mat )
+void cvPrintMatProperty( const CvMat* mat )
 {
     printf("CvMat Property\n");
     printf(" rows: %d\n", mat->rows);
@@ -56,7 +56,7 @@ CV_INLINE void cvPrintMatProperty( const CvMat* mat )
 * @param img
 * @return void
 */
-CV_INLINE void cvPrintImageProperty( const IplImage* img )
+void cvPrintImageProperty( const IplImage* img )
 {
     printf("IplImage Property\n");
     printf(" width: %d\n", img->width);
@@ -72,7 +72,7 @@ CV_INLINE void cvPrintImageProperty( const IplImage* img )
 * @param arr array
 * @return void
 */
-CV_INLINE void cvPrintMat( const CvArr* arr, bool transpose )
+void cvPrintMat( const CvArr* arr, bool transpose )
 {
     CV_FUNCNAME( "cvPrintMat" );
     __BEGIN__;

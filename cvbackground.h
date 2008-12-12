@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -31,15 +31,15 @@
 CVAPI(void) cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, int thresh = 100 );
 
 /**
-// Obtain non-background pixels using reference image (such as previous frame in video )
-//
-// @param mg     The target image
-// @param ref    The reference image. Usually the previous frame of video
-// @param mask   The generated mask image where 0 is for bg and 1 is for non-bg. Must be 8U and 1 channel
-// @param [thresh = 100] The threshold. [0 - 255^2] for single channel image. [0 - 255^2 * 3] for 3 channel image.
-// @return void
+ * Obtain non-background pixels using reference image (such as previous frame in video )
+ *
+ * @param mg     The target image
+ * @param ref    The reference image. Usually the previous frame of video
+ * @param mask   The generated mask image where 0 is for bg and 1 is for non-bg. Must be 8U and 1 channel
+ * @param [thresh = 100] The threshold. [0 - 255^2] for single channel image. [0 - 255^2 * 3] for 3 channel image.
+ * @return void
 */
-CVAPI(void) cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, int thresh )
+void cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, int thresh )
 {
     CV_FUNCNAME( "cvBackground" ); // error handling
     __BEGIN__;

@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -46,15 +46,18 @@ CVAPI(void) cvCreateAffine( CvMat* affine,
  * @param [shear = cvPoint2D32f(0,0)]
  *                  The shear deformation parameter shx and shy
  * @return void
- * @Book{Hartley2004,
- *    author = "Hartley, R.~I. and Zisserman, A.",
- *    title = "Multiple View Geometry in Computer Vision",
- *    edition = "Second",
- *    year = "2004",
- *    publisher = "Cambridge University Press, ISBN: 0521540518"
- * } 
+ *
+ * References)
+ * @verbatim
+ @Book{Hartley2004,
+    author = "Hartley, R.~I. and Zisserman, A.",
+    title = "Multiple View Geometry in Computer Vision",
+    edition = "Second",
+    year = "2004",
+    publisher = "Cambridge University Press, ISBN: 0521540518"
+ } @endverbatim
  */
-CVAPI(void) cvCreateAffine( CvMat* affine, CvRect32f rect, CvPoint2D32f shear )
+void cvCreateAffine( CvMat* affine, CvRect32f rect, CvPoint2D32f shear )
 {
     double c, s;
     CvMat *R, *S, *A, hdr;

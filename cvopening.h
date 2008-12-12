@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -43,7 +43,7 @@ CVAPI( void ) cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element = 
 // References)
 //  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
 */
-CVAPI( void ) cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations )
+void cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations )
 {
     cvErode( src, dst, element, iterations );
     cvDilate( dst, dst, element, iterations );

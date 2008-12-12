@@ -1,8 +1,8 @@
-/**
+/** @file
 * OpenCV versus Matlab C Library (MEX) interfaces
 *     verified under OpenCV 1.00 and Matlab 2007b
-*
-* The MIT License
+*/
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 

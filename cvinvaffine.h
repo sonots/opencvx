@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -38,7 +38,7 @@ CVAPI(void) cvInvAffine( const CvMat* affine, CvMat* invaffine );
  * @param affine    The 2 x 3 CV_32FC1|CV_64FC1 affine matrix
  * @param invaffine The 2 x 3 CV_32FC1|CV_64FC1 affine matrix to be created
  */
-CVAPI(void) cvInvAffine( const CvMat* affine, CvMat* invaffine )
+void cvInvAffine( const CvMat* affine, CvMat* invaffine )
 {
     CvMat* Affine;
     CvMat* InvAffine;

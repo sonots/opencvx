@@ -1,5 +1,5 @@
-/**
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -28,7 +28,7 @@
 #include "cv.h"
 #include "cvaux.h"
 
-double cvRandGauss( CvRNG* rng, double sigma );
+CVAPI(double) cvRandGauss( CvRNG* rng, double sigma );
 
 /**
  * This function returns a Gaussian random variate, with mean zero and standard deviation sigma.

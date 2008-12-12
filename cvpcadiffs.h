@@ -1,15 +1,13 @@
-/** @file
-// cvxpca.h
-//
-// Copyright (c) 2008, Naotoshi Seo. All rights reserved.
-//
-// The program is free to use for non-commercial academic purposes,
-// but for course works, you must understand what is going inside to 
-// use. The program can be used, modified, or re-distributed for any 
-// purposes only if you or one of your group understand not only 
-// programming codes but also theory and math behind (if any). 
-// Please contact the authors if you are interested in using the 
-// program without meeting the above conditions.
+/** @file */
+/* Copyright (c) 2008, Naotoshi Seo. All rights reserved.
+ *
+ * The program is free to use for non-commercial academic purposes,
+ * but for course works, you must understand what is going inside to 
+ * use. The program can be used, modified, or re-distributed for any 
+ * purposes only if you or one of your group understand not only 
+ * programming codes but also theory and math behind (if any). 
+ * Please contact the authors if you are interested in using the 
+ * program without meeting the above conditions.
 */
 
 #include "cv.h"
@@ -28,19 +26,15 @@
 //                   const CvArr* eigenvectors, CvArr* result );
 //void cvBackProjectPCA( const CvArr* proj, const CvArr* avg,
 //                       const CvArr* eigenvects, CvArr* result );
-void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
+CVAPI(void) cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
                     const CvMat* eigenvectors, CvMat* probs, 
                     int normalize = 0, bool logprob = true );
-double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
+CVAPI(double) cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
                    const CvMat* eigenvectors, int normalize = 0, bool logprob = true );
 
 /**
  * cvPcaDiffs - Distance "in" and "from" feature space [1]
  *
- * Synopsis
- *   [p] = cvPcaDiffs(X, U, Me, Lambda, normalize, logprob, lambdapad)
- *
- * Description
  *   This computes a distance between a point to a PCA subspace as sum of
  *   distance-from-feature space (DFFS) and distance-in-feature-space
  *   (DIFS). The DFFS is essentially a reconstruction error and the
@@ -61,6 +55,7 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
  * @param [logprob   = false] Log probability or not
  *
  * References
+ * @verbatim
  *   [1] @INPROCEEDINGS{Moghaddam95probabilisticvisual,
  *     author = {Baback Moghaddam and Alex Pentl},
  *     title = {Probabilistic visual learning for object detection},
@@ -75,20 +70,7 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
  *     year = {2002},
  *     volume = {24},
  *     pages = {780--788}
- *
- * Authors
- *   Naotoshi Seo <sonots(at)sonots.com>
- *
- * License
- *   The program is free to use for non-commercial academic purposes,
- *   but for course works, you must understand what is going inside to use.
- *   The program can be used, modified, or re-distributed for any purposes
- *   if you or one of your group understand codes (the one must come to
- *   court if court cases occur.) Please contact the authors if you are
- *   interested in using the program without meeting the above conditions.
- *
- * Changes
- *   11/18/2008  First Edition
+ * @endverbatim
  */
 void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
                     const CvMat* eigenvectors, CvMat* probs, int normalize, bool logprob )

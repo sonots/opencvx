@@ -36,7 +36,7 @@ CVAPI(CvScalar) cvAngleMean( const CvArr *arr,
                              double wrap = 360 );
 
 /**
- * cvAngleMean - Compute mean of angle elements of an array
+ * Compute mean of angle elements of an array
  *
  * Compute mean of angle elements of an array (each channel independently). 
  * There is a fact that 0 degrees and 360 degrees are identical angles, 
@@ -52,9 +52,9 @@ CVAPI(CvScalar) cvAngleMean( const CvArr *arr,
  *                          The defeault is 360 as angle.
  * @return angle mean for each channel
  */
-CVAPI(CvScalar) cvAngleMean( const CvArr *arr, 
-                                const CvArr *weight, 
-                                double wrap )
+CvScalar cvAngleMean( const CvArr *arr, 
+                      const CvArr *weight, 
+                      double wrap )
 {
     CvMat* mat, matstub;
     CvMat* wmat = NULL, wmatstub;

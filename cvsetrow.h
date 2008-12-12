@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -30,10 +30,12 @@
 
 CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
                          int start_row, int end_row, int delta_row = 1 );
+CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row );
 
-//#define cvSetRow(src, dst, row) (cvSetRows( src, dst, row, row + 1))
-// trouble with cvSetRow(src,dst,row++)
-CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row )
+/**
+ * #define cvSetRow(src, dst, row) (cvSetRows( src, dst, row, row + 1))
+ */
+void cvSetRow( const CvArr* src, CvArr* dst, int row )
 {
     cvSetRows( src, dst, row, row+1 );
 }
@@ -43,11 +45,11 @@ CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row )
  *
  * Following code is faster than using this function because it does not 
  * require cvCopy()
- * <code>
+ * @code
  * CvMat* submat, submathdr;
  * submat = cvGetRows( mat, &submathdr, start_row, end_row, delta_row );
  * // Write on submat
- * </code>
+ * @endcode
  *
  * @param src       Source array
  * @param dst       Target array. Either of array must be size of setting rows.
@@ -59,7 +61,7 @@ CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row )
  * @return void
  * @see cvSetRow( src, dst, row ) // cvSetRows( src, dst, row, row + 1 )
  */
-CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
+void cvSetRows( const CvArr* src, CvArr* dst,
                          int start_row, int end_row, int delta_row )
 {
     int coi;

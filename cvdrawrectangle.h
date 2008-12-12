@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -70,7 +70,7 @@ CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img,
  * @return void
  * @uses cvRectangle
  */
-CVAPI(void) cvDrawRectangle( IplImage* img, 
+void cvDrawRectangle( IplImage* img, 
                              CvRect32f rect32f,
                              CvPoint2D32f shear,
                              CvScalar color,
@@ -198,7 +198,7 @@ CVAPI(void) cvDrawRectangle( IplImage* img,
  * @return void
  * @uses cvDrawRectangle
  */
-CVAPI(void) cvShowImageAndRectangle( const char* w_name, 
+void cvShowImageAndRectangle( const char* w_name, 
                                      const IplImage* img,
                                      CvRect32f rect32f,
                                      CvPoint2D32f shear,

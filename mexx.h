@@ -1,8 +1,8 @@
-/**
+/** @file
 * Matlab C Library (MEX) eXtension
 *     verified Matlab 2007b
-*
-* The MIT License
+*/
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 

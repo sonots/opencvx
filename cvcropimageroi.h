@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -56,7 +56,7 @@ CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* orig,
  *                     The shear deformation parameter shx and shy
  * @return void
  */
-CVAPI(void) cvCropImageROI( const IplImage* img, IplImage* dst, CvRect32f rect32f, CvPoint2D32f shear )
+void cvCropImageROI( const IplImage* img, IplImage* dst, CvRect32f rect32f, CvPoint2D32f shear )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     float angle = rect32f.angle;
@@ -148,7 +148,7 @@ CVAPI(void) cvCropImageROI( const IplImage* img, IplImage* dst, CvRect32f rect32
  * @return void
  * @uses cvCropImageROI
  */
-CVAPI(void) cvShowCroppedImage( const char* w_name, IplImage* img, CvRect32f rect32f, CvPoint2D32f shear )
+void cvShowCroppedImage( const char* w_name, IplImage* img, CvRect32f rect32f, CvPoint2D32f shear )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     if( rect.width <= 0 || rect.height <= 0 ) return;
