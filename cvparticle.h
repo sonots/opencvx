@@ -40,7 +40,6 @@
 #include "cvsetrow.h"
 #include "cvsetcol.h"
 #include "cvlogsum.h"
-#include "cvweightedmean.h"
 #include "cvanglemean.h"
 #include "cvrandgauss.h"
 
@@ -187,7 +186,7 @@ void cvParticleMeanParticle( const CvParticle* p, CvMat* meanp )
 {
     CvMat* probs = NULL;
     CvMat* particles_i, hdr;
-    int i;
+    int i, j;
     CV_FUNCNAME( "cvParticleMeanParticle" );
     __BEGIN__;
     CV_ASSERT( meanp->rows == p->num_states && meanp->cols == 1 );
@@ -207,8 +206,12 @@ void cvParticleMeanParticle( const CvParticle* p, CvMat* meanp )
         if( !circular ) // usual mean
         {
             particles_i = cvGetRow( p->particles, &hdr, i );
-            CvScalar mean = cvWeightedMean( particles_i, probs );
-            cvmSet( meanp, i, 0, mean.val[0] );
+            double mean = 0;
+            for( j = 0; j < p->num_particles; j++ )
+            {
+                mean += cvmGet( particles_i, 0, j ) * cvmGet( probs, 0, j );
+            }
+            cvmSet( meanp, i, 0, mean );
         }
         else // wrapped mean (angle)
         {
