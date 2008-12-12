@@ -132,7 +132,7 @@ int main( int argc, char** argv )
         }
         // draw most probable particle
         printf( "Most probable particle's state\n" );
-        int maxp_id = cvParticleMaxParticle( particle );
+        int maxp_id = cvParticleGetMax( particle );
         CvParticleState maxs = cvParticleStateGet( particle, maxp_id );
         cvParticleStateDraw( maxs, frame, CV_RGB(255,0,0) );
         cvParticleStatePrint( maxs );

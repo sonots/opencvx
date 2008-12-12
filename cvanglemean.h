@@ -1,5 +1,5 @@
-/** @file
-* The MIT License
+/** @file */
+/* The MIT License
 * 
 * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
 * 
@@ -31,11 +31,12 @@
 #include <float.h>
 #include <math.h>
 
-CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight = NULL, 
-                      double wrap = 360 );
+CVAPI(CvScalar) cvAngleMean( const CvArr *arr, 
+                             const CvArr *weight = NULL, 
+                             double wrap = 360 );
 
 /**
- * cvAngleMean
+ * cvAngleMean - Compute mean of angle elements of an array
  *
  * Compute mean of angle elements of an array (each channel independently). 
  * There is a fact that 0 degrees and 360 degrees are identical angles, 
@@ -45,12 +46,15 @@ CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight = NULL,
  *
  * @param  arr              array
  * @param  [weight = NULL]  weight to compute mean. 
- *                          The deafult is 1/num (uniform)
+ *                          The deafult is 1/num (uniform).
  *                          The size must be same with arr. 
  * @param  [wrap = 360]     The unit of wrapping around.
  *                          The defeault is 360 as angle.
+ * @return angle mean for each channel
  */
-CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight, double wrap )
+CVAPI(CvScalar) cvAngleMean( const CvArr *arr, 
+                                const CvArr *weight, 
+                                double wrap )
 {
     CvMat* mat, matstub;
     CvMat* wmat = NULL, wmatstub;

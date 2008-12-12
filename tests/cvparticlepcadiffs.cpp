@@ -169,17 +169,17 @@ int main( int argc, char** argv )
         }
         // draw most probable particle
         printf( "Most probable particle's state\n" );
-        int maxp_id = cvParticleMaxParticle( particle );
+        int maxp_id = cvParticleGetMax( particle );
         CvParticleState maxs = cvParticleStateGet( particle, maxp_id );
         cvParticleStateDraw( maxs, frame, CV_RGB(255,0,0) );
         cvParticleStatePrint( maxs );
         
         // marginalization and normalization beforehand to get mean
-        cvParticleMarginalize( particle );
+        icvParticleMarginalize( particle );
 
         // draw mean particle's state
         printf( "Mean particle's state\n");
-        cvParticleMeanParticle( particle, meanp );
+        cvParticleGetMean( particle, meanp );
         CvParticleState means = cvParticleStateFromMat( meanp );
         cvParticleStateDraw( means, frame, CV_RGB(255,0,0) );
         cvParticleStatePrint( means );

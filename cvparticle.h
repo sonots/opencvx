@@ -7,7 +7,11 @@
  * cvParticleTransition( p ). 
  * Other functions should not necessary be modified.
  *
- * The MIT License
+ * cvCreateParticle -> cvPartcileSetXxx -> cvParticleInit
+ * -> loop { cvParticleTransition -> cvParticleResample )
+ * -> cvReleaseParticle
+ */
+/* The MIT License
  * 
  * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
  * 
@@ -44,35 +48,37 @@
 #include "cvrandgauss.h"
 
 /******************************* Structures **********************************/
-
+/**
+ * Particle Filter structure
+ */
 typedef struct CvParticle {
     // config
-    int num_states;    // Number of tracking states, e.g.,
-                       // 4 if x, y, width, height
-    int num_observes;  // Number of observation models, e.g., 
-                       // 2 if color model and shape model
-    int num_particles; // Number of particles
-    bool logprob;      // probs are log probabilities
+    int num_states;    /**< Number of tracking states, e.g.,
+                          4 if x, y, width, height */
+    int num_observes;  /**< Number of observation models, e.g., 
+                          2 if color model and shape model */
+    int num_particles; /**< Number of particles */
+    bool logprob;      /**< probs are log probabilities */
     // transition
-    CvMat* dynamics;   // num_states x num_states. Dynamics model.
-    CvRNG  rng;        // Random seed
-    CvMat* std;        // num_states x 1. Standard deviation for gaussian noise
-                       // Set standard deviation == 0 for no noise
-    CvMat* stds;       // num_states x num_particles. Std for each state and
-                       // each particle. "std" is used if "stds" is not set. 
-    CvMat* bound;      // num_states x 3 (lowerbound, upperbound, 
-                       // wrap_around (like angle) flag 0 or 1)
-                       // Set lowerbound == upperbound to express no bound
+    CvMat* dynamics;   /**< num_states x num_states. Dynamics model. */
+    CvRNG  rng;        /**< Random seed */
+    CvMat* std;        /**< num_states x 1. Standard deviation for gaussian noise
+                           Set standard deviation == 0 for no noise */
+    CvMat* stds;       /**< num_states x num_particles. Std for each state and
+                          each particle. "std" is used if "stds" is not set. */
+    CvMat* bound;      /**< num_states x 3 (lowerbound, upperbound, 
+                          wrap_around (like angle) flag 0 or 1)
+                          Set lowerbound == upperbound to express no bound */
     // particle states
-    CvMat* particles;  // num_states x num_particles. The particles. 
-                       // The transition states values of all particles.
-    CvMat* probs;      // num_observes x num_particles. The likelihood of 
-                       // each particle respect to the particle id in "particles"
-    CvMat* trans_probs;    // 1 x num_particles. Likelihoods of transition states. 
-                           // Marginalized respect to observation models
-    CvMat* observe_probs;  // num_observes x 1. Likelihoods of observation states. 
-                           // Marginalized respect to tracking states
-    CvMat* observe_priors; // num_observes x 1. Prior probs for observation states.
+    CvMat* particles;      /**< num_states x num_particles. The particles. 
+                              The transition states values of all particles. */
+    CvMat* probs;          /**< num_observes x num_particles. The likelihood of 
+                              each particle respect to the particle id in "particles" */
+    CvMat* trans_probs;    /**< 1 x num_particles. Likelihoods of transition states. 
+                              Marginalized respect to observation models */
+    CvMat* observe_probs;  /**< num_observes x 1. Likelihoods of observation states. 
+                              Marginalized respect to tracking states */
+    CvMat* observe_priors; /**< num_observes x 1. Prior probs for observation states. */
 } CvParticle;
 
 /**************************** Function Prototypes ****************************/
@@ -81,17 +87,17 @@ CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particle
 void cvReleaseParticle( CvParticle** p );
 void cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics );
 void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std );
-void cvParticleSetBound( CvParticle* p );
+void cvParticleSetBound( CvParticle* p, const CvMat* bound );
 
 void cvParticleInit( CvParticle* p, const CvParticle* init = NULL );
 void cvParticleTransition( CvParticle* p );
 void cvParticleResample( CvParticle* p, bool marginal = true );
 
-void cvParticleMarginalize( CvParticle* p );
-void cvParticleBound( CvParticle* p );
+void icvParticleMarginalize( CvParticle* p );
+void icvParticleBound( CvParticle* p );
 
-int  cvParticleMaxParticle( const CvParticle* p );
-CvMat* cvParticleMeanParticle( const CvParticle* p );
+int  cvParticleGetMax( const CvParticle* p );
+void cvParticleGetMean( const CvParticle* p, CvMat* meanp );
 void cvParticlePrint( const CvParticle* p, int p_id = -1 );
 
 /*************************** Constructor / Destructor *************************/
@@ -149,7 +155,6 @@ CvParticle* cvCreateParticle( int num_states, int num_observes,
  * Release Particle filter structure
  *
  * @param particle
- * @return void
  */
 void cvReleaseParticle( CvParticle** particle )
 {
@@ -214,7 +219,7 @@ void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std )
 }
 
 /**
- * Set lowerbound and upperbound for tracking states
+ * Set lowerbound and upperbound used for bounding tracking state transition
  *
  * @param particle
  * @param bound    num_states x 3 (lowerbound, upperbound, circular flag 0 or 1)
@@ -237,10 +242,12 @@ void cvParticleSetBound( CvParticle* p, const CvMat* bound )
 /**
  * Initialize states
  *
+ * If initial states are given, these states are uniformly copied.
+ * If not given, states are uniform randomly sampled within lowerbound 
+ * and upperbound regions.
+ *
  * @param particle
- * @param [init = NULL] Manually tell initial states. 
- *                      Use num_particles as number of initial candidates for this.
- *                      If not given, uniform randomly initialize
+ * @param [init = NULL] initial states.
  */
 void cvParticleInit( CvParticle* p, const CvParticle* init )
 {
@@ -297,6 +304,8 @@ void cvParticleInit( CvParticle* p, const CvParticle* init )
  * Other functions should not necessary be modified.
  *
  * @param particle
+ * @note Uses See also functions inside.
+ * @see icvParticleBound
  */
 void cvParticleTransition( CvParticle* p )
 {
@@ -343,7 +352,7 @@ void cvParticleTransition( CvParticle* p )
     cvReleaseMat( &transits );
     cvReleaseMat( &noises );
 
-    cvParticleBound( p );
+    icvParticleBound( p );
 }
 
 /**
@@ -353,7 +362,9 @@ void cvParticleTransition( CvParticle* p )
  * Simply copy, not uniform randomly selects
  *
  * @param particle
- * @uses cvParticleMaxParticle
+ * @note Uses See also functions inside.
+ * @see icvParticleMarginalize
+ * @see cvParticleGetMax
  */
 void cvParticleResample( CvParticle* p, bool marginal )
 {
@@ -365,7 +376,7 @@ void cvParticleResample( CvParticle* p, bool marginal )
 
     if( marginal )
     {
-        cvParticleMarginalize( p );
+        icvParticleMarginalize( p );
     }
 
     k = 0;
@@ -383,7 +394,7 @@ void cvParticleResample( CvParticle* p, bool marginal )
         }
     }
 
-    max_loc = cvParticleMaxParticle( p );
+    max_loc = cvParticleGetMax( p );
     particle = cvGetCol( p->particles, &hdr, max_loc );
     while( k < p->num_particles )
         cvSetCol( particle, new_particles, k++ );
@@ -395,13 +406,15 @@ exit:
 
 
 /**
- * Create trans_probs, and observe_probs by marginalizing
- * Do normalization too
+ * Do marginalization to obtain observe_probs (probabilities for
+ * observation states) and trans_probs (probabilities for 
+ * transition states). Normalization is done too.
  *
  * @param particle
- * @todo priors
+ * @note Used by See also functions
+ * @see cvParticleResample
  */
-void cvParticleMarginalize( CvParticle* p )
+void icvParticleMarginalize( CvParticle* p )
 {
     if( !p->logprob )
     {
@@ -471,11 +484,13 @@ void cvParticleMarginalize( CvParticle* p )
 }
 
 /**
- * Bound particle states
+ * Apply lower bound and upper bound for particle states.
  *
  * @param particle
+ * @note Used by See also functions
+ * @see cvParticleTransition
  */
-void cvParticleBound( CvParticle* p )
+void icvParticleBound( CvParticle* p )
 {
     int row, col;
     double lower, upper;
@@ -511,7 +526,7 @@ void cvParticleBound( CvParticle* p )
  * @param particle
  * @return int
  */
-int cvParticleMaxParticle( const CvParticle* p )
+int cvParticleGetMax( const CvParticle* p )
 {
     double minval, maxval;
     CvPoint min_loc, max_loc;
@@ -520,18 +535,18 @@ int cvParticleMaxParticle( const CvParticle* p )
 }
 
 /**
- * Get mean state
+ * Get the mean state (particle)
  *
  * @param particle
- * @param meanp num_states x 1, CV_32FC1 or CV_64FC1
- * @return CvMat*
+ * @param meanp     num_states x 1, CV_32FC1 or CV_64FC1
+ * @return void
  */
-void cvParticleMeanParticle( const CvParticle* p, CvMat* meanp )
+void cvParticleGetMean( const CvParticle* p, CvMat* meanp )
 {
     CvMat* probs = NULL;
     CvMat* particles_i, hdr;
     int i, j;
-    CV_FUNCNAME( "cvParticleMeanParticle" );
+    CV_FUNCNAME( "cvParticleGetMean" );
     __BEGIN__;
     CV_ASSERT( meanp->rows == p->num_states && meanp->cols == 1 );
     if( !p->logprob )
