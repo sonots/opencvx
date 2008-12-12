@@ -51,7 +51,7 @@ CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight = NULL, double wrap 
 CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight, double wrap )
 {
     CvMat* mat, matstub;
-    CvMat* wmat, wmatstub;
+    CvMat* wmat = NULL, wmatstub;
     CvScalar mean = cvScalar(0,0,0,0);
     CV_FUNCNAME( "cvMean" );
     __BEGIN__;
@@ -72,56 +72,29 @@ CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight, double wrap )
                    mat->cols == wmat->cols &&
                    CV_MAT_CN(mat->type) == CV_MAT_CN(wmat->type) );
     }
-    if( weight == NULL )
+    double w = 1 / (double)mat->rows * mat->cols;
+    int row, col, ch;
+    int nChannels = CV_MAT_CN(mat->type);
+    CvScalar elem;
+    CvScalar welem = cvScalar(w,w,w,w);
+    CvScalar mean_cos = cvScalar(0,0,0,0);
+    CvScalar mean_sin = cvScalar(0,0,0,0);
+    for( row = 0; row < mat->rows; row++ )
     {
-        double N = mat->rows * mat->cols;
-        int row, col, ch;
-        int nChannels = CV_MAT_CN(mat->type);
-        CvScalar elem;
-        CvScalar mean_cos = cvScalar(0,0,0,0);
-        CvScalar mean_sin = cvScalar(0,0,0,0);
-        for( row = 0; row < mat->rows; row++ )
+        for( col = 0; col < mat->cols; col++ )
         {
-            for( col = 0; col < mat->cols; col++ )
+            elem = cvGet2D( mat, row, col );
+            if( wmat != NULL ) welem = cvGet2D( wmat, row, col );
+            for( ch = 0; ch < nChannels; ch++ )
             {
-                elem = cvGet2D( mat, row, col );
-                for( ch = 0; ch < nChannels; ch++ )
-                {
-                    mean_cos.val[ch] += cos( elem.val[ch] * 2*M_PI / wrap ) / N;
-                    mean_sin.val[ch] += sin( elem.val[ch] * 2*M_PI / wrap ) / N;
-                }
+                mean_cos.val[ch] += cos( elem.val[ch] * 2*M_PI / wrap ) * welem.val[ch];
+                mean_sin.val[ch] += sin( elem.val[ch] * 2*M_PI / wrap ) * welem.val[ch];
             }
-        }
-        for( ch = 0; ch < nChannels; ch++ )
-        {
-            mean.val[ch] = atan( mean_sin.val[ch] / mean_cos.val[ch] ) * wrap / (2*M_PI);
         }
     }
-    else
+    for( ch = 0; ch < nChannels; ch++ )
     {
-        int row, col, ch;
-        int nChannels = CV_MAT_CN(mat->type);
-        CvScalar elem;
-        CvScalar welem;
-        CvScalar mean_cos = cvScalar(0,0,0,0);
-        CvScalar mean_sin = cvScalar(0,0,0,0);
-        for( row = 0; row < mat->rows; row++ )
-        {
-            for( col = 0; col < mat->cols; col++ )
-            {
-                elem = cvGet2D( mat, row, col );
-                welem = cvGet2D( wmat, row, col );
-                for( ch = 0; ch < nChannels; ch++ )
-                {
-                    mean_cos.val[ch] += cos( elem.val[ch] * 2*M_PI / wrap ) * welem.val[ch];
-                    mean_sin.val[ch] += sin( elem.val[ch] * 2*M_PI / wrap ) * welem.val[ch];
-                }
-            }
-        }
-        for( ch = 0; ch < nChannels; ch++ )
-        {
-            mean.val[ch] = atan( mean_sin.val[ch] / mean_cos.val[ch] ) * wrap / (2*M_PI);
-        }
+        mean.val[ch] = atan( mean_sin.val[ch] / mean_cos.val[ch] ) * wrap / (2*M_PI);
     }
     __END__;
     return mean;
