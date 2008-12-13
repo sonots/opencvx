@@ -268,6 +268,9 @@ void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize )
 
 /***************************** Utility Functions ****************************************/
 
+/**
+ * Draw tracking state on an image
+ */
 void cvParticleStateDraw( const CvParticleState& state, IplImage* img, CvScalar color )
 {
     CvBox32f box32f = cvBox32f( state.x, state.y, state.width, state.height, state.angle );
@@ -275,6 +278,9 @@ void cvParticleStateDraw( const CvParticleState& state, IplImage* img, CvScalar 
     cvDrawRectangle( img, rect32f, cvPoint2D32f(0,0), color );
 }
 
+/**
+ * Print the tracking state
+ */
 void cvParticleStatePrint( const CvParticleState& state )
 {
     printf( "x :%.2f ", state.x );

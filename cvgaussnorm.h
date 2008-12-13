@@ -44,8 +44,6 @@
 //    cvMatGaussNorm( sample, dst );
 // }
 
-void cvImgGaussNorm( const CvArr* img, CvArr* normed );
-
 /**
  * Zero mean and unit covariance normalization of an image
  * Each channel is processed independently

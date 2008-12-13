@@ -132,7 +132,7 @@ cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs,
 }
 
 /**
- * Ccompute gaussian mixture pdf
+ * Compute gaussian mixture pdf
  *
  * @param sample    D x 1 sample vector
  * @param means     D x K mean vector for each cluster
