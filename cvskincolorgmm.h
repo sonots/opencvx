@@ -32,7 +32,7 @@
 //     You may guess this value by looking your image. 
 //     You may reduce this number when you can allow larger false alaram rate which
 //     results in to reduce reduce miss detection rate.
-// @param [probs = NULL] The likelihood-ratio valued array rather than mask if you want
+// @param probs      The likelihood-ratio valued array rather than mask if you want
 // 
 // References)
 // @verbatim

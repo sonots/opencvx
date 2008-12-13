@@ -83,22 +83,22 @@ typedef struct CvParticle {
 
 /**************************** Function Prototypes ****************************/
 
-CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particles, bool logprob = false );
+CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particles, bool logprob );
 void cvReleaseParticle( CvParticle** p );
 void cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics );
 void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std );
 void cvParticleSetBound( CvParticle* p, const CvMat* bound );
 
-void cvParticleInit( CvParticle* p, const CvParticle* init = NULL );
+void cvParticleInit( CvParticle* p, const CvParticle* init );
 void cvParticleTransition( CvParticle* p );
-void cvParticleResample( CvParticle* p, bool marginal = true );
+void cvParticleResample( CvParticle* p, bool marginal );
 
 void icvParticleMarginalize( CvParticle* p );
 void icvParticleBound( CvParticle* p );
 
 int  cvParticleGetMax( const CvParticle* p );
 void cvParticleGetMean( const CvParticle* p, CvMat* meanp );
-void cvParticlePrint( const CvParticle* p, int p_id = -1 );
+void cvParticlePrint( const CvParticle* p, int p_id );
 
 /*************************** Constructor / Destructor *************************/
 
@@ -108,12 +108,11 @@ void cvParticlePrint( const CvParticle* p, int p_id = -1 );
  * @param num_states    Number of tracking states, e.g., 4 if x, y, width, height
  * @param num_observes  Number of observation models, e.g., 2 if color model and shape model
  * @param num_particles Number of particles
- * @param [logprob = false]
- *                      The probs parameter is log probabilities or not
+ * @param logprob       The probs parameter is log probabilities or not
  * @return CvParticle*
  */
 CvParticle* cvCreateParticle( int num_states, int num_observes, 
-                              int num_particles, bool logprob )
+                              int num_particles, bool logprob = false )
 {
     CvParticle *p = NULL;
     CV_FUNCNAME( "cvCreateParticle" );
@@ -247,9 +246,9 @@ void cvParticleSetBound( CvParticle* p, const CvMat* bound )
  * and upperbound regions.
  *
  * @param particle
- * @param [init = NULL] initial states.
+ * @param init       initial states.
  */
-void cvParticleInit( CvParticle* p, const CvParticle* init )
+void cvParticleInit( CvParticle* p, const CvParticle* init = NULL )
 {
     int i, j, k;
     if( init )
@@ -366,7 +365,7 @@ void cvParticleTransition( CvParticle* p )
  * @see icvParticleMarginalize
  * @see cvParticleGetMax
  */
-void cvParticleResample( CvParticle* p, bool marginal )
+void cvParticleResample( CvParticle* p, bool marginal = true )
 {
     int i, j, np, k = 0;
     CvMat* particle, hdr;
@@ -593,7 +592,7 @@ void cvParticleGetMean( const CvParticle* p, CvMat* meanp )
  * @param particle
  * @param p_id      particle id
  */
-void cvParticlePrint( const CvParticle*p, int p_id )
+void cvParticlePrint( const CvParticle*p, int p_id = -1 )
 {
     if( p_id == -1 ) // print all
     {

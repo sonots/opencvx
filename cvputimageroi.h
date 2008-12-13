@@ -49,14 +49,11 @@
  *
  * @param src          The source image
  * @param dst          The target image
- * @param [rect32f = cvRect32f(0,0,1,1,0)]
- *                     The rectangle region (x,y,width,height) to put
+ * @param rect32f      The rectangle region (x,y,width,height) to put
  *                     the rotation angle in degree where the rotation center is (x,y)
- * @param [shear = cvPoint2D32f(0,0)]
- *                     The shear deformation parameter shx and shy
- * @param [mask = NULL] The mask image
- * @param [circumscribe = 0]
- *                     Put a circular (ellipsoidal) image as a circumscribed 
+ * @param shear        The shear deformation parameter shx and shy
+ * @param mask         The mask image
+ * @param circumscribe Put a circular (ellipsoidal) image as a circumscribed 
  *                     circle (ellipsoid) rather than a inscribed circle (ellipsoid)
  * @return void
  */
