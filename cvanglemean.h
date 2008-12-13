@@ -32,20 +32,19 @@
 #include <math.h>
 
 /**
- * Compute mean of angle elements of an array
- *
  * Compute mean of angle elements of an array (each channel independently). 
+ *
  * There is a fact that 0 degrees and 360 degrees are identical angles, 
  * so that for example 180 degrees is not a sensible mean of 2 degrees and 
- * 358 degrees. This function computes means of angles by computing mean 
- * of cosine and sine and finally taking arc tangent. 
+ * 358 degrees, but 0 degree is the mean. 
+ * Algorithm works as 1. compute means of cosine and sine 
+ * 2. take arc tangent of the mean consine and sine. 
  *
- * @param  arr              array
- * @param  [weight = NULL]  weight to compute mean. 
- *                          The deafult is 1/num (uniform).
- *                          The size must be same with arr. 
- * @param  [wrap = 360]     The unit of wrapping around.
- *                          The defeault is 360 as angle.
+ * @param  arr     array
+ * @param  weight  Weight to compute mean. The deafult is 1/num (uniform).
+ *                 The size must be same with arr. 
+ * @param  wrap    The unit of wrapping around.
+ *                 The defeault is 360 as angle.
  * @return angle mean for each channel
  */
 CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight = NULL, 
