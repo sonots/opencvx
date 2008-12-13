@@ -18,7 +18,7 @@
 #include "cvaux.h"
 using namespace std;
 
-CVAPI(void) cvSkinColorPeer( const IplImage* img, IplImage* mask );
+void cvSkinColorPeer( const IplImage* img, IplImage* mask );
 
 /**
 // cvSkinColorPeer - Skin Color Detection by Peer, et.al [1]

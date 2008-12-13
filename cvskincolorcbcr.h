@@ -18,7 +18,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-CVAPI(void) cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL );
+void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL );
 
 /**
 // cvSkinColorCbCr - Skin Color Detection in (Cb, Cr) space by [1][2]

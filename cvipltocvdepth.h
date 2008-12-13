@@ -27,7 +27,7 @@
 
 #include "cv.h"
 
-CVAPI(int) cvIplToCvDepth(int depth);
+int cvIplToCvDepth(int depth);
 
 /**
  * Convert IplImage depth to CvMat depth

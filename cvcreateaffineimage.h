@@ -35,7 +35,7 @@
 
 #define CV_AFFINE_SAME 0
 #define CV_AFFINE_FULL 1
-CVAPI(IplImage*) cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
+IplImage* cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
                                 int flags = CV_AFFINE_SAME, CvPoint* origin = NULL,
                                 CvScalar color = CV_RGB(0,0,0) );
 CV_INLINE IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine, 

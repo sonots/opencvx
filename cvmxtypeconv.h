@@ -39,7 +39,7 @@
 #define cvmxCvToIplDepth(type) (cvCvToIplDepth(type))
 #define cvmxIplToCvDepth(depth) (cvIplToCvDepth(depth))
 CVAPI(mxClassID)    cvmxClassIDFromIplDepth(int depth);
-CVAPI(int)          cvmxClassIDToIplDepth(mxClassID classid);
+int          cvmxClassIDToIplDepth(mxClassID classid);
 CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type);
 CV_INLINE int       cvmxClassIDToCvDepth(mxClassID classid);
 

@@ -28,7 +28,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-CVAPI(void) cvClosing( const CvArr* src, CvArr* dst, IplConvKernel* element = NULL, int iterations = 1 );
+void cvClosing( const CvArr* src, CvArr* dst, IplConvKernel* element = NULL, int iterations = 1 );
 
 /**
  * cvClosing - closing morphological operation

@@ -28,7 +28,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-CVAPI( void ) cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element = NULL, int iterations = 1 );
+void cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element = NULL, int iterations = 1 );
 /**
 // cvOpening - opening morphological operation
 //

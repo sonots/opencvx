@@ -28,7 +28,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-CVAPI(void) cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, int thresh = 100 );
+void cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, int thresh = 100 );
 
 /**
  * Obtain non-background pixels using reference image (such as previous frame in video )

@@ -30,7 +30,7 @@
 #include "cvsetrow.h"
 #include "cvsetcol.h"
 
-CVAPI( void ) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, int dim = -1 );
+void cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, int dim = -1 );
 #define cvHcat( src1, src2, dst ) cvCat( (src1), (src2), (dst), 0 )
 #define cvVcat( src1, src2, dst ) cvCat( (src1), (src2), (dst), 1 )
 

@@ -32,7 +32,7 @@
 
 #include "cvrect32f.h"
 
-CVAPI(void) cvCreateAffine( CvMat* affine, 
+void cvCreateAffine( CvMat* affine, 
                             CvRect32f rect = cvRect32f(0,0,1,1,0), 
                             CvPoint2D32f shear = cvPoint2D32f(0,0) );
 

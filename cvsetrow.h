@@ -96,7 +96,7 @@ void cvSetRows( const CvArr* src, CvArr* dst,
     __END__;
 }
 /*
-CVAPI( void ) cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end_row )
+void cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end_row )
 {
     CV_FUNCNAME( "cvSetRows" );
     __BEGIN__;

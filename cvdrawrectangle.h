@@ -33,14 +33,14 @@
 #include "cvcreateaffine.h"
 #include "cvrect32f.h"
 
-CVAPI(void) cvDrawRectangle( IplImage* img, 
+void cvDrawRectangle( IplImage* img, 
                              CvRect32f rect32f = cvRect32f(0,0,1,1,0),
                              CvPoint2D32f shear = cvPoint2D32f(0,0), 
                              CvScalar color = CV_RGB(255, 255, 255), 
                              int thickness = 1, 
                              int line_type = 8,
                              int shift = 0);
-CVAPI(void) cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
+void cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
                                      CvRect32f rect32f = cvRect32f(0,0,1,1,0),
                                      CvPoint2D32f shear = cvPoint2D32f(0,0),
                                      CvScalar color = CV_RGB(255, 255, 0), 

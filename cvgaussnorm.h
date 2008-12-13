@@ -44,7 +44,7 @@
 //    cvMatGaussNorm( sample, dst );
 // }
 
-CVAPI(void) cvImgGaussNorm( const CvArr* img, CvArr* normed );
+void cvImgGaussNorm( const CvArr* img, CvArr* normed );
 
 /**
 // cvImgGaussNorm - Zero mean and unit covariance normalization of an image

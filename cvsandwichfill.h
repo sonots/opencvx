@@ -28,7 +28,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-CVAPI(void) cvSandwichFill( const IplImage* src, IplImage* dst );
+void cvSandwichFill( const IplImage* src, IplImage* dst );
 
 /**
 // cvSandwichFill - Search boundary (non-zero pixel) from both side and fill inside

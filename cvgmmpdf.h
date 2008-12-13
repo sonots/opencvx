@@ -34,8 +34,8 @@
 
 #include "cvgausspdf.h"
 
-CVAPI(void) cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs, bool normalize = false );
-CVAPI(double) cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs = NULL, bool normalize = false );
+void cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs, bool normalize = false );
+double cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, const CvMat* weights, CvMat* probs = NULL, bool normalize = false );
 
 /**
 // cvMatGmmPdf - compute gaussian mixture pdf for a set of sample vectors

@@ -94,7 +94,7 @@ void cvSetCols( const CvArr* src, CvArr* dst,
 }
 
 /*
-CVAPI( void ) cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end_col )
+void cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end_col )
 {
 CV_FUNCNAME( "cvSetCols" );
     __BEGIN__;

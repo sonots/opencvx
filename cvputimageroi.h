@@ -34,7 +34,7 @@
 #include "cvcreateaffine.h"
 #include "cvcreateaffineimage.h"
 
-CVAPI(void) cvPutImageROI( const IplImage* src,
+void cvPutImageROI( const IplImage* src,
                            IplImage* dst,
                            CvRect32f rect32f = cvRect32f(0,0,1,1,0),
                            CvPoint2D32f shear = cvPoint2D32f(0,0),

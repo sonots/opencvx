@@ -26,10 +26,10 @@
 //                   const CvArr* eigenvectors, CvArr* result );
 //void cvBackProjectPCA( const CvArr* proj, const CvArr* avg,
 //                       const CvArr* eigenvects, CvArr* result );
-CVAPI(void) cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
+void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
                     const CvMat* eigenvectors, CvMat* probs, 
                     int normalize = 0, bool logprob = true );
-CVAPI(double) cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
+double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
                    const CvMat* eigenvectors, int normalize = 0, bool logprob = true );
 
 /**

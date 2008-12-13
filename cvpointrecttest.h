@@ -32,7 +32,7 @@
 #include "cvcreateaffine.h"
 #include "cvrectpoints.h"
 
-CVAPI(double) cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
+double cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
                                   int measure_dist = 0, 
                                   CvPoint2D32f shear = cvPoint2D32f(0,0) );
 CV_INLINE double cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, 

@@ -30,7 +30,7 @@
 
 #include "cvsetrow.h"
 
-CVAPI(void) cvInvAffine( const CvMat* affine, CvMat* invaffine );
+void cvInvAffine( const CvMat* affine, CvMat* invaffine );
 
 /**
  * Create an inv affine transform matrix from an affine transform matrix

@@ -30,7 +30,7 @@
 
 #include <time.h>
 
-CVAPI(clock_t) cvWaitFps( double frame_per_sec, clock_t start = 0 );
+clock_t cvWaitFps( double frame_per_sec, clock_t start = 0 );
 
 /**
  * Wait amount of seconds per frame totally. 

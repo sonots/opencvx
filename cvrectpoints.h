@@ -31,7 +31,7 @@
 #include "cvrect32f.h"
 #include "cvcreateaffine.h"
 
-CVAPI(void) cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
+void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
                              CvPoint2D32f shear = cvPoint2D32f(0,0) );
 CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
                                CvPoint2D32f shear = cvPoint2D32f(0,0) );

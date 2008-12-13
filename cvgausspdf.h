@@ -30,8 +30,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-CVAPI(void) cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, CvMat* probs, bool normalize = false, bool logprob = false );
-CVAPI(double) cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, bool normalize = false, bool logprob = false );
+void cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, CvMat* probs, bool normalize = false, bool logprob = false );
+double cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, bool normalize = false, bool logprob = false );
 
 /**
  * cvMatGaussPdf - compute multivariate gaussian pdf for a set of sample vectors

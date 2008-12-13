@@ -23,7 +23,7 @@
 #include "cvxmat.h"
 #include "cvgmmpdf.h"
 
-CVAPI(void) cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.0, IplImage* probs = NULL );
+void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.0, IplImage* probs = NULL );
 
 /**
 // cvSkinColorGMM - Skin Color Detection with GMM model

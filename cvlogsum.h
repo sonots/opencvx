@@ -31,7 +31,7 @@
 #include <float.h>
 #include <math.h>
 
-CVAPI(CvScalar) cvLogSum( const CvArr *arr );
+CvScalar cvLogSum( const CvArr *arr );
 
 /**
  * cvLogSum

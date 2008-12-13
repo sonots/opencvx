@@ -28,7 +28,7 @@
 #include "cv.h"
 #include "cvaux.h"
 
-CVAPI(double) cvRandGauss( CvRNG* rng, double sigma );
+double cvRandGauss( CvRNG* rng, double sigma );
 
 /**
  * This function returns a Gaussian random variate, with mean zero and standard deviation sigma.

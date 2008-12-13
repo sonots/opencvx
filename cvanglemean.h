@@ -31,7 +31,7 @@
 #include <float.h>
 #include <math.h>
 
-CVAPI(CvScalar) cvAngleMean( const CvArr *arr, 
+CvScalar cvAngleMean( const CvArr *arr, 
                              const CvArr *weight = NULL, 
                              double wrap = 360 );
 
