@@ -14,7 +14,6 @@
 #ifndef CV_SKINCOLOR_GMM_INCLUDED
 #define CV_SKINCOLOR_GMM_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 #define _USE_MATH_DEFINES
@@ -23,10 +22,8 @@
 #include "cvxmat.h"
 #include "cvgmmpdf.h"
 
-void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.0, IplImage* probs = NULL );
-
 /**
-// cvSkinColorGMM - Skin Color Detection with GMM model
+// Skin Color Detection with GMM model
 //
 // @param img        Input image
 // @param mask       Generated mask image. 1 for skin and 0 for others
@@ -54,7 +51,8 @@ void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold = 1.
 //  }
 // @endverbatim
 */
-void cvSkinColorGmm( const IplImage* _img, IplImage* mask, double threshold, IplImage* probs )
+void cvSkinColorGmm( const IplImage* _img, IplImage* mask, 
+                     double threshold = 1.0, IplImage* probs = NULL )
 {
     CV_FUNCNAME( "cvSkinColorGmm" );
     __BEGIN__;

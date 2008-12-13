@@ -34,12 +34,12 @@
 #include "cvcreateaffine.h"
 #include "cvcreateaffineimage.h"
 
-void cvPutImageROI( const IplImage* src,
-                           IplImage* dst,
-                           CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                           CvPoint2D32f shear = cvPoint2D32f(0,0),
-                           const IplImage* mask = NULL,
-                           bool circumscribe = 0 );
+// void cvPutImageROI( const IplImage* src,
+//                     IplImage* dst,
+//                     CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+//                     CvPoint2D32f shear = cvPoint2D32f(0,0),
+//                     const IplImage* mask = NULL,
+//                     bool circumscribe = 0 );
 
 /**
  * Put a source image on the specified region on a target image 
@@ -61,11 +61,11 @@ void cvPutImageROI( const IplImage* src,
  * @return void
  */
 void cvPutImageROI( const IplImage* src,
-                           IplImage* dst, 
-                           CvRect32f rect32f, 
-                           CvPoint2D32f shear,
-                           const IplImage* mask,
-                           bool circumscribe )
+                    IplImage* dst,
+                    CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                    CvPoint2D32f shear = cvPoint2D32f(0,0),
+                    const IplImage* mask = NULL,
+                    bool circumscribe = 0 )
 {
     CvRect rect;
     float tx, ty, sx, sy, angle;

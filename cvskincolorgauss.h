@@ -14,22 +14,19 @@
 #ifndef CV_SKINCOLOR_GAUSS_INCLUDED
 #define CV_SKINCOLOR_GAUSS_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5 );
-
 /**
-// cvSkinColorGauss - Skin Color Detection with a Gaussian model
+// Skin Color Detection with a Gaussian model
 //
 // @param img    Input image
 // @param mask   Generated mask image. 1 for skin and 0 for others
-// @param [factor = 2.5] A factor to determine threshold value.
-//     The default threshold is -2.5 * sigma and 2.5 * sigma which
-//     supports more than 95% region of Gaussian PDF. 
+// @param factor A factor to determine threshold value.
+//               The default threshold is -2.5 * sigma and 2.5 * sigma which
+//               supports more than 95% region of Gaussian PDF. 
 // 
 // References)
 // @verbatim
@@ -47,7 +44,7 @@ void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5
 //  PR00149), IEEE Comput. Soc. Part vol. 2, 1999.
 // @endverbatim
 */
-void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor )
+void cvSkinColorGauss( const IplImage* _img, IplImage* mask, double factor = 2.5 )
 {
     double mean[] = { 188.9069, 142.9157, 115.1863 };
     double sigma[] = { 58.3542, 45.3306, 43.397 };

@@ -33,19 +33,21 @@
 #include "cvcreateaffine.h"
 #include "cvrect32f.h"
 
-void cvDrawRectangle( IplImage* img, 
-                             CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                             CvPoint2D32f shear = cvPoint2D32f(0,0), 
-                             CvScalar color = CV_RGB(255, 255, 255), 
-                             int thickness = 1, 
-                             int line_type = 8,
-                             int shift = 0);
-void cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
-                                     CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                                     CvPoint2D32f shear = cvPoint2D32f(0,0),
-                                     CvScalar color = CV_RGB(255, 255, 0), 
-                                     int thickness = 1, int line_type = 8, 
-                                     int shift = 0);
+//void 
+//cvDrawRectangle( IplImage* img, 
+//                 CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+//                 CvPoint2D32f shear = cvPoint2D32f(0,0), 
+//                 CvScalar color = CV_RGB(255, 255, 255), 
+//                 int thickness = 1, 
+//                 int line_type = 8,
+//                int shift = 0 );
+//CV_INLINE void 
+//cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
+//                         CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+//                         CvPoint2D32f shear = cvPoint2D32f(0,0),
+//                         CvScalar color = CV_RGB(255, 255, 0), 
+//                         int thickness = 1, int line_type = 8, 
+//                         int shift = 0 );
 
 /**
  * Draw an rotated and sheared rectangle
@@ -70,13 +72,14 @@ void cvShowImageAndRectangle( const char* w_name, const IplImage* img,
  * @return void
  * @uses cvRectangle
  */
-void cvDrawRectangle( IplImage* img, 
-                             CvRect32f rect32f,
-                             CvPoint2D32f shear,
-                             CvScalar color,
-                             int thickness,
-                             int line_type,
-                             int shift )
+void 
+cvDrawRectangle( IplImage* img, 
+                 CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                 CvPoint2D32f shear = cvPoint2D32f(0,0), 
+                 CvScalar color = CV_RGB(255, 255, 255), 
+                 int thickness = 1, 
+                 int line_type = 8,
+                 int shift = 0 )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     float angle = rect32f.angle;
@@ -198,11 +201,13 @@ void cvDrawRectangle( IplImage* img,
  * @return void
  * @uses cvDrawRectangle
  */
-void cvShowImageAndRectangle( const char* w_name, 
-                                     const IplImage* img,
-                                     CvRect32f rect32f,
-                                     CvPoint2D32f shear,
-                                     CvScalar color, int thickness, int line_type, int shift)
+CV_INLINE void 
+cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
+                         CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                         CvPoint2D32f shear = cvPoint2D32f(0,0),
+                         CvScalar color = CV_RGB(255, 255, 0), 
+                         int thickness = 1, int line_type = 8, 
+                         int shift = 0 )
 {
     CvRect rect  = cvRectFromRect32f( rect32f );
     if( rect.width <= 0 || rect.height <= 0 ) { cvShowImage( w_name, img ); return; }

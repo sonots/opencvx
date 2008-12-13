@@ -33,12 +33,14 @@
 #include "cvcreateaffine.h"
 #include "cvrect32f.h"
 
-void cvCropImageROI( const IplImage* img, IplImage* dst, 
-                            CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                            CvPoint2D32f shear = cvPoint2D32f(0,0) );
-void cvShowCroppedImage( const char* w_name, IplImage* orig, 
-                            CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                            CvPoint2D32f shear = cvPoint2D32f(0,0) );
+//void 
+//cvCropImageROI( const IplImage* img, IplImage* dst, 
+//                CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+//                CvPoint2D32f shear = cvPoint2D32f(0,0) );
+//CV_INLINE void 
+//cvShowCroppedImage( const char* w_name, IplImage* img,
+//                    CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+//                    CvPoint2D32f shear = cvPoint2D32f(0,0) );
 
 /**
  * Crop image with rotated and sheared rectangle
@@ -56,7 +58,10 @@ void cvShowCroppedImage( const char* w_name, IplImage* orig,
  *                     The shear deformation parameter shx and shy
  * @return void
  */
-void cvCropImageROI( const IplImage* img, IplImage* dst, CvRect32f rect32f, CvPoint2D32f shear )
+void 
+cvCropImageROI( const IplImage* img, IplImage* dst, 
+                CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                CvPoint2D32f shear = cvPoint2D32f(0,0) )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     float angle = rect32f.angle;
@@ -148,7 +153,10 @@ void cvCropImageROI( const IplImage* img, IplImage* dst, CvRect32f rect32f, CvPo
  * @return void
  * @uses cvCropImageROI
  */
-void cvShowCroppedImage( const char* w_name, IplImage* img, CvRect32f rect32f, CvPoint2D32f shear )
+CV_INLINE void 
+cvShowCroppedImage( const char* w_name, IplImage* img, 
+                    CvRect32f rect32f = cvRect32f(0,0,1,1,0),
+                    CvPoint2D32f shear = cvPoint2D32f(0,0) )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     if( rect.width <= 0 || rect.height <= 0 ) return;

@@ -58,18 +58,7 @@ typedef struct CvBox32f {
                   /* rotation center is center of rectangle */
 } CvBox32f;
 
-/******************* Function Prototypes ********************************/
-
-CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 );
-CV_INLINE CvBox32f  cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 );
-
-CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle = 0 );
-CV_INLINE CvRect    cvRectFromRect32f( CvRect32f rect );
-CV_INLINE CvBox32f  cvBox32fFromBox2D( CvBox2D box );
-CV_INLINE CvBox2D   cvBox2DFromBox32f( CvBox32f box );
-
-CVAPI(CvBox32f)     cvBox32fFromRect32f( CvRect32f rect );
-CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
+/***************************** Define *****************************************/
 
 #define cvBox32fFromRect(rect) (cvBox32fFromRect32f(cvRect32fFromRect(rect)))
 #define cvBox2DFromRect(rect) (cvBox2DFromBox32f(cvBox32fFromRect(rect)))
@@ -100,12 +89,23 @@ CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
     fflush( stdout );
 #endif
 
+//CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 );
+//CV_INLINE CvBox32f  cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 );
+
+//CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle = 0 );
+//CV_INLINE CvRect    cvRectFromRect32f( CvRect32f rect );
+//CV_INLINE CvBox32f  cvBox32fFromBox2D( CvBox2D box );
+//CV_INLINE CvBox2D   cvBox2DFromBox32f( CvBox32f box );
+
+//CVAPI(CvBox32f)     cvBox32fFromRect32f( CvRect32f rect );
+//CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
+
 /******************* Function Implementations ***************************/
 
 /**
- * Constructure
+ * Constructor
  */
-CvRect32f cvRect32f( float x, float y, float width, float height, float angle )
+CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 )
 {
     CvRect32f rect = { x, y, width, height, angle };
     return rect;
@@ -114,33 +114,33 @@ CvRect32f cvRect32f( float x, float y, float width, float height, float angle )
 /**
  * Constructor
  */
-CvBox32f cvBox32f( float cx, float cy, float width, float height, float angle )
+CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 )
 {
     CvBox32f box = { cx, cy, width, height, angle };
     return box;
 }
 
 /**
- * conversion
+ *cvRect32f from cvRect
  */
-CvRect32f cvRect32fFromRect( CvRect rect, float angle )
+CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle = 0.0 )
 {
     return cvRect32f( rect.x, rect.y, rect.width, rect.height, angle );
 }
 
 /**
- * conversion
+ * cvRect from cvRect32f
  */
-CvRect cvRectFromRect32f( CvRect32f rect )
+CV_INLINE CvRect cvRectFromRect32f( CvRect32f rect )
 {
     return cvRect( cvRound( rect.x ), cvRound( rect.y ),
                    cvRound( rect.width ), cvRound( rect.height ) );
 }
 
 /**
- * conversion
+ * cvBox32f from cvBox2D
  */
-CvBox32f cvBox32fFromBox2D( CvBox2D box )
+CV_INLINE CvBox32f cvBox32fFromBox2D( CvBox2D box )
 {
     return cvBox32f( box.center.x, box.center.y,
                      box.size.width, box.size.height,
@@ -148,9 +148,9 @@ CvBox32f cvBox32fFromBox2D( CvBox2D box )
 }
 
 /**
- * conversion
+ * cvBox2D from cvBox32f
  */
-CvBox2D cvBox2DFromBox32f( CvBox32f box )
+CV_INLINE CvBox2D cvBox2DFromBox32f( CvBox32f box )
 {
     CvBox2D box2d;
     box2d.center.x = box.cx;
@@ -162,7 +162,7 @@ CvBox2D cvBox2DFromBox32f( CvBox32f box )
 }
 
 /**
- * conversion
+ * cvBox32f from cvRect32f
  *
  * Convert upper-left coordinate to center coordinate of the rectangle
  */
@@ -185,7 +185,7 @@ CvBox32f cvBox32fFromRect32f( CvRect32f rect )
 }
 
 /**
- * conversion
+ * cvRect32f from cvBox32f
  *
  * Convert center coordinate to upper-left coordinate of the rectangle
  */

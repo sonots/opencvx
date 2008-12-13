@@ -24,15 +24,14 @@
 #ifndef CV_PRINTMAT_INCLUDED
 #define CV_PRINTMAT_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 #include <stdio.h>
 #include <iostream>
 
-CV_INLINE void cvPrintMatProperty( const CvMat* mat );
-CV_INLINE void cvPrintImageProperty( const IplImage* img );
-CV_INLINE void cvPrintMat( const CvArr* arr, bool transpose = false );
+//CV_INLINE void cvPrintMatProperty( const CvMat* mat );
+//CV_INLINE void cvPrintImageProperty( const IplImage* img );
+//void cvPrintMat( const CvArr* arr, bool transpose = false );
 
 /**
 * Print CvMat Property
@@ -40,7 +39,7 @@ CV_INLINE void cvPrintMat( const CvArr* arr, bool transpose = false );
 * @param mat
 * @return void
 */
-void cvPrintMatProperty( const CvMat* mat )
+CV_INLINE void cvPrintMatProperty( const CvMat* mat )
 {
     printf("CvMat Property\n");
     printf(" rows: %d\n", mat->rows);
@@ -56,7 +55,7 @@ void cvPrintMatProperty( const CvMat* mat )
 * @param img
 * @return void
 */
-void cvPrintImageProperty( const IplImage* img )
+CV_INLINE void cvPrintImageProperty( const IplImage* img )
 {
     printf("IplImage Property\n");
     printf(" width: %d\n", img->width);
@@ -72,7 +71,7 @@ void cvPrintImageProperty( const IplImage* img )
 * @param arr array
 * @return void
 */
-void cvPrintMat( const CvArr* arr, bool transpose )
+void cvPrintMat( const CvArr* arr, bool transpose = false )
 {
     CV_FUNCNAME( "cvPrintMat" );
     __BEGIN__;

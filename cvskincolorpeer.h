@@ -13,15 +13,12 @@
 #ifndef CV_SKINCOLOR_PEER_INCLUDED
 #define CV_SKINCOLOR_PEER_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 using namespace std;
 
-void cvSkinColorPeer( const IplImage* img, IplImage* mask );
-
 /**
-// cvSkinColorPeer - Skin Color Detection by Peer, et.al [1]
+// Skin Color Detection by Peer, et.al [1]
 //
 // @param img Input image
 // @param mask Generated mask image. 1 for skin and 0 for others

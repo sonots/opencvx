@@ -24,17 +24,20 @@
 #ifndef CV_GAUSSPDF_INCLUDED
 #define CV_GAUSSPDF_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-void cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, CvMat* probs, bool normalize = false, bool logprob = false );
-double cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, bool normalize = false, bool logprob = false );
+//void 
+//cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, 
+//               CvMat* probs, bool normalize = false, bool logprob = false );
+//CV_INLINE double 
+//cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, 
+//            bool normalize = false, bool logprob = false );
 
 /**
- * cvMatGaussPdf - compute multivariate gaussian pdf for a set of sample vectors
+ * Compute multivariate gaussian pdf for a set of sample vectors
  *
  * Example)
  * @code
@@ -65,12 +68,14 @@ double cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, boo
  * @param mean      D x 1 mean vector
  * @param cov       D x D covariance matrix
  * @param probs     1 x N computed probabilites
- * @param [normalize = false] Compute normalization term or not
- * @param [logprob   = false] Log probability or not
+ * @param normalize Compute normalization term or not
+ * @param logprob   Log probability or not
  * @return void
  * @see cvCalcCovarMatrix, cvAvg
 */
-void cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, CvMat* probs, bool normalize, bool logprob )
+void 
+cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, 
+               CvMat* probs, bool normalize = false, bool logprob = false )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -123,7 +128,7 @@ void cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, C
 }
 
 /**
- * cvGaussPdf - compute multivariate gaussian pdf
+ * Compute multivariate gaussian pdf
  *
  * Example)
  * @code
@@ -142,13 +147,15 @@ void cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, C
  * @param sample    D x 1 data vector
  * @param mean      D x 1 mean vector
  * @param cov       D x D covariance matrix
- * @param [normalize = false] Compute normalization term or not
- * @param [logprob   = false] Log probability or not
+ * @param normalize Compute normalization term or not
+ * @param logprob   Log probability or not
  * @return double   probability
  * @see cvCalcCovarMatrix, cvAvg
  * @see cvMatGaussPdf
 */
-double cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, bool normalize, bool logprob )
+CV_INLINE double 
+cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, 
+            bool normalize = false, bool logprob = false )
 {
     double prob;
     CvMat *_probs  = cvCreateMat( 1, 1, sample->type );

@@ -24,21 +24,12 @@
 #ifndef CV_SETROW_INCLUDED
 #define CV_SETROW_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 
-CV_INLINE void cvSetRows( const CvArr* src, CvArr* dst,
-                         int start_row, int end_row, int delta_row = 1 );
-CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row );
-
-/**
- * #define cvSetRow(src, dst, row) (cvSetRows( src, dst, row, row + 1))
- */
-void cvSetRow( const CvArr* src, CvArr* dst, int row )
-{
-    cvSetRows( src, dst, row, row+1 );
-}
+// void cvSetRows( const CvArr* src, CvArr* dst,
+//                 int start_row, int end_row, int delta_row = 1 );
+// CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row );
 
 /**
  * Set array row or row span
@@ -62,7 +53,7 @@ void cvSetRow( const CvArr* src, CvArr* dst, int row )
  * @see cvSetRow( src, dst, row ) // cvSetRows( src, dst, row, row + 1 )
  */
 void cvSetRows( const CvArr* src, CvArr* dst,
-                         int start_row, int end_row, int delta_row )
+                int start_row, int end_row, int delta_row = 1 )
 {
     int coi;
     CvMat *srcmat = (CvMat*)src, srcmatstub;
@@ -142,5 +133,15 @@ void cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end_row )
     __END__;
 }
 */
+
+/**
+ * Set array row
+ *
+ * #define cvSetRow(src, dst, row) (cvSetRows( src, dst, row, row + 1))
+ */
+CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row )
+{
+    cvSetRows( src, dst, row, row+1 );
+}
 
 #endif

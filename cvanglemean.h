@@ -31,10 +31,6 @@
 #include <float.h>
 #include <math.h>
 
-CvScalar cvAngleMean( const CvArr *arr, 
-                             const CvArr *weight = NULL, 
-                             double wrap = 360 );
-
 /**
  * Compute mean of angle elements of an array
  *
@@ -52,9 +48,8 @@ CvScalar cvAngleMean( const CvArr *arr,
  *                          The defeault is 360 as angle.
  * @return angle mean for each channel
  */
-CvScalar cvAngleMean( const CvArr *arr, 
-                      const CvArr *weight, 
-                      double wrap )
+CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight = NULL, 
+                      double wrap = 360 )
 {
     CvMat* mat, matstub;
     CvMat* wmat = NULL, wmatstub;

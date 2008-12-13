@@ -47,12 +47,11 @@
 void cvImgGaussNorm( const CvArr* img, CvArr* normed );
 
 /**
-// cvImgGaussNorm - Zero mean and unit covariance normalization of an image
-//                  Each channel is processed independently
-//
-// @param img       input image
-// @param normed    normalized image. 32F or 64F should be preferred.
-// @return void
+ * Zero mean and unit covariance normalization of an image
+ * Each channel is processed independently
+ *
+ * @param img       input image
+ * @param normed    normalized image. 32F or 64F should be preferred.
 */
 void cvImgGaussNorm( const CvArr* img, CvArr* normed )
 {

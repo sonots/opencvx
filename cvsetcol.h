@@ -24,21 +24,12 @@
 #ifndef CV_SETCOL_INCLUDED
 #define CV_SETCOL_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 
-CV_INLINE void cvSetCols( const CvArr* src, CvArr* dst,
-                          int start_col, int end_col );
-CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col );
-
-/**
- * #define cvSetCol(src, dst, col) (cvSetCols( src, dst, col, col + 1))
- */
-void cvSetCol( const CvArr* src, CvArr* dst, int col )
-{
-    cvSetCols( src, dst, col, col+1 );
-}
+//void cvSetCols( const CvArr* src, CvArr* dst,
+//                int start_col, int end_col );
+//CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col );
 
 /**
  * Set array col or col span
@@ -59,7 +50,7 @@ void cvSetCol( const CvArr* src, CvArr* dst, int col )
  * @see cvSetCol( src, dst, col ) // cvSetCols( src, dst, col, col + 1 )
  */
 void cvSetCols( const CvArr* src, CvArr* dst,
-                          int start_col, int end_col )
+                int start_col, int end_col )
 {
     int coi;
     CvMat *srcmat = (CvMat*)src, srcmatstub;
@@ -134,6 +125,17 @@ CV_FUNCNAME( "cvSetCols" );
     __END__;
 }
 */
+
+/**
+ * Set array col
+ *
+ * #define cvSetCol(src, dst, col) (cvSetCols( src, dst, col, col + 1))
+ */
+CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col )
+{
+    cvSetCols( src, dst, col, col+1 );
+}
+
 
 #endif
 

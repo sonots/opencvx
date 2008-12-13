@@ -32,10 +32,6 @@
 
 #include "cvrect32f.h"
 
-void cvCreateAffine( CvMat* affine, 
-                            CvRect32f rect = cvRect32f(0,0,1,1,0), 
-                            CvPoint2D32f shear = cvPoint2D32f(0,0) );
-
 /**
  * Create an affine transform matrix
  *
@@ -57,7 +53,9 @@ void cvCreateAffine( CvMat* affine,
     publisher = "Cambridge University Press, ISBN: 0521540518"
  } @endverbatim
  */
-void cvCreateAffine( CvMat* affine, CvRect32f rect, CvPoint2D32f shear )
+void cvCreateAffine( CvMat* affine, 
+                     CvRect32f rect = cvRect32f(0,0,1,1,0), 
+                     CvPoint2D32f shear = cvPoint2D32f(0,0) )
 {
     double c, s;
     CvMat *R, *S, *A, hdr;

@@ -12,32 +12,29 @@
 #ifndef CV_SKINCOLOR_CBCR_INCLUDED
 #define CV_SKINCOLOR_CBCR_INCLUDED
 
-
 #include "cv.h"
 #include "cvaux.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL );
-
 /**
-// cvSkinColorCbCr - Skin Color Detection in (Cb, Cr) space by [1][2]
-//
-// @param img  Input image
-// @param mask Generated mask image. 1 for skin and 0 for others
-// @param [dist = NULL] The distortion valued array rather than mask if you want
-// 
-// References)
-// @verbatim
-//  [1] R.L. Hsu, M. Abdel-Mottaleb, A.K. Jain, "Face Detection in Color Images," 
-//  IEEE Transactions on Pattern Analysis and Machine Intelligence ,vol. 24, no. 5,  
-//  pp. 696-706, May, 2002. (Original)
-//  [2] P. Peer, J. Kovac, J. and F. Solina, ”Human skin colour
-//  clustering for face detection”, In: submitted to EUROCON –
-//  International Conference on Computer as a Tool , 2003. (Tuned)
-// @endverbatim
+ * Skin Color Detection in (Cb, Cr) space by [1][2]
+ *
+ * @param img  Input image
+ * @param mask Generated mask image. 1 for skin and 0 for others
+ * @param dist The distortion valued array rather than mask if you want
+ * 
+ * References)
+ * @verbatim
+ *  [1] R.L. Hsu, M. Abdel-Mottaleb, A.K. Jain, "Face Detection in Color Images," 
+ *  IEEE Transactions on Pattern Analysis and Machine Intelligence ,vol. 24, no. 5,  
+ *  pp. 696-706, May, 2002. (Original)
+ *  [2] P. Peer, J. Kovac, J. and F. Solina, ”Human skin colour
+ *  clustering for face detection”, In: submitted to EUROCON –
+ *  International Conference on Computer as a Tool , 2003. (Tuned)
+ * @endverbatim
 */
-void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr )
+void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL )
 {
     CV_FUNCNAME( "cvSkinColorCbCr" );
     __BEGIN__;

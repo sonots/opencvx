@@ -38,10 +38,10 @@
 /************** Definitions *******************************/
 #define cvmxCvToIplDepth(type) (cvCvToIplDepth(type))
 #define cvmxIplToCvDepth(depth) (cvIplToCvDepth(depth))
-CVAPI(mxClassID)    cvmxClassIDFromIplDepth(int depth);
-int          cvmxClassIDToIplDepth(mxClassID classid);
-CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type);
-CV_INLINE int       cvmxClassIDToCvDepth(mxClassID classid);
+//mxClassID cvmxClassIDFromIplDepth(int depth)
+//int cvmxClassIDToIplDepth(mxClassID classid)
+//CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type)
+//CV_INLINE int cvmxClassIDToCvDepth(mxClassID classid)
 
 /********************* Memo *******************************/
 /*
@@ -162,7 +162,7 @@ int cvmxClassIDToIplDepth(mxClassID classid)
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-mxClassID cvmxClassIDFromCvDepth(int type)
+CV_INLINE mxClassID cvmxClassIDFromCvDepth(int type)
 {
     return cvmxClassIDFromIplDepth(cvCvToIplDepth(type));
 }
@@ -181,7 +181,7 @@ mxClassID cvmxClassIDFromCvDepth(int type)
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-int cvmxClassIDToCvDepth(mxClassID classid)
+CV_INLINE int cvmxClassIDToCvDepth(mxClassID classid)
 {
     return cvmxIplToCvDepth(cvmxClassIDToIplDepth(classid));
 }

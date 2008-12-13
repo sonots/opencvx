@@ -36,11 +36,11 @@
 #include "cvmxtypeconv.h"
 
 /************** Definitions *******************************/
-CVAPI(mxArray*)     cvmxArrayFromCvArr(const CvArr* arr);
 #define cvmxArrayFromIplImage(img) (cvmxArrayFromCvArr(img))
 #define cvmxArrayFromCvMat(mat) (cvmxArrayFromCvArr(mat))
-CVAPI(IplImage*)    cvmxArrayToIplImage(const mxArray* mxarr);
-CVAPI(CvMat*)       cvmxArrayToCvMat(const mxArray* mxarr);
+//mxArray* cvmxArrayFromCvArr(const CvArr* arr);
+//IplImage* cvmxArrayToIplImage(const mxArray* mxarr);
+//CvMat* cvmxArrayToCvMat(const mxArray* mxarr);
 
 /************** Functions *********************************/
 /**

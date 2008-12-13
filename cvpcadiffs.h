@@ -20,20 +20,24 @@
 #ifndef CV_PCADIFFS_INCLUDED
 #define CV_PCADIFFS_INCLUDED
 
+// refer
 //void cvCalcPCA( const CvArr* data, CvArr* avg,
 //                CvArr* eigenvalues, CvArr* eigenvectors, int flags );
 //void cvProjectPCA( const CvArr* data, const CvArr* avg,
 //                   const CvArr* eigenvectors, CvArr* result );
 //void cvBackProjectPCA( const CvArr* proj, const CvArr* avg,
 //                       const CvArr* eigenvects, CvArr* result );
-void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
-                    const CvMat* eigenvectors, CvMat* probs, 
-                    int normalize = 0, bool logprob = true );
-double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
-                   const CvMat* eigenvectors, int normalize = 0, bool logprob = true );
+
+//void 
+//cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
+//               const CvMat* eigenvectors, CvMat* probs, 
+//               int normalize = 0, bool logprob = true );
+//CV_INLINE double 
+//cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
+//            const CvMat* eigenvectors, int normalize = 0, bool logprob = true );
 
 /**
- * cvPcaDiffs - Distance "in" and "from" feature space [1]
+ * PCA Distance "in" and "from" feature space [1]
  *
  *   This computes a distance between a point to a PCA subspace as sum of
  *   distance-from-feature space (DFFS) and distance-in-feature-space
@@ -48,11 +52,11 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
  * @param eigenvalues         nEig x 1 eigen values
  * @param eigenvectors        M x D or D x M (automatically adjusted) eigen vectors
  * @param probs               1 x N computed likelihood probabilities
- * @param [normalize = 0]     Compute normalization term or not
+ * @param normalize           Compute normalization term or not
  *                            0 - nothing
  *                            1 - normalization term
  *                            2 - normalize so that sum becomes 1.0
- * @param [logprob   = false] Log probability or not
+ * @param logprob             Log probability or not
  *
  * References
  * @verbatim
@@ -72,8 +76,10 @@ double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalu
  *     pages = {780--788}
  * @endverbatim
  */
-void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
-                    const CvMat* eigenvectors, CvMat* probs, int normalize, bool logprob )
+void 
+cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
+               const CvMat* eigenvectors, CvMat* probs, 
+               int normalize = 0, bool logprob = true )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -197,17 +203,18 @@ void cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenva
 }
 
 /**
-// cvPcaDiffs - Distance "in" and "from" feature space
-//
-// @param avg                 D x 1 mean vector
-// @param eigenvalues         nEig x 1 eigen values
-// @param eigenvectors        M x D eigen vectors
-// @param [normalize = false] Compute normalization term or not
-// @param [logprob   = false] Log probability or not
-// @return double likelihood
+ * PCA Distance "in" and "from" feature space
+ *
+ * @param avg                 D x 1 mean vector
+ * @param eigenvalues         nEig x 1 eigen values
+ * @param eigenvectors        M x D eigen vectors
+ * @param normalize           Compute normalization term or not
+ * @param logprob             Log probability or not
+ * @return double likelihood
 */
-double cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
-                   const CvMat* eigenvectors, int normalize, bool logprob )
+CV_INLINE double 
+cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
+            const CvMat* eigenvectors, int normalize = 0, bool logprob = true )
 {
     double prob;
     CvMat *_probs  = cvCreateMat( 1, 1, sample->type );

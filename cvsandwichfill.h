@@ -28,15 +28,13 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-void cvSandwichFill( const IplImage* src, IplImage* dst );
-
 /**
-// cvSandwichFill - Search boundary (non-zero pixel) from both side and fill inside
-//
-// @param IplImage* src One channel image with 0 or 1 value (mask image)
-// @param IplImage* dst
-// @see cvSmooth( src, dst, CV_MEDIAN, 3 )
-// @see cvClosing( src, dst, NULL, 3 )
+ * Search boundary (non-zero pixel) from both side and fill inside
+ *
+ * @param IplImage* src One channel image with 0 or 1 value (mask image)
+ * @param IplImage* dst
+ * @see cvSmooth( src, dst, CV_MEDIAN, 3 )
+ * @see cvClosing( src, dst, NULL, 3 )
 */
 void cvSandwichFill( const IplImage* src, IplImage* dst )
 {

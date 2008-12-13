@@ -30,8 +30,6 @@
 #include <math.h>
 using namespace std;
 
-CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type = CV_L2 );
-
 /**
 // Compute Norm between two points
 //
@@ -41,7 +39,7 @@ CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type = CV_L2 );
 //                                CV_L1 to compute L1 norm (abs)
 // @return double
 */
-double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type )
+CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type = CV_L2 )
 {
     if( norm_type == CV_L1 )
         return abs( p2.x - p1.x ) + abs( p2.y - p1.y );

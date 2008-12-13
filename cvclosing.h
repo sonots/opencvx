@@ -28,23 +28,22 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-void cvClosing( const CvArr* src, CvArr* dst, IplConvKernel* element = NULL, int iterations = 1 );
-
 /**
- * cvClosing - closing morphological operation
+ * Closing morphological operation
  *
  * closing operation would help to fill disconnected contour
  *
- * @param src Input Array
- * @param dst Output Array
- * @param [element = NULL] Kernel shape. see cvErode or cvDilate
- * @param [iterations = 1]
+ * @param src        Input Array
+ * @param dst        Output Array
+ * @param element    Kernel shape. see cvErode or cvDilate
+ * @param iterations
  * @return void
  *
  * References)
  *  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
 */
-void cvClosing( const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations )
+void cvClosing( const CvArr* src, CvArr* dst, 
+                IplConvKernel* element = NULL, int iterations = 1 )
 {
     cvDilate( dst, dst, element, iterations );
     cvErode( src, dst, element, iterations );

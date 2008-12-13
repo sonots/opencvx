@@ -32,27 +32,29 @@
 #include "cvcreateaffine.h"
 #include "cvrectpoints.h"
 
-double cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
-                                  int measure_dist = 0, 
-                                  CvPoint2D32f shear = cvPoint2D32f(0,0) );
-CV_INLINE double cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, 
-                                  int measure_dist = 0 );
+// double
+// cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
+//                     int measure_dist = 0, CvPoint2D32f shear = cvPoint2D32f(0,0) );
+// CV_INLINE double 
+// cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, int measure_dist = 0 );
 
 /**
  * Point in rectangle test
  *
  * @param rect    rectangle (x,y,width,height), and angle if want.
  * @param pt      The point tested against the contour. 
- * @param [measure_dist = 0]
- *                0 - return positive, negative, 0 if inside, outside, on the rectangle boundary respectively
- *                1 - return singned distance between the point and the nearest rectangle edge. 
- * @param [shear = cvPoint2D32f(0,0)]
- *                shear deformation parameter (of affine transform)
+ * @param measure_dist
+ *                0 - return positive, negative, 0 
+ *                    if inside, outside, on the rectangle boundary respectively
+ *                1 - return singned distance between the point 
+ *                    and the nearest rectangle edge. 
+ * @param shear   shear deformation parameter (of affine transform)
  * @return double
  * @uses cvPointPolygonTest
  */
-double cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
-                                  int measure_dist, CvPoint2D32f shear )
+double
+cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
+                    int measure_dist = 0, CvPoint2D32f shear = cvPoint2D32f(0,0) )
 {
     CvPoint2D32f points[4];
     CvMat *contour = cvCreateMat( 1, 4, CV_32FC2 );
@@ -84,14 +86,16 @@ double cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt,
  *
  * @param rect    rectangle
  * @param pt      The point tested against the contour. 
- * @param [measure_dist = 0]
- *                0 - return +1, -1, 0 if inside, outside, on the rectangle boundary respectively
- *                1 - return singned distance between the point and the nearest rectangle edge. 
+ * @param measure_dist
+ *                0 - return positive, negative, 0 
+ *                    if inside, outside, on the rectangle boundary respectively
+ *                1 - return singned distance between the point 
+ *                    and the nearest rectangle edge. 
  * @return double
  * @uses cvPointPolygonTest
  */
-double cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, 
-                                  int measure_dist )
+CV_INLINE double 
+cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, int measure_dist = 0 )
 {
     return cvPointRect32fTest( cvRect32fFromRect( rect ), pt, measure_dist );
 }

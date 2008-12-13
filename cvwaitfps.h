@@ -30,8 +30,6 @@
 
 #include <time.h>
 
-clock_t cvWaitFps( double frame_per_sec, clock_t start = 0 );
-
 /**
  * Wait amount of seconds per frame totally. 
  * If processing time exceeded the seconds per frame, 
@@ -50,7 +48,7 @@ clock_t cvWaitFps( double frame_per_sec, clock_t start = 0 );
  * @param [start = 0] Start time
  * @return clock_t    Wait time
  */
-clock_t cvWaitFps( double fps, clock_t start )
+clock_t cvWaitFps( double fps, clock_t start = 0 )
 {
     clock_t msec_per_frame = (clock_t)( 1.0 / (double) fps * 1000 );
     clock_t current = clock();

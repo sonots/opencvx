@@ -28,22 +28,22 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-void cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element = NULL, int iterations = 1 );
 /**
-// cvOpening - opening morphological operation
-//
-// opening operation would help to remove noise
-//
-// @param src Input Array
-// @param dst Output Array
-// @param [element = NULL] Kernel shape. see cvErode or cvDilate
-// @param [iterations = 1]
-// @return void
-//
-// References)
-//  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
+ * Opening morphological operation
+ *
+ * opening operation would help to remove noise
+ *
+ * @param src         Input Array
+ * @param dst         Output Array
+ * @param element     Kernel shape. see cvErode or cvDilate
+ * @param iterations
+ * @return void
+ *
+ * References)
+ *  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
 */
-void cvOpening( const CvArr* src, CvArr* dst, IplConvKernel* element, int iterations )
+CV_INLINE void cvOpening( const CvArr* src, CvArr* dst, 
+                          IplConvKernel* element = NULL, int iterations = 1 )
 {
     cvErode( src, dst, element, iterations );
     cvDilate( dst, dst, element, iterations );

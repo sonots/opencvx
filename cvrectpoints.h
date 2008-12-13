@@ -31,12 +31,12 @@
 #include "cvrect32f.h"
 #include "cvcreateaffine.h"
 
-void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
-                             CvPoint2D32f shear = cvPoint2D32f(0,0) );
-CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
-                               CvPoint2D32f shear = cvPoint2D32f(0,0) );
-CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4], 
-                             CvPoint2D32f shear = cvPoint2D32f(0,0) );
+// void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
+//                       CvPoint2D32f shear = cvPoint2D32f(0,0) );
+// CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
+//                                CvPoint2D32f shear = cvPoint2D32f(0,0) );
+// CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4], 
+//                              CvPoint2D32f shear = cvPoint2D32f(0,0) );
 // cvBoxPoints
 
 /**
@@ -52,8 +52,10 @@ CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4],
  * @param rect
  * @param pt[4]
  * @param shear
+ * @see cvBoxPoints
  */
-void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], CvPoint2D32f shear )
+void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
+                      CvPoint2D32f shear = cvPoint2D32f(0,0) )
 {
     if( shear.x == 0 && shear.y == 0 )
     {
@@ -86,8 +88,8 @@ void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], CvPoint2D32f shear )
  * @param pt[4]
  * @param shear
  */
-void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
-                               CvPoint2D32f shear )
+CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
+                               CvPoint2D32f shear = cvPoint2D32f(0,0) )
 {
     cvRect32fPoints( cvRect32fFromBox32f( box ), pt, shear );
 }
@@ -106,7 +108,8 @@ void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4],
  * @param pt[4]
  * @param shear
  */
-void cvRectPoints( CvRect rect, CvPoint2D32f pt[4], CvPoint2D32f shear )
+CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4], 
+                             CvPoint2D32f shear = cvPoint2D32f(0,0) )
 {
     cvRect32fPoints( cvRect32fFromRect( rect ), pt, shear );
 }

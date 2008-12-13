@@ -28,8 +28,6 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-void cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, int thresh = 100 );
-
 /**
  * Obtain non-background pixels using reference image (such as previous frame in video )
  *
@@ -39,7 +37,8 @@ void cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, 
  * @param [thresh = 100] The threshold. [0 - 255^2] for single channel image. [0 - 255^2 * 3] for 3 channel image.
  * @return void
 */
-void cvBackground( const IplImage* _img, const IplImage* _ref, IplImage* _mask, int thresh )
+void cvBackground( const IplImage* _img, const IplImage* _ref, 
+                   IplImage* _mask, int thresh = 100 )
 {
     CV_FUNCNAME( "cvBackground" ); // error handling
     __BEGIN__;

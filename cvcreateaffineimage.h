@@ -35,32 +35,14 @@
 
 #define CV_AFFINE_SAME 0
 #define CV_AFFINE_FULL 1
-IplImage* cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
-                                int flags = CV_AFFINE_SAME, CvPoint* origin = NULL,
-                                CvScalar color = CV_RGB(0,0,0) );
-CV_INLINE IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine, 
-                                        int flags = CV_AFFINE_SAME, CvPoint* origin = NULL );
 
-/**
- * Create a mask image for cvCreateAffineImage
- *
- * @param src       Image. Used to get image size.
- * @param affine    2 x 3 Affine transform matrix
- * @param flags     CV_AFFINE_SAME - Outside image coordinates are cut off
- *                  CV_AFFINE_FULL - Fully contain the original image pixel values
- * @param origin    The coordinate of origin (the coordinate in original image respective to 
- *                  the transformed image origin). 
- *                  Useful when CV_AFFINE_FULL is used.
- */
-IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine, 
-                                        int flags, CvPoint* origin )
-{
-    IplImage* orig = cvCreateImage( cvGetSize(src), IPL_DEPTH_8U, 1 );
-    cvSet( orig, cvScalar(1) );
-    IplImage* mask = cvCreateAffineImage( orig, affine, flags, origin, cvScalar(0) );
-    cvReleaseImage( &orig );
-    return mask;
-}
+//CV_INLINE IplImage* 
+//cvCreateAffineMask( const IplImage* src, const CvMat* affine, 
+//                    int flags = CV_AFFINE_SAME, CvPoint* origin = NULL );
+//IplImage* 
+//cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
+//                     int flags = CV_AFFINE_SAME, CvPoint* origin = NULL,
+//                     CvScalar color = CV_RGB(0,0,0) );
 
 /**
  * Affine transform of an image
@@ -78,9 +60,10 @@ IplImage* cvCreateAffineMask( const IplImage* src, const CvMat* affine,
  * @see cvWarpAffine - this does not support CV_AFFINE_FULL, but supports
  *                     several interpolation methods and so on.
  */
-IplImage* cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
-                                int flags, CvPoint* origin,
-                                CvScalar color )
+IplImage* 
+cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
+                     int flags = CV_AFFINE_SAME, CvPoint* origin = NULL,
+                     CvScalar color = CV_RGB(0,0,0) )
 {
     IplImage* dst;
     int minx = INT_MAX;
@@ -175,5 +158,26 @@ IplImage* cvCreateAffineImage( const IplImage* src, const CvMat* affine,
     return dst;
 }
 
+/**
+ * Create a mask image for cvCreateAffineImage
+ *
+ * @param src       Image. Used to get image size.
+ * @param affine    2 x 3 Affine transform matrix
+ * @param flags     CV_AFFINE_SAME - Outside image coordinates are cut off
+ *                  CV_AFFINE_FULL - Fully contain the original image pixel values
+ * @param origin    The coordinate of origin (the coordinate in original image respective to 
+ *                  the transformed image origin). 
+ *                  Useful when CV_AFFINE_FULL is used.
+ */
+CV_INLINE IplImage* 
+cvCreateAffineMask( const IplImage* src, const CvMat* affine, 
+                    int flags = CV_AFFINE_SAME, CvPoint* origin = NULL )
+{
+    IplImage* orig = cvCreateImage( cvGetSize(src), IPL_DEPTH_8U, 1 );
+    cvSet( orig, cvScalar(1) );
+    IplImage* mask = cvCreateAffineImage( orig, affine, flags, origin, cvScalar(0) );
+    cvReleaseImage( &orig );
+    return mask;
+}
 
 #endif
