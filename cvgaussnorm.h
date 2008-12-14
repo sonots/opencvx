@@ -48,20 +48,20 @@
  * Zero mean and unit covariance normalization of an image
  * Each channel is processed independently
  *
- * @param img       input image
- * @param normed    normalized image. 32F or 64F should be preferred.
+ * @param src       input image
+ * @param dst       normalized image. 32F or 64F should be preferred.
 */
-void cvImgGaussNorm( const CvArr* img, CvArr* normed )
+void cvGaussNormImage( const CvArr* src, CvArr* dst )
 {
-    CvMat instub, *in = (CvMat*)img;
-    CvMat outstub, *out = (CvMat*)normed;
+    CvMat instub, *in = (CvMat*)src;
+    CvMat outstub, *out = (CvMat*)dst;
     int coi = 0;
     CvScalar mean, std;
     int rows, cols, nChannels;
     int ch, row, col;
     CvMat *tmp_in;
     CvMat *sub_in;
-    CV_FUNCNAME( "cvImgGaussNorm" );
+    CV_FUNCNAME( "cvGaussNormImage" );
     __BEGIN__;
     if( !CV_IS_MAT(in) )
     {
