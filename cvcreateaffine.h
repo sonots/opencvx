@@ -33,14 +33,12 @@
 #include "cvrect32f.h"
 
 /**
- * Create an affine transform matrix
+ * Create an affine transform matrix from parameters.
  *
  * @param affine    The 2 x 3 CV_32FC1|CV_64FC1 affine matrix to be created
- * @param [rect = cvRect32f(0,0,1,1,0)]
- *                  The translation (x, y) and scaling (width, height) and
+ * @param rect      The translation (x, y) and scaling (width, height) and
  *                  rotation (angle) paramenter in degree
- * @param [shear = cvPoint2D32f(0,0)]
- *                  The shear deformation parameter shx and shy
+ * @param shear     The shear deformation parameter shx and shy
  * @return void
  *
  * References)
