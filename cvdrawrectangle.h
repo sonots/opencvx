@@ -52,22 +52,19 @@
 /**
  * Draw an rotated and sheared rectangle
  *
- * Use CvBox32f to define rotation center as the center of rectangle,
- * and use cvRect32fBox32( box32f ) to pass argument. 
+ * If you want define rotation center as the center of the rectangle,
+ * use CvBox32f and use cvRect32fBox32( box32f ) for the rect32f argument. 
  *
  * @param img             The image to be drawn rectangle
- * @param [rect32f = cvRect32f(0,0,1,1,0)]
- *                        The rectangle (x,y,width,height) to be shown and
+ * @param rect32f         The rectangle (x,y,width,height) to be shown and
  *                        the rotation angle in degree where the rotation center is (x,y)
- * @param [shear = cvPoint2D32f(0,0)]
- *                        The shear deformation parameter shx and shy
- * @param [color  = CV_RGB(255, 255, 0)] 
- *                        Line color (RGB) or brightness (grayscale image). 
- * @param [thickness = 1] Thickness of lines that make up the rectangle. 
+ * @param shear           The shear deformation parameter shx and shy
+ * @param color           Line color (RGB) or brightness (grayscale image). 
+ * @param thickness       Thickness of lines that make up the rectangle. 
  *                        Negative values, e.g. CV_FILLED, make the function 
  *                        to draw a filled rectangle. 
- * @param [line_type = 8] Type of the line, see cvLine description. 
- * @param [shift = 0]     Number of fractional bits in the point coordinates. 
+ * @param line_type       Type of the line, see cvLine description. 
+ * @param shift           Number of fractional bits in the point coordinates. 
  * @todo thickness, line_type, and shift are available only when rotate == 0 && shear == 0 currently. 
  * @return void
  * @uses cvRectangle
@@ -185,18 +182,15 @@ cvDrawRectangle( IplImage* img,
  *
  * @param w_name          Window name
  * @param img             Image to be shown
- * @param [rect32f = cvRect32f(0,0,1,1,0)]
- *                        Rectangle to be shown and
- *                        Rotation degree of rectangle
- * @param [shear = cvPoint2D32f(0,0)]
- *                        The shear deformation parameter shx and shy
- * @param [color  = CV_RGB(255, 255, 0)] 
- *                        Line color (RGB) or brightness (grayscale image). 
- * @param [thickness = 1] Thickness of lines that make up the rectangle. 
+ * @param rect32f         The rectangle (x,y,width,height) to be shown and
+ *                        the rotation angle in degree where the rotation center is (x,y)
+ * @param shear           The shear deformation parameter shx and shy
+ * @param color           Line color (RGB) or brightness (grayscale image). 
+ * @param thickness       Thickness of lines that make up the rectangle. 
  *                        Negative values, e.g. CV_FILLED, make the function 
  *                        to draw a filled rectangle. 
- * @param [line_type = 8] Type of the line, see cvLine description. 
- * @param [shift = 0]     Number of fractional bits in the point coordinates. 
+ * @param line_type       Type of the line, see cvLine description. 
+ * @param shift           Number of fractional bits in the point coordinates. 
  * @todo thickness, line_type, and shift are available only when angle == 0 && shear == 0 currently. 
  * @return void
  * @uses cvDrawRectangle

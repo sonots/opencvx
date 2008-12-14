@@ -45,17 +45,17 @@
 /**
  * Crop image with rotated and sheared rectangle
  *
+ * @code
  * IplImage* dst = cvCreateImage( cvSize( rect.width, rect.height ), img->depth, img->nChannels );
- * Use CvBox32f to define rotation center as the center of rectangle,
- * and use cvRect32fBox32( box32f ) to pass argument. 
+ * @endcode
+ * If you want define rotation center as the center of the rectangle,
+ * use CvBox32f and use cvRect32fBox32( box32f ) for the rect32f argument. 
  *
  * @param img          The target image
  * @param dst          The cropped image
- * @param [rect32f = cvRect32f(0,0,1,1,0)]
- *                     The rectangle region (x,y,width,height) to crop and 
+ * @param rect32f      The rectangle region (x,y,width,height) to crop and 
  *                     the rotation angle in degree where the rotation center is (x,y)
- * @param [shear = cvPoint2D32f(0,0)]
- *                     The shear deformation parameter shx and shy
+ * @param shear        The shear deformation parameter shx and shy
  * @return void
  */
 void 
@@ -145,11 +145,9 @@ cvCropImageROI( const IplImage* img, IplImage* dst,
  *
  * @param w_name       Window name
  * @param img          Image to be cropped
- * @param [rect32f = cvRect32f(0,0,1,1,0)]
- *                     The rectangle region (x,y,width,height) to crop and 
+ * @param rect32f      The rectangle region (x,y,width,height) to crop and 
  *                     the rotation angle in degree
- * @param [shear = cvPoint2D32f(0,0)]
- *                     The shear deformation parameter shx and shy
+ * @param shear        The shear deformation parameter shx and shy
  * @return void
  * @uses cvCropImageROI
  */
