@@ -46,8 +46,8 @@
  * @endcode
  *
  * @param fps         Frame per second. fps video property
- * @param [start = 0] Start time
- * @return clock_t    Wait time
+ * @param start       Start time
+ * @return            Wait time
  */
 clock_t cvWaitFps( double fps, clock_t start = 0 )
 {
