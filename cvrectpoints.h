@@ -35,24 +35,24 @@
 //                       CvPoint2D32f shear = cvPoint2D32f(0,0) );
 // CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
 //                                CvPoint2D32f shear = cvPoint2D32f(0,0) );
-// CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4], 
-//                              CvPoint2D32f shear = cvPoint2D32f(0,0) );
+// CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4] );
 // cvBoxPoints
 
 /**
  * Find 4 corners of rectangle
  *
  * @code
- *  0 0
- *  1 0
- *  1 1
- *  0 1
+ *     x y
+ * [0] 0 0
+ * [1] 1 0
+ * [2] 1 1
+ * [3] 0 1
  * @endcode
  *
- * @param rect
- * @param pt[4]
- * @param shear
- * @see cvBoxPoints
+ * @param rect       Rectangle parameters and rotation angle parameter 
+ * @param pt[4]      Found 4 corners
+ * @param shear      Shear deformation parameter if you want
+ * @see cvBoxPoints, cvBox32fPoints, cvRectPoints, cvRect32fPoints
  */
 void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
                       CvPoint2D32f shear = cvPoint2D32f(0,0) )
@@ -84,9 +84,18 @@ void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4],
 /**
  * Find 4 corners of box
  *
- * @param rect
- * @param pt[4]
- * @param shear
+ * @code
+ *     x y
+ * [0] 0 0
+ * [1] 1 0
+ * [2] 1 1
+ * [3] 0 1
+ * @endcode
+ *
+ * @param box    Box structure
+ * @param pt[4]  Found 4 corners
+ * @param shear  Shear deformation parameters if you want
+ * @see cvBoxPoints, cvBox32fPoints, cvRectPoints, cvRect32fPoints
  */
 CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
                                CvPoint2D32f shear = cvPoint2D32f(0,0) )
@@ -98,20 +107,20 @@ CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4],
  * Find 4 corners of rectangle
  *
  * @code
- *  0 0
- *  1 0
- *  1 1
- *  0 1
+ *     x y
+ * [0] 0 0
+ * [1] 1 0
+ * [2] 1 1
+ * [3] 0 1
  * @endcode
  *
- * @param rect
- * @param pt[4]
- * @param shear
+ * @param rect   Rectangle parameter
+ * @param pt[4]  Found 4 points
+ * @see cvBoxPoints, cvBox32fPoints, cvRectPoints, cvRect32fPoints
  */
-CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4], 
-                             CvPoint2D32f shear = cvPoint2D32f(0,0) )
+CV_INLINE void cvRectPoints( CvRect rect, CvPoint2D32f pt[4] )
 {
-    cvRect32fPoints( cvRect32fFromRect( rect ), pt, shear );
+    cvRect32fPoints( cvRect32fFromRect( rect ), pt );
 }
 
 #endif

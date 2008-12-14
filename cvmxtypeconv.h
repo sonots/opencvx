@@ -118,8 +118,8 @@ mxClassID cvmxClassIDFromIplDepth(int depth)
 /**
 * Convert mxClassID to IplImage depth 
 * 
-* @param int depth IplImage's depth
-* @return mxClassID
+* @param classid mxClassID of a mxArr
+* @return IplImage depth
 * @see cvmxClassIDFromCvDepth
 * @see cvmxClassIDToCvDepth
 * @see cvmxClassIDFromIplDepth
