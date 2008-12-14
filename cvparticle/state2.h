@@ -9,8 +9,8 @@
  * model only. you may create another cvParticleTransition to support more complex
  * non-linear state transition model. Most of other functions still should be 
  * available modifications
- *
- * The MIT License
+ */
+/* The MIT License
  * 
  * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
  * 

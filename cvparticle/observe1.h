@@ -2,8 +2,8 @@
  * 
  * Template matching observation model for particle filter
  * CvParticleState s must have s.x, s.y, s.width, s.height, s.angle
- *
- * The MIT License
+ */
+/* The MIT License
  * 
  * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
  * 

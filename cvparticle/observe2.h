@@ -3,8 +3,8 @@
  * Moghaddam's PCA DIFS + DFFS (distance-in-feature-space + distance-from-feature-space) 
  * observation model for particle filter
  * CvParticleState must have x, y, width, height, and angle
- *
- * The MIT License
+ */
+/* The MIT License
  * 
  * Copyright (c) 2008, Naotoshi Seo <sonots(at)sonots.com>
  * 
