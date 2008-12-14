@@ -42,28 +42,31 @@
 //IplImage* 
 //cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
 //                     int flags = CV_AFFINE_SAME, CvPoint* origin = NULL,
-//                     CvScalar color = CV_RGB(0,0,0) );
+//                     CvScalar bgcolor = CV_RGB(0,0,0) );
 
 /**
- * Affine transform of an image
+ * Affine transform of an image. 
  *
- * Do not forget cvReleaseImage( &ret );
+ * Memory is allocated. Do not forget cvReleaseImage( &ret );
  *
  * @param src       Image
  * @param affine    2 x 3 Affine transform matrix
- * @param flags     CV_AFFINE_SAME - Outside image coordinates are cut off
+ * @param flags     CV_AFFINE_SAME - Outside image coordinates are cut off. 
  *                  CV_AFFINE_FULL - Fully contain the original image pixel values
- * @param origin    The coordinate of origin (the coordinate in original image respective to 
- *                  the transformed image origin). 
- *                  Useful when CV_AFFINE_FULL is used.
- * @return IplImage*
- * @see cvWarpAffine - this does not support CV_AFFINE_FULL, but supports
- *                     several interpolation methods and so on.
+ * @param origin    The coordinate of origin is returned. The origin is the 
+ *                  coordinate in original image respective to the transformed 
+ *                  image origin. Useful when CV_AFFINE_FULL is used.
+ * @param bgcolor   The color used when corresponding coordinate is not 
+ *                  available in the original image. 
+ * @return
+ * @see cvWarpAffine
+ *  this does not support CV_AFFINE_FULL, but supports
+ *  everal interpolation methods and so on.
  */
 IplImage* 
 cvCreateAffineImage( const IplImage* src, const CvMat* affine, 
                      int flags = CV_AFFINE_SAME, CvPoint* origin = NULL,
-                     CvScalar color = CV_RGB(0,0,0) )
+                     CvScalar bgcolor = CV_RGB(0,0,0) )
 {
     IplImage* dst;
     int minx = INT_MAX;
@@ -126,7 +129,7 @@ cvCreateAffineImage( const IplImage* src, const CvMat* affine,
         origin->y = miny;
     }
     dst = cvCreateImage( cvSize(width, height), src->depth, src->nChannels );
-    cvSet( dst, color );
+    cvSet( dst, bgcolor );
 
     // inverse affine
     invaffine = cvCreateMat( 2, 3, affine->type );
