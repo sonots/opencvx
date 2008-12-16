@@ -103,7 +103,7 @@ typedef struct CvBox32f {
 /******************* Function Implementations ***************************/
 
 /**
- * Constructor
+ * The Constructor of Floating Rectangle Structure
  */
 CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 )
 {
@@ -112,7 +112,7 @@ CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, floa
 }
 
 /**
- * Constructor
+ * The Constructor of Center Coordinate Floating Rectangle Structure
  */
 CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 )
 {
