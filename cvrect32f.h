@@ -28,7 +28,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 
-/******************* Structure Definitions ***************************/
+/************************* Structure Definitions ******************************/
 
 /**
  * Floating Rectangle Structure
@@ -45,7 +45,7 @@ typedef struct CvRect32f {
 /**
  * Center Coordinate Floating Rectangle Structure
  *
- * This is quivalent with CvBox2D, but I wanted this structure because
+ * This is equivalent with CvBox2D, but I wanted this structure because
  * CvBox2D's parameters are too long such as box.center.x, box.size.width and
  * CvBox2D does not have a constructor cvBox2D(...). 
  */
@@ -58,54 +58,37 @@ typedef struct CvBox32f {
                   /* rotation center is center of rectangle */
 } CvBox32f;
 
-/***************************** Define *****************************************/
+/***************************** Prototypes *************************************/
 
-#define cvBox32fFromRect(rect) (cvBox32fFromRect32f(cvRect32fFromRect(rect)))
-#define cvBox2DFromRect(rect) (cvBox2DFromBox32f(cvBox32fFromRect(rect)))
-#define cvRectFromBox32f(box) (cvRectFromRect32f(cvRect32fFromBox32f(box)))
-#define cvRectFromBox2D(box) (cvRectFromBox32f(cvBox32fFromBox2D(box)))
-#define cvBox2DFromRect32f(rect) (cvBox2DFromBox32f(cvBox32fFromRect32f(rect)))
-#define cvRect32fFromBox2D(box) (cvRect32fFromBox32f(cvBox32fFromBox2D(box)))
+//CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, 
+//                               float angle = 0.0 );
+//CV_INLINE CvBox32f  cvBox32f( float cx, float cy, float width, float height, 
+//                              float angle = 0.0 );
 
-#define cvPrintRect32f(rect)                                          \
-    printf( "x=%f y=%f width=%f height=%f angle=%f\n",                \
-            rect.x, rect.y, rect.width, rect.height, rect.angle );    \
-    fflush( stdout );
-#define cvPrintBox32f(box)                                         \
-    printf( "cx=%f cy=%f width=%f height=%f angle=%f\n",           \
-            box.cx, box.cy, box.width, box.height, box.angle );    \
-    fflush( stdout );
-#ifndef cvPrintBox2D
-#define cvPrintBox2D(box)                                               \
-    printf( "cx=%f cy=%f width=%f height=%f angle=%f\n",                \
-            box.center.x, box.center.y, box.size.width,                 \
-            box.size.height, box.angle );                               \
-    fflush( stdout );
-#endif
-#ifndef cvPrintRect
-#define cvPrintRect(rect)                                 \
-    printf( "x=%d y=%d width=%d height=%d",               \
-            rect.x, rect.y, rect.width, rect.height );    \
-    fflush( stdout );
-#endif
-
-//CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 );
-//CV_INLINE CvBox32f  cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 );
-
+//CVAPI(CvBox32f)     cvBox32fFromRect32f( CvRect32f rect );
+//CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
 //CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle = 0 );
 //CV_INLINE CvRect    cvRectFromRect32f( CvRect32f rect );
 //CV_INLINE CvBox32f  cvBox32fFromBox2D( CvBox2D box );
 //CV_INLINE CvBox2D   cvBox2DFromBox32f( CvBox32f box );
+//CV_INLINE CvBox32f  cvBox32fFromRect( CvRect rect );
+//CV_INLINE CvRect cvRectFromBox32f( CvBox32f box );
+//CV_INLINE CvRect cvRectFromBox2D( CvBox2D box );
+//CV_INLINE CvBox2D cvBox2DFromRect32f( CvRect32f rect );
+//CV_INLINE CvRect32f cvRect32fFromBox2D( CvBox2D box );
 
-//CVAPI(CvBox32f)     cvBox32fFromRect32f( CvRect32f rect );
-//CVAPI(CvRect32f)    cvRect32fFromBox32f( CvBox32f box );
+// CV_INLINE void cvPrintRect32f( CvRect32f rect );
+// CV_INLINE void cvPrintBox32f( CvBox32f box );
+// CV_INLINE void cvPrintBox2D( CvBox2D box );
+// CV_INLINE void cvPrintRect( CvRect rect );
 
-/******************* Function Implementations ***************************/
+/******************************* Constructor **********************************/
 
 /**
  * The Constructor of Floating Rectangle Structure
  */
-CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, float angle = 0.0 )
+CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, 
+                               float angle = 0.0 )
 {
     CvRect32f rect = { x, y, width, height, angle };
     return rect;
@@ -114,12 +97,14 @@ CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, floa
 /**
  * The Constructor of Center Coordinate Floating Rectangle Structure
  */
-CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, float angle = 0.0 )
+CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, 
+                             float angle = 0.0 )
 {
     CvBox32f box = { cx, cy, width, height, angle };
     return box;
 }
 
+/****************************** Converter *************************************/
 /**
  *cvRect32f from cvRect
  */
@@ -205,6 +190,81 @@ CvRect32f cvRect32fFromBox32f( CvBox32f box )
         cvReleaseMat( &R );
     }
     return cvRect32f( l.x, l.y, box.width, box.height, box.angle );
+}
+
+/**
+ * CvBox32f from CvRect
+ */
+CV_INLINE CvBox32f cvBox32fFromRect( CvRect rect )
+{
+    return cvBox32fFromRect32f( cvRect32fFromRect( rect ) );
+}
+/**
+ * CvRect from CvBox32f
+ */
+CV_INLINE CvRect cvRectFromBox32f( CvBox32f box )
+{
+    return cvRectFromRect32f( cvRect32fFromBox32f( box ) );
+}
+/**
+ * CvRect from CvBox2D
+ */
+CV_INLINE CvRect cvRectFromBox2D( CvBox2D box )
+{
+    return cvRectFromBox32f( cvBox32fFromBox2D( box ) );
+}
+/**
+ * CvBox2D from CvRect32f
+ */
+CV_INLINE CvBox2D cvBox2DFromRect32f( CvRect32f rect )
+{
+    return cvBox2DFromBox32f( cvBox32fFromRect32f( rect ) );
+}
+/**
+ * CvRect32f from CvBox2D
+ */
+CV_INLINE CvRect32f cvRect32fFromBox2D( CvBox2D box )
+{
+    return cvRect32fFromBox32f( cvBox32fFromBox2D( box ) );
+}
+
+/************************************ Print ***********************************/
+/**
+ * Print CvRect32f
+ */
+CV_INLINE void cvPrintRect32f( CvRect32f rect )
+{
+    printf( "x=%f y=%f width=%f height=%f angle=%f\n",
+            rect.x, rect.y, rect.width, rect.height, rect.angle );
+    fflush( stdout );
+}
+/**
+ * Print CvBox32f
+ */
+CV_INLINE void cvPrintBox32f( CvBox32f box )
+{
+    printf( "cx=%f cy=%f width=%f height=%f angle=%f\n",
+            box.cx, box.cy, box.width, box.height, box.angle );
+    fflush( stdout );
+}
+/**
+ * Print CvBox2D
+ */
+CV_INLINE void cvPrintBox2D( CvBox2D box )
+{
+    printf( "cx=%f cy=%f width=%f height=%f angle=%f\n",
+            box.center.x, box.center.y, box.size.width,
+            box.size.height, box.angle );
+    fflush( stdout );
+}
+/**
+ * Print CvRect
+ */
+CV_INLINE void cvPrintRect( CvRect rect )
+{
+    printf( "x=%d y=%d width=%d height=%d",
+            rect.x, rect.y, rect.width, rect.height );
+    fflush( stdout );
 }
 
 #endif
