@@ -1,13 +1,13 @@
-/** @file 
+/** @file */
 /* Copyright (c) 2008, Naotoshi Seo. All rights reserved.
-//
-// The program is free to use for non-commercial academic purposes,
-// but for course works, you must understand what is going inside to 
-// use. The program can be used, modified, or re-distributed for any 
-// purposes only if you or one of your group understand not only 
-// programming codes but also theory and math behind (if any). 
-// Please contact the authors if you are interested in using the 
-// program without meeting the above conditions.
+ *
+ * The program is free to use for non-commercial academic purposes,
+ * but for course works, you must understand what is going inside to 
+ * use. The program can be used, modified, or re-distributed for any 
+ * purposes only if you or one of your group understand not only 
+ * programming codes but also theory and math behind (if any). 
+ * Please contact the authors if you are interested in using the 
+ * program without meeting the above conditions.
 */
 #ifndef CV_SKINCOLOR_CBCR_INCLUDED
 #define CV_SKINCOLOR_CBCR_INCLUDED
@@ -34,13 +34,13 @@
  *  International Conference on Computer as a Tool , 2003. (Tuned)
  * @endverbatim
 */
-void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* distarr = NULL )
+void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* _dist = NULL )
 {
     CV_FUNCNAME( "cvSkinColorCbCr" );
     __BEGIN__;
     int width  = _img->width;
     int height = _img->height;
-    CvMat* dist = (CvMat*)distarr, diststub;
+    CvMat* dist = (CvMat*)_dist, diststub;
     int coi = 0;
     IplImage* img;
 
