@@ -59,6 +59,7 @@ void cvGaussNormImage( const CvArr* src, CvArr* dst )
     CvScalar mean, std;
     int rows, cols, nChannels;
     int ch, row, col;
+    CvScalar inval;
     CvMat *tmp_in;
     CvMat *sub_in;
     CV_FUNCNAME( "cvGaussNormImage" );
@@ -86,29 +87,19 @@ void cvGaussNormImage( const CvArr* src, CvArr* dst )
     
     cvAvgSdv( tmp_in, &mean, &std );
     cvSubS( tmp_in, mean, sub_in );
-    //cvScale( sub_in, out, 1.0/std.val[0] );
+    //cvScale( sub_in, out, 1.0/std.val[0] ); // do channel
     rows = out->rows;
     cols = out->cols;
     nChannels = CV_MAT_CN(out->type);
-    if( CV_MAT_DEPTH(out->type) == CV_64F ) {
-        for( ch = 0; ch < nChannels; ch++ ) {
-            for( row = 0; row < rows; row++ ) {
-                for( col = 0; col < cols; col++ ) {
-                    CV_MAT_ELEM_CN( *out, double, row, col * nChannels + ch )
-                        = CV_MAT_ELEM_CN( *sub_in, double, row, col * nChannels + ch ) / std.val[ch];
-                }
+    for( row = 0; row < rows; row++ ) {
+        for( col = 0; col < cols; col++ ) {
+            inval = cvGet2D( sub_in, row, col );
+            for( ch = 0; ch < nChannels; ch++ ) {
+                inval.val[ch] /= std.val[ch];
             }
+            cvSet2D( out, row, col, inval );
         }
-    } else if( CV_MAT_DEPTH(out->type) == CV_32F ) {
-        for( ch = 0; ch < nChannels; ch++ ) {
-            for( row = 0; row < rows; row++ ) {
-                for( col = 0; col < cols; col++ ) {
-                    CV_MAT_ELEM_CN( *out, float, row, col * nChannels + ch )
-                        = CV_MAT_ELEM_CN( *sub_in, float, row, col * nChannels + ch ) / std.val[ch];
-                }
-            }
-        }
-    }
+    }        
 
     if( in->type != out->type ) {
         cvReleaseMat( &tmp_in );
