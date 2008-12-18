@@ -29,7 +29,7 @@
 #include "cxcore.h"
 
 /**
- * Multiplay a scalar to an array
+ * Multiply a scalar to an array
  *
  * @param  src       source array
  * @param  scalar    scalar to multiply
