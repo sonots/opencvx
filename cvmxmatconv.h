@@ -35,24 +35,38 @@
 #include "matrix.h"
 #include "cvmxtypeconv.h"
 
-/************** Definitions *******************************/
+/**
+ * Convert IplImage to mxArray. Allocate memory too
+ *
+ * Currently support only uint8, float, double
+ * Currently support only 1 channel (grayscale) and 3 channels (rgb etc)
+ *
+ * @param  img
+ * @return mxArray*
+ */
 #define cvmxArrayFromIplImage(img) (cvmxArrayFromCvArr(img))
-#define cvmxArrayFromCvMat(mat) (cvmxArrayFromCvArr(mat))
-//mxArray* cvmxArrayFromCvArr(const CvArr* arr);
-//IplImage* cvmxArrayToIplImage(const mxArray* mxarr);
-//CvMat* cvmxArrayToCvMat(const mxArray* mxarr);
 
-/************** Functions *********************************/
+/**
+ * Convert CvMat to mxArray. Allocate memory too
+ *
+ * Currently support only uint8, float, double
+ * Currently support only 1 channel (grayscale) and 3 channels (rgb etc)
+ *
+ * @param  mat
+ * @return mxArray*
+ */
+#define cvmxArrayFromCvMat(mat) (cvmxArrayFromCvArr(mat))
+
 /**
 * Convert CvArr to mxArray. Allocate memory too
 *
 * Currently support only uint8, float, double
 * Currently support only 1 channel (grayscale) and 3 channels (rgb etc)
 *
-* @param CvArr* arr
+* @param  arr
 * @return mxArray*
 */
-mxArray* cvmxArrayFromCvArr(const CvArr* arr)
+CVAPI(mxArray*) cvmxArrayFromCvArr(const CvArr* arr)
 {
     CV_FUNCNAME( "cvmxArraFromCvArr" );
     IplImage imghdr, *img = (IplImage*)arr;
@@ -115,10 +129,10 @@ mxArray* cvmxArrayFromCvArr(const CvArr* arr)
 * Currently support only uint8, float, double
 * Currently support only 1 channel (grayscale) and 3 channels (rgb etc)
 *
-* @param mxArray* mxarr
+* @param  mxarr
 * @return IplImage*
 */
-IplImage* cvmxArrayToIplImage(const mxArray* mxarr)
+CVAPI(IplImage*) cvmxArrayToIplImage(const mxArray* mxarr)
 {
     CV_FUNCNAME( "cvmxArrayToCvArr" );
     IplImage *img = NULL;
@@ -178,10 +192,10 @@ IplImage* cvmxArrayToIplImage(const mxArray* mxarr)
 * Currently support only uint8, float, double
 * Currently support only 1 channel (grayscale) and 3 channels (rgb etc)
 *
-* @param mxArray* mxarr
+* @param  mxarr
 * @return CvMat*
 */
-CvMat* cvmxArrayToCvMat(const mxArray* mxarr)
+CVAPI(CvMat*) cvmxArrayToCvMat(const mxArray* mxarr)
 {
     IplImage* img = cvmxArrayToIplImage(mxarr);
     CvMat *mat = cvCreateMat(img->height, img->width, CV_MAKETYPE(cvmxIplToCvDepth(img->depth), img->nChannels));

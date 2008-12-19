@@ -31,13 +31,13 @@
 
 //CV_INLINE void cvPrintMatProperty( const CvMat* mat );
 //CV_INLINE void cvPrintImageProperty( const IplImage* img );
-//void cvPrintMat( const CvArr* arr, bool transpose = false );
+//CVAPI(void) cvPrintMat( const CvArr* arr, bool transpose = false );
 
 /**
 * Print CvMat Property
 *
 * @param mat
-* @return void
+* @return CVAPI(void)
 */
 CV_INLINE void cvPrintMatProperty( const CvMat* mat )
 {
@@ -53,7 +53,7 @@ CV_INLINE void cvPrintMatProperty( const CvMat* mat )
 * Print IplImage Property
 *
 * @param img
-* @return void
+* @return CVAPI(void)
 */
 CV_INLINE void cvPrintImageProperty( const IplImage* img )
 {
@@ -69,9 +69,9 @@ CV_INLINE void cvPrintImageProperty( const IplImage* img )
 * Print array
 *
 * @param arr array
-* @return void
+* @return CVAPI(void)
 */
-void cvPrintMat( const CvArr* arr, bool transpose = false )
+CVAPI(void) cvPrintMat( const CvArr* arr, bool transpose CV_DEFAULT(false) )
 {
     CV_FUNCNAME( "cvPrintMat" );
     __BEGIN__;

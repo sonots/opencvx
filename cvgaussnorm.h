@@ -33,9 +33,9 @@
 #include "cvmatelemcn.h"
 
 // @todo
-// void cvMatGaussNorm( const CvMat* samples, CvMat* dst );
+// CVAPI(void) cvMatGaussNorm( const CvMat* samples, CvMat* dst );
 // #define cvGaussNorm( sample, dst ) cvMatGaussNorm( sample, dst )
-// void cvImgGaussNorm( const IplImage* img, IplImage* normed ) {
+// CVAPI(void) cvImgGaussNorm( const IplImage* img, IplImage* normed ) {
 //    IplImage* sample, samplehdr;
 //    IplImage* dst, dsthdr;
 //    sample = cvReshape( img, &samplehdr, 1, img->nChannels );
@@ -51,7 +51,7 @@
  * @param src       input image
  * @param dst       normalized image. 32F or 64F should be preferred.
 */
-void cvGaussNormImage( const CvArr* src, CvArr* dst )
+CVAPI(void) cvGaussNormImage( const CvArr* src, CvArr* dst )
 {
     CvMat instub, *in = (CvMat*)src;
     CvMat outstub, *out = (CvMat*)dst;

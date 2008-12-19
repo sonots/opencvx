@@ -52,9 +52,10 @@
  * @return               result of test
  * @see cvPointPolygonTest, cvPointRectTest
  */
-double
+CVAPI(double)
 cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt, 
-                    int measure_dist = 0, CvPoint2D32f shear = cvPoint2D32f(0,0) )
+                    int measure_dist CV_DEFAULT(0), 
+                    CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)) )
 {
     CvPoint2D32f points[4];
     CvMat *contour = cvCreateMat( 1, 4, CV_32FC2 );
@@ -96,7 +97,8 @@ cvPointRect32fTest( const CvRect32f& rect, CvPoint2D32f pt,
  * @see cvPointPolygonTest, cvPointRect32fTest
  */
 CV_INLINE double 
-cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, int measure_dist = 0 )
+cvPointRectTest( const CvRect& rect, CvPoint2D32f pt, 
+                 int measure_dist CV_DEFAULT(0) )
 {
     return cvPointRect32fTest( cvRect32fFromRect( rect ), pt, measure_dist );
 }

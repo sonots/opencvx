@@ -27,7 +27,7 @@
 #include "cv.h"
 #include "cvaux.h"
 
-//void cvSetCols( const CvArr* src, CvArr* dst,
+//CVAPI(void) cvSetCols( const CvArr* src, CvArr* dst,
 //                int start_col, int end_col );
 //CV_INLINE void cvSetCol( const CvArr* src, CvArr* dst, int col );
 
@@ -46,11 +46,11 @@
  * @param dst       Target array. Either of array must be size of setting cols.
  * @param start_col Zero-based index of the starting col (inclusive) of the span. 
  * @param end_col   Zero-based index of the ending col (exclusive) of the span. 
- * @return void
+ * @return CVAPI(void)
  * @see cvSetCol( src, dst, col ) // cvSetCols( src, dst, col, col + 1 )
  */
-void cvSetCols( const CvArr* src, CvArr* dst,
-                int start_col, int end_col )
+CVAPI(void) cvSetCols( const CvArr* src, CvArr* dst,
+                       int start_col, int end_col )
 {
     int coi;
     CvMat *srcmat = (CvMat*)src, srcmatstub;
@@ -85,7 +85,7 @@ void cvSetCols( const CvArr* src, CvArr* dst,
 }
 
 /*
-void cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end_col )
+CVAPI(void) cvSetCols( const CvArr* subarr, CvArr* arr, int start_col, int end_col )
 {
 CV_FUNCNAME( "cvSetCols" );
     __BEGIN__;

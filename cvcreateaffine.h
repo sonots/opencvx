@@ -39,7 +39,7 @@
  * @param rect      The translation (x, y) and scaling (width, height) and
  *                  rotation (angle) paramenter in degree
  * @param shear     The shear deformation parameter shx and shy
- * @return void
+ * @return CVAPI(void)
  *
  * References)
  * @verbatim
@@ -51,9 +51,9 @@
     publisher = "Cambridge University Press, ISBN: 0521540518"
  } @endverbatim
  */
-void cvCreateAffine( CvMat* affine, 
-                     CvRect32f rect = cvRect32f(0,0,1,1,0), 
-                     CvPoint2D32f shear = cvPoint2D32f(0,0) )
+CVAPI(void) cvCreateAffine( CvMat* affine, 
+                            CvRect32f rect CV_DEFAULT(cvRect32f(0,0,1,1,0)), 
+                            CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)) )
 {
     double c, s;
     CvMat *R, *S, *A, hdr;

@@ -33,13 +33,20 @@
  *
  * @param mg     The target image
  * @param ref    The reference image. Usually the previous frame of video
- * @param mask   The generated mask image where 0 is for bg and 1 is for non-bg. Must be 8U and 1 channel
- * @param [thresh = 100] The threshold. [0 - 255^2] for single channel image. [0 - 255^2 * 3] for 3 channel image.
- * @return void
+ * @param mask   The generated mask image where 0 is for bg and 1 is for non-bg.
+ *               Must be 8U and 1 channel
+ * @param thresh The threshold. [0 - 255^2] for single channel image. 
+ *               [0 - 255^2 * 3] for 3 channel image.
+ * @return 
 */
-void cvBackground( const IplImage* _img, const IplImage* _ref, 
-                   IplImage* _mask, int thresh = 100 )
+CVAPI(void) cvBackground( const IplImage* _img, 
+                          const IplImage* _ref, 
+                          IplImage* _mask, 
+                          int thresh CV_DEFAULT(100) )
 {
+    IplImage *img;
+    IplImage *ref;
+    IplImage *mask;
     CV_FUNCNAME( "cvBackground" ); // error handling
     __BEGIN__;
     CV_ASSERT( _img->width == _ref->width );
@@ -50,9 +57,9 @@ void cvBackground( const IplImage* _img, const IplImage* _ref,
     CV_ASSERT( _mask->nChannels == 1 );
     CV_ASSERT( _mask->depth == IPL_DEPTH_8U );
 
-    IplImage *img = cvCreateImage( cvGetSize(_img), IPL_DEPTH_32F, _img->nChannels );
-    IplImage *ref = cvCreateImage( cvGetSize(_img), IPL_DEPTH_32F, _img->nChannels );
-    IplImage *mask = cvCreateImage( cvGetSize(_img), IPL_DEPTH_32F, 1 );
+    img = cvCreateImage( cvGetSize(_img), IPL_DEPTH_32F, _img->nChannels );
+    ref = cvCreateImage( cvGetSize(_img), IPL_DEPTH_32F, _img->nChannels );
+    mask = cvCreateImage( cvGetSize(_img), IPL_DEPTH_32F, 1 );
     cvConvert( _img, img );
     cvConvert( _ref, ref );
     cvSub( img, ref, img );

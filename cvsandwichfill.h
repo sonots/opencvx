@@ -36,7 +36,7 @@
  * @see cvSmooth( src, dst, CV_MEDIAN, 3 )
  * @see cvClosing( src, dst, NULL, 3 )
 */
-void cvSandwichFill( const IplImage* src, IplImage* dst )
+CVAPI(void) cvSandwichFill( const IplImage* src, IplImage* dst )
 {
     cvCopy( src, dst );
     for( int y = 0; y < dst->height; y++ )

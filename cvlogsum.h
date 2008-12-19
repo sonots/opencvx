@@ -41,7 +41,7 @@
  * @param  arr       array having log values. 32F or 64F
  * @return CvScalar  log sum for each channel
  */
-CvScalar cvLogSum( const CvArr *arr )
+CVAPI(CvScalar) cvLogSum( const CvArr *arr )
 {
     IplImage* img = (IplImage*)arr, imgstub;
     IplImage *tmp, *tmp2;

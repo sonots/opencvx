@@ -34,7 +34,7 @@
 #include "cvcreateaffine.h"
 #include "cvcreateaffineimage.h"
 
-// void cvPutImageROI( const IplImage* src,
+// CVAPI(void) cvPutImageROI( const IplImage* src,
 //                     IplImage* dst,
 //                     CvRect32f rect32f = cvRect32f(0,0,1,1,0),
 //                     CvPoint2D32f shear = cvPoint2D32f(0,0),
@@ -55,14 +55,14 @@
  * @param mask         The mask image
  * @param circumscribe Put a circular (ellipsoidal) image as a circumscribed 
  *                     circle (ellipsoid) rather than a inscribed circle (ellipsoid)
- * @return void
+ * @return CVAPI(void)
  */
-void cvPutImageROI( const IplImage* src,
-                    IplImage* dst,
-                    CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                    CvPoint2D32f shear = cvPoint2D32f(0,0),
-                    const IplImage* mask = NULL,
-                    bool circumscribe = 0 )
+CVAPI(void) cvPutImageROI( const IplImage* src,
+                           IplImage* dst,
+                           CvRect32f rect32f CV_DEFAULT(cvRect32f(0,0,1,1,0)),
+                           CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)),
+                           const IplImage* mask CV_DEFAULT(NULL),
+                           bool circumscribe CV_DEFAULT(0) )
 {
     CvRect rect;
     float tx, ty, sx, sy, angle;

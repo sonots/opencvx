@@ -30,7 +30,24 @@
 #include "cvsetrow.h"
 #include "cvsetcol.h"
 
+/**
+ * Concatinate arrays horizontally
+ *
+ * @param src1 Input array 1
+ * @param src2 Input array 2
+ * @param dst Target array
+ * @see cvCat, cvVcat
+ */
 #define cvHcat( src1, src2, dst ) cvCat( (src1), (src2), (dst), 0 )
+
+/**
+ * Concatinate arrays vertically
+ *
+ * @param src1 Input array 1
+ * @param src2 Input array 2
+ * @param dst Target array
+ * @see cvCat, cvHcat
+ */
 #define cvVcat( src1, src2, dst ) cvCat( (src1), (src2), (dst), 1 )
 
 /**
@@ -54,7 +71,7 @@
 * @see cvHcat( src1, src2, dst ) // cvCat( src1, src2, dst, 0 )
 * @see cvVcat( src1, src2, dst ) // cvCat( src1, src2, dst, 1 )
 */
-void cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, int dim = -1 )
+CVAPI(void) cvCat( const CvArr* src1arr, const CvArr* src2arr, CvArr* dstarr, int dim CV_DEFAULT(-1) )
 {
     int coi = 0;
     CvMat *src1 = (CvMat*)src1arr, src1stub;

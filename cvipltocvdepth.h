@@ -49,7 +49,7 @@
  * @reference ./cxcore/src/cxtables.cpp
  * @see cvCvToIplDepth(mat->type)
  */
-int cvIplToCvDepth(int depth)
+CVAPI(int) cvIplToCvDepth( int depth )
 {
     /*
     #define CV_8U   0

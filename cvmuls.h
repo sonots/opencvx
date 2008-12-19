@@ -35,7 +35,7 @@
  * @param  scalar    scalar to multiply
  * @param  dst       destination array
  */
-CvScalar cvMulS( const CvArr *src, const CvScalar scalar, CvArr *dst )
+CVAPI(void) cvMulS( const CvArr *src, const CvScalar scalar, CvArr *dst )
 {
     IplImage* _src = (IplImage*)src, _srchdr;
     IplImage* _dst = (IplImage*)dst, _dsthdr;

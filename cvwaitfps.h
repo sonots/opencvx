@@ -49,7 +49,7 @@
  * @param start       Start time
  * @return            Wait time
  */
-clock_t cvWaitFps( double fps, clock_t start = 0 )
+clock_t cvWaitFps( double fps, clock_t start CV_DEFAULT(0) )
 {
     clock_t msec_per_frame = (clock_t)( 1.0 / (double) fps * 1000 );
     clock_t current = clock();

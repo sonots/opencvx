@@ -29,7 +29,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-//void 
+//CVAPI(void) 
 //cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, 
 //               CvMat* probs, bool normalize = false, bool logprob = false );
 //CV_INLINE double 
@@ -70,12 +70,16 @@
  * @param probs     1 x N computed probabilites
  * @param normalize Compute normalization term or not
  * @param logprob   Log probability or not
- * @return void
+ * @return CVAPI(void)
  * @see cvCalcCovarMatrix, cvAvg
 */
-void 
-cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov, 
-               CvMat* probs, bool normalize = false, bool logprob = false )
+CVAPI(void) 
+cvMatGaussPdf( const CvMat* samples, 
+               const CvMat* mean, 
+               const CvMat* cov, 
+               CvMat* probs, 
+               bool normalize CV_DEFAULT(false), 
+               bool logprob CV_DEFAULT(false) )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -155,7 +159,7 @@ cvMatGaussPdf( const CvMat* samples, const CvMat* mean, const CvMat* cov,
 */
 CV_INLINE double 
 cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, 
-            bool normalize = false, bool logprob = false )
+            bool normalize CV_DEFAULT(false), bool logprob CV_DEFAULT(false) )
 {
     double prob;
     CvMat *_probs  = cvCreateMat( 1, 1, sample->type );

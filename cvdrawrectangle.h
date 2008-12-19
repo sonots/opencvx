@@ -33,7 +33,7 @@
 #include "cvcreateaffine.h"
 #include "cvrect32f.h"
 
-//void 
+//CVAPI(void) 
 //cvDrawRectangle( IplImage* img, 
 //                 CvRect32f rect32f = cvRect32f(0,0,1,1,0),
 //                 CvPoint2D32f shear = cvPoint2D32f(0,0), 
@@ -66,17 +66,17 @@
  * @param line_type       Type of the line, see cvLine description. 
  * @param shift           Number of fractional bits in the point coordinates. 
  * @todo thickness, line_type, and shift are available only when rotate == 0 && shear == 0 currently. 
- * @return void
+ * @return CVAPI(void)
  * @uses cvRectangle
  */
-void 
+CVAPI(void) 
 cvDrawRectangle( IplImage* img, 
-                 CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                 CvPoint2D32f shear = cvPoint2D32f(0,0), 
-                 CvScalar color = CV_RGB(255, 255, 255), 
-                 int thickness = 1, 
-                 int line_type = 8,
-                 int shift = 0 )
+                 CvRect32f rect32f CV_DEFAULT(cvRect32f(0,0,1,1,0)),
+                 CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)), 
+                 CvScalar color CV_DEFAULT(CV_RGB(255, 255, 255)), 
+                 int thickness CV_DEFAULT(1), 
+                 int line_type CV_DEFAULT(8),
+                 int shift CV_DEFAULT(0) )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     float angle = rect32f.angle;
@@ -192,16 +192,17 @@ cvDrawRectangle( IplImage* img,
  * @param line_type       Type of the line, see cvLine description. 
  * @param shift           Number of fractional bits in the point coordinates. 
  * @todo thickness, line_type, and shift are available only when angle == 0 && shear == 0 currently. 
- * @return void
+ * @return CVAPI(void)
  * @uses cvDrawRectangle
  */
 CV_INLINE void 
 cvShowImageAndRectangle( const char* w_name, const IplImage* img, 
-                         CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                         CvPoint2D32f shear = cvPoint2D32f(0,0),
-                         CvScalar color = CV_RGB(255, 255, 0), 
-                         int thickness = 1, int line_type = 8, 
-                         int shift = 0 )
+                         CvRect32f rect32f CV_DEFAULT(cvRect32f(0,0,1,1,0)),
+                         CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)),
+                         CvScalar color CV_DEFAULT(CV_RGB(255, 255, 0)), 
+                         int thickness CV_DEFAULT(1), 
+                         int line_type CV_DEFAULT(8), 
+                         int shift CV_DEFAULT(0) )
 {
     CvRect rect  = cvRectFromRect32f( rect32f );
     if( rect.width <= 0 || rect.height <= 0 ) { cvShowImage( w_name, img ); return; }

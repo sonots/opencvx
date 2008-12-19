@@ -51,8 +51,9 @@
 //  }
 // @endverbatim
 */
-void cvSkinColorGmm( const IplImage* _img, IplImage* mask, 
-                     double threshold = 1.0, IplImage* probs = NULL )
+CVAPI(void) cvSkinColorGmm( const IplImage* _img, IplImage* mask, 
+                            double threshold CV_DEFAULT(1.0), 
+                            IplImage* probs CV_DEFAULT(NULL) )
 {
     CV_FUNCNAME( "cvSkinColorGmm" );
     __BEGIN__;

@@ -47,13 +47,20 @@
  *                 The defeault is 360 as angle.
  * @return angle mean for each channel
  */
-CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight = NULL, 
-                      double wrap = 360 )
+CVAPI(CvScalar) cvAngleMean( const CvArr *arr, 
+                             const CvArr *weight CV_DEFAULT(NULL), 
+                             double wrap CV_DEFAULT(360) )
 {
     CvMat* mat, matstub;
     CvMat* wmat = NULL, wmatstub;
     CvScalar mean = cvScalar(0,0,0,0);
-    CV_FUNCNAME( "cvMean" );
+    int row, col, ch;
+    int nChannels;
+    CvScalar elem;
+    CvScalar mean_cos = cvScalar(0,0,0,0);
+    CvScalar mean_sin = cvScalar(0,0,0,0);
+    CvScalar welem;
+    CV_FUNCNAME( "cvAngleMean" );
     __BEGIN__;
 
     mat = (CvMat*)arr;
@@ -74,12 +81,7 @@ CvScalar cvAngleMean( const CvArr *arr, const CvArr *weight = NULL,
             CV_MAT_CN(mat->type) == CV_MAT_CN(wmat->type) 
         );
     }
-    int row, col, ch;
-    int nChannels = CV_MAT_CN(mat->type);
-    CvScalar elem;
-    CvScalar mean_cos = cvScalar(0,0,0,0);
-    CvScalar mean_sin = cvScalar(0,0,0,0);
-    CvScalar welem;
+    nChannels = CV_MAT_CN(mat->type);
     if( wmat == NULL ) // uniform
     {
         double w = 1.0 / (double)mat->rows * (double)mat->cols;

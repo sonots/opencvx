@@ -39,7 +39,7 @@ using namespace std;
 //                                CV_L1 to compute L1 norm (abs)
 // @return double
 */
-CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type = CV_L2 )
+CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type CV_DEFAULT(CV_L2) )
 {
     if( norm_type == CV_L1 )
         return abs( p2.x - p1.x ) + abs( p2.y - p1.y );

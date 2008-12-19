@@ -27,7 +27,7 @@
 #include "cv.h"
 #include "cvaux.h"
 
-// void cvSetRows( const CvArr* src, CvArr* dst,
+// CVAPI(void) cvSetRows( const CvArr* src, CvArr* dst,
 //                 int start_row, int end_row, int delta_row = 1 );
 // CV_INLINE void cvSetRow( const CvArr* src, CvArr* dst, int row );
 
@@ -49,11 +49,11 @@
  * @param [delta_row = 1]
  *                  Index step in the row span. That is, the function extracts every 
  *                  delta_row-th row from start_row and up to (but not including) end_row. 
- * @return void
+ * @return CVAPI(void)
  * @see cvSetRow( src, dst, row ) // cvSetRows( src, dst, row, row + 1 )
  */
-void cvSetRows( const CvArr* src, CvArr* dst,
-                int start_row, int end_row, int delta_row = 1 )
+CVAPI(void) cvSetRows( const CvArr* src, CvArr* dst,
+                       int start_row, int end_row, int delta_row CV_DEFAULT(1) )
 {
     int coi;
     CvMat *srcmat = (CvMat*)src, srcmatstub;
@@ -87,7 +87,7 @@ void cvSetRows( const CvArr* src, CvArr* dst,
     __END__;
 }
 /*
-void cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end_row )
+CVAPI(void) cvSetRows( const CvArr* subarr, CvArr* arr, int start_row, int end_row )
 {
     CV_FUNCNAME( "cvSetRows" );
     __BEGIN__;

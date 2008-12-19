@@ -18,15 +18,8 @@
 int main( int argc, char** argv )
 {
     IplImage *img = cvLoadImage( "lena.png" );
-    IplImage *gry = cvCreateImage( cvGetSize(img), img->depth, 1 );
-    CvMat *grynormed = cvCreateMat( img->height, img->width, CV_64FC1 );
-
-    //cvCvtColor( img, gry, CV_BGR2GRAY );
-    //cvImgGaussNorm( gry, grynormed );
-    //cvPrintMat( grynormed );
-
     CvMat *normed = cvCreateMat( img->height, img->width, CV_MAKETYPE(CV_64F, 3) );
-    cvImgGaussNorm( img, normed );
+    cvGaussNormImage( img, normed );
     cvPrintMat( normed );
 }
 

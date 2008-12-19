@@ -43,7 +43,8 @@
  *  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
 */
 CV_INLINE void cvOpening( const CvArr* src, CvArr* dst, 
-                          IplConvKernel* element = NULL, int iterations = 1 )
+                          IplConvKernel* element CV_DEFAULT(NULL), 
+                          int iterations CV_DEFAULT(1) )
 {
     cvErode( src, dst, element, iterations );
     cvDilate( dst, dst, element, iterations );

@@ -101,7 +101,7 @@
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-mxClassID cvmxClassIDFromIplDepth(int depth)
+CVAPI(mxClassID) cvmxClassIDFromIplDepth(int depth)
 {
     static const unsigned char ClassIDFromIplDepth[] =
     {
@@ -127,7 +127,7 @@ mxClassID cvmxClassIDFromIplDepth(int depth)
 * @see cvmxIplToCvDepth
 * @see cvCvToIplDepth
 */
-int cvmxClassIDToIplDepth(mxClassID classid)
+CVAPI(int) cvmxClassIDToIplDepth(mxClassID classid)
 {
     static const signed int ClassIDToIplDepth[] = {
         0,

@@ -34,9 +34,9 @@
 /**
 * definitions 
 */
-void mxPrintMatrix(const mxArray* mxarr);
-void mxSetCol(mxArray* X, mxArray* X1, int col);
-void mxSetRow(mxArray* X, mxArray* X1, int row);
+CVAPI(void) mxPrintMatrix(const mxArray* mxarr);
+CVAPI(void) mxSetCol(mxArray* X, mxArray* X1, int col);
+CVAPI(void) mxSetRow(mxArray* X, mxArray* X1, int row);
 mxArray* mxGetCol(mxArray* X, int col);
 mxArray* mxGetRow(mxArray* X, int row);
 
@@ -58,9 +58,9 @@ mxArray* mxGetRow(mxArray* X, int row);
 * Currently support only upto 3-D. 
 *
 * @param mxArray* mxarr
-* @return void
+* @return CVAPI(void)
 */
-void mxPrintMatrix(const mxArray* mxarr)
+CVAPI(void) mxPrintMatrix(const mxArray* mxarr)
 {
     int nDim;
     const mwSize *dims;
@@ -117,7 +117,7 @@ void mxPrintMatrix(const mxArray* mxarr)
 * @param int col
 * @return mxArray*
 */
-void mxSetCol(mxArray* X, mxArray* X1, int col)
+CVAPI(void) mxSetCol(mxArray* X, mxArray* X1, int col)
 {
     int nRow = mxGetM(X);
     int nCol = mxGetN(X);
@@ -137,7 +137,7 @@ void mxSetCol(mxArray* X, mxArray* X1, int col)
 * @param int col
 * @return mxArray*
 */
-void mxSetRow(mxArray* X, mxArray* X1, int row)
+CVAPI(void) mxSetRow(mxArray* X, mxArray* X1, int row)
 {
     int nRow = mxGetM(X);
     int nCol = mxGetN(X);

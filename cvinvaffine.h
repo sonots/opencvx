@@ -36,7 +36,7 @@
  * @param affine    The 2 x 3 CV_32FC1|CV_64FC1 affine matrix
  * @param invaffine The 2 x 3 CV_32FC1|CV_64FC1 affine matrix to be created
  */
-void cvInvAffine( const CvMat* affine, CvMat* invaffine )
+CVAPI(void) cvInvAffine( const CvMat* affine, CvMat* invaffine )
 {
     CvMat* Affine;
     CvMat* InvAffine;

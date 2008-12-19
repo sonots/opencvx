@@ -88,7 +88,7 @@ typedef struct CvBox32f {
  * The Constructor of Floating Rectangle Structure
  */
 CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, 
-                               float angle = 0.0 )
+                               float angle CV_DEFAULT(0.0) )
 {
     CvRect32f rect = { x, y, width, height, angle };
     return rect;
@@ -98,7 +98,7 @@ CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height,
  * The Constructor of Center Coordinate Floating Rectangle Structure
  */
 CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, 
-                             float angle = 0.0 )
+                             float angle CV_DEFAULT(0.0) )
 {
     CvBox32f box = { cx, cy, width, height, angle };
     return box;
@@ -108,7 +108,7 @@ CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height,
 /**
  *cvRect32f from cvRect
  */
-CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle = 0.0 )
+CV_INLINE CvRect32f cvRect32fFromRect( CvRect rect, float angle CV_DEFAULT(0.0) )
 {
     return cvRect32f( rect.x, rect.y, rect.width, rect.height, angle );
 }

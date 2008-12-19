@@ -31,7 +31,7 @@
 #include "cvrect32f.h"
 #include "cvcreateaffine.h"
 
-// void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
+// CVAPI(void) cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
 //                       CvPoint2D32f shear = cvPoint2D32f(0,0) );
 // CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
 //                                CvPoint2D32f shear = cvPoint2D32f(0,0) );
@@ -54,8 +54,8 @@
  * @param shear      Shear deformation parameter if you want
  * @see cvBoxPoints, cvBox32fPoints, cvRectPoints, cvRect32fPoints
  */
-void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
-                      CvPoint2D32f shear = cvPoint2D32f(0,0) )
+CVAPI(void) cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4], 
+                             CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)) )
 {
     if( shear.x == 0 && shear.y == 0 )
     {
@@ -98,7 +98,7 @@ void cvRect32fPoints( CvRect32f rect, CvPoint2D32f pt[4],
  * @see cvBoxPoints, cvBox32fPoints, cvRectPoints, cvRect32fPoints
  */
 CV_INLINE void cvBox32fPoints( CvBox32f box, CvPoint2D32f pt[4], 
-                               CvPoint2D32f shear = cvPoint2D32f(0,0) )
+                               CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)) )
 {
     cvRect32fPoints( cvRect32fFromBox32f( box ), pt, shear );
 }

@@ -34,7 +34,7 @@
  *  International Conference on Computer as a Tool , 2003. (Tuned)
  * @endverbatim
 */
-void cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* _dist = NULL )
+CVAPI(void) cvSkinColorCrCb( const IplImage* _img, IplImage* mask, CvArr* _dist CV_DEFAULT(NULL) )
 {
     CV_FUNCNAME( "cvSkinColorCbCr" );
     __BEGIN__;

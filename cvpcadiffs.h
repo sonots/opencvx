@@ -20,15 +20,7 @@
 #ifndef CV_PCADIFFS_INCLUDED
 #define CV_PCADIFFS_INCLUDED
 
-// refer
-//void cvCalcPCA( const CvArr* data, CvArr* avg,
-//                CvArr* eigenvalues, CvArr* eigenvectors, int flags );
-//void cvProjectPCA( const CvArr* data, const CvArr* avg,
-//                   const CvArr* eigenvectors, CvArr* result );
-//void cvBackProjectPCA( const CvArr* proj, const CvArr* avg,
-//                       const CvArr* eigenvects, CvArr* result );
-
-//void 
+//CVAPI(void) 
 //cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
 //               const CvMat* eigenvectors, CvMat* probs, 
 //               int normalize = 0, bool logprob = true );
@@ -57,6 +49,9 @@
  *                            1 - normalization term
  *                            2 - normalize so that sum becomes 1.0
  * @param logprob             Log probability or not
+ * @see CVAPI(void) cvCalcPCA( const CvArr* data, CvArr* avg, CvArr* eigenvalues, CvArr* eigenvectors, int flags );
+ * @see CVAPI(void) cvProjectPCA( const CvArr* data, const CvArr* avg, const CvArr* eigenvectors, CvArr* result );
+ * @see CVAPI(void) cvBackProjectPCA( const CvArr* proj, const CvArr* avg,const CvArr* eigenvects, CvArr* result );
  *
  * References
  * @verbatim
@@ -76,10 +71,10 @@
  *     pages = {780--788}
  * @endverbatim
  */
-void 
+CVAPI(void) 
 cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
                const CvMat* eigenvectors, CvMat* probs, 
-               int normalize = 0, bool logprob = true )
+               int normalize CV_DEFAULT(0), bool logprob CV_DEFAULT(true) )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -214,7 +209,8 @@ cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues,
 */
 CV_INLINE double 
 cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
-            const CvMat* eigenvectors, int normalize = 0, bool logprob = true )
+            const CvMat* eigenvectors, 
+            int normalize CV_DEFAULT(0), bool logprob CV_DEFAULT(true) )
 {
     double prob;
     CvMat *_probs  = cvCreateMat( 1, 1, sample->type );

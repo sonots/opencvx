@@ -33,7 +33,7 @@
 #include "cvcreateaffine.h"
 #include "cvrect32f.h"
 
-//void 
+//CVAPI(void) 
 //cvCropImageROI( const IplImage* img, IplImage* dst, 
 //                CvRect32f rect32f = cvRect32f(0,0,1,1,0),
 //                CvPoint2D32f shear = cvPoint2D32f(0,0) );
@@ -56,12 +56,12 @@
  * @param rect32f      The rectangle region (x,y,width,height) to crop and 
  *                     the rotation angle in degree where the rotation center is (x,y)
  * @param shear        The shear deformation parameter shx and shy
- * @return void
+ * @return CVAPI(void)
  */
-void 
+CVAPI(void) 
 cvCropImageROI( const IplImage* img, IplImage* dst, 
-                CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                CvPoint2D32f shear = cvPoint2D32f(0,0) )
+                CvRect32f rect32f CV_DEFAULT(cvRect32f(0,0,1,1,0)),
+                CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)) )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     float angle = rect32f.angle;
@@ -148,13 +148,13 @@ cvCropImageROI( const IplImage* img, IplImage* dst,
  * @param rect32f      The rectangle region (x,y,width,height) to crop and 
  *                     the rotation angle in degree
  * @param shear        The shear deformation parameter shx and shy
- * @return void
+ * @return CVAPI(void)
  * @uses cvCropImageROI
  */
 CV_INLINE void 
 cvShowCroppedImage( const char* w_name, IplImage* img, 
-                    CvRect32f rect32f = cvRect32f(0,0,1,1,0),
-                    CvPoint2D32f shear = cvPoint2D32f(0,0) )
+                    CvRect32f rect32f CV_DEFAULT(cvRect32f(0,0,1,1,0)),
+                    CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)) )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     if( rect.width <= 0 || rect.height <= 0 ) return;

@@ -83,23 +83,25 @@ typedef struct CvParticle {
 
 /**************************** Function Prototypes ****************************/
 
-//CvParticle* cvCreateParticle( int num_states, int num_observes, int num_particles, bool logprob );
-//void cvReleaseParticle( CvParticle** p );
+#ifndef NO_DOXYGEN
+CVAPI(CvParticle*) cvCreateParticle( int num_states, int num_observes, int num_particles, bool logprob );
+CVAPI(void) cvReleaseParticle( CvParticle** p );
 
-//void cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics );
-//void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std );
-//void cvParticleSetBound( CvParticle* p, const CvMat* bound );
+CVAPI(void) cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics );
+CVAPI(void) cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std );
+CVAPI(void) cvParticleSetBound( CvParticle* p, const CvMat* bound );
 
-// int  cvParticleGetMax( const CvParticle* p );
-// void cvParticleGetMean( const CvParticle* p, CvMat* meanp );
-// void cvParticlePrint( const CvParticle* p, int p_id );
+CVAPI(int)  cvParticleGetMax( const CvParticle* p );
+CVAPI(void) cvParticleGetMean( const CvParticle* p, CvMat* meanp );
+CVAPI(void) cvParticlePrint( const CvParticle* p, int p_id );
 
-// void cvParticleMarginalize( CvParticle* p );
-// void cvParticleBound( CvParticle* p );
+CVAPI(void) cvParticleMarginalize( CvParticle* p );
+CVAPI(void) cvParticleBound( CvParticle* p );
 
-// void cvParticleInit( CvParticle* p, const CvParticle* init );
-// void cvParticleTransition( CvParticle* p );
-// void cvParticleResample( CvParticle* p, bool marginal );
+CVAPI(void) cvParticleInit( CvParticle* p, const CvParticle* init );
+CVAPI(void) cvParticleTransition( CvParticle* p );
+CVAPI(void) cvParticleResample( CvParticle* p, bool marginal );
+#endif
 
 /*************************** Constructor / Destructor *************************/
 
@@ -112,8 +114,10 @@ typedef struct CvParticle {
  * @param logprob       The probs parameter is log probabilities or not
  * @return CvParticle*
  */
-CvParticle* cvCreateParticle( int num_states, int num_observes, 
-                              int num_particles, bool logprob = false )
+CVAPI(CvParticle*) cvCreateParticle( int num_states, 
+                                     int num_observes, 
+                                     int num_particles, 
+                                     bool logprob CV_DEFAULT(false) )
 {
     CvParticle *p = NULL;
     CV_FUNCNAME( "cvCreateParticle" );
@@ -156,7 +160,7 @@ CvParticle* cvCreateParticle( int num_states, int num_observes,
  *
  * @param particle
  */
-void cvReleaseParticle( CvParticle** particle )
+CVAPI(void) cvReleaseParticle( CvParticle** particle )
 {
     CvParticle *p = NULL;
     CV_FUNCNAME( "cvReleaseParticle" );
@@ -188,7 +192,7 @@ void cvReleaseParticle( CvParticle** particle )
  * @param dynamics (num_states) x (num_states). dynamics model
  *    new_state = dynamics * curr_state + noise
  */
-void cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics )
+CVAPI(void) cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics )
 {
     CV_FUNCNAME( "cvParticleSetDynamics" );
     __BEGIN__;
@@ -207,7 +211,7 @@ void cvParticleSetDynamics( CvParticle* p, const CvMat* dynamics )
  * @param std      num_states x 1. standard deviation for gaussian noise
  *                 Set standard deviation == 0 for no noise
  */
-void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std )
+CVAPI(void) cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std )
 {
     CV_FUNCNAME( "cvParticleSetNoise" );
     __BEGIN__;
@@ -225,7 +229,7 @@ void cvParticleSetNoise( CvParticle* p, CvRNG rng, const CvMat* std )
  * @param bound    num_states x 3 (lowerbound, upperbound, circular flag 0 or 1)
  *                 Set lowerbound == upperbound to express no bound
  */
-void cvParticleSetBound( CvParticle* p, const CvMat* bound )
+CVAPI(void) cvParticleSetBound( CvParticle* p, const CvMat* bound )
 {
     CV_FUNCNAME( "cvParticleSetBound" );
     __BEGIN__;
@@ -244,7 +248,7 @@ void cvParticleSetBound( CvParticle* p, const CvMat* bound )
  * @param particle
  * @return int
  */
-int cvParticleGetMax( const CvParticle* p )
+CVAPI(int) cvParticleGetMax( const CvParticle* p )
 {
     double minval, maxval;
     CvPoint min_loc, max_loc;
@@ -257,9 +261,9 @@ int cvParticleGetMax( const CvParticle* p )
  *
  * @param particle
  * @param meanp     num_states x 1, CV_32FC1 or CV_64FC1
- * @return void
+ * @return CVAPI(void)
  */
-void cvParticleGetMean( const CvParticle* p, CvMat* meanp )
+CVAPI(void) cvParticleGetMean( const CvParticle* p, CvMat* meanp )
 {
     CvMat* probs = NULL;
     CvMat* particles_i, hdr;
@@ -311,7 +315,7 @@ void cvParticleGetMean( const CvParticle* p, CvMat* meanp )
  * @param particle
  * @param p_id      particle id
  */
-void cvParticlePrint( const CvParticle*p, int p_id = -1 )
+CVAPI(void) cvParticlePrint( const CvParticle*p, int p_id CV_DEFAULT(-1) )
 {
     if( p_id == -1 ) // print all
     {
@@ -342,7 +346,7 @@ void cvParticlePrint( const CvParticle*p, int p_id = -1 )
  * @note Used by See also functions
  * @see cvParticleResample
  */
-void cvParticleMarginalize( CvParticle* p )
+CVAPI(void) cvParticleMarginalize( CvParticle* p )
 {
     if( !p->logprob )
     {
@@ -418,7 +422,7 @@ void cvParticleMarginalize( CvParticle* p )
  * @note Used by See also functions
  * @see cvParticleTransition
  */
-void cvParticleBound( CvParticle* p )
+CVAPI(void) cvParticleBound( CvParticle* p )
 {
     int row, col;
     double lower, upper;
@@ -458,7 +462,7 @@ void cvParticleBound( CvParticle* p )
  * @param particle
  * @param init       initial states.
  */
-void cvParticleInit( CvParticle* p, const CvParticle* init = NULL )
+CVAPI(void) cvParticleInit( CvParticle* p, const CvParticle* init = NULL )
 {
     int i, j, k;
     if( init )
@@ -516,7 +520,7 @@ void cvParticleInit( CvParticle* p, const CvParticle* init = NULL )
  * @note Uses See also functions inside.
  * @see cvParticleBound
  */
-void cvParticleTransition( CvParticle* p )
+CVAPI(void) cvParticleTransition( CvParticle* p )
 {
     int i, j;
     CvMat* transits = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
@@ -575,7 +579,7 @@ void cvParticleTransition( CvParticle* p )
  * @see cvParticleMarginalize
  * @see cvParticleGetMax
  */
-void cvParticleResample( CvParticle* p, bool marginal = true )
+CVAPI(void) cvParticleResample( CvParticle* p, bool marginal = true )
 {
     int i, j, np, k = 0;
     CvMat* particle, hdr;

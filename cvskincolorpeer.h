@@ -33,7 +33,7 @@ using namespace std;
 //     (|R -G|>15)^(R>G)^(R>B)
 // @endverbatim
 */
-void cvSkinColorPeer( const IplImage* img, IplImage* mask )
+CVAPI(void) cvSkinColorPeer( const IplImage* img, IplImage* mask )
 {
     int x, y;
     uchar r, g, b;

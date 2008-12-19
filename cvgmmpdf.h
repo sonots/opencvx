@@ -33,7 +33,7 @@
 
 #include "cvgausspdf.h"
 
-//void 
+//CVAPI(void) 
 //cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, 
 //             const CvMat* weights, CvMat* probs, bool normalize = false );
 //CV_INLINE double 
@@ -80,9 +80,9 @@
  * @param normalize Compute normalization term or not
  * @see cvGaussPdf
 */
-void 
+CVAPI(void) 
 cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, 
-             const CvMat* weights, CvMat* probs, bool normalize = false )
+             const CvMat* weights, CvMat* probs, bool normalize CV_DEFAULT(false) )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -145,7 +145,7 @@ cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs,
  */
 CV_INLINE double 
 cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, 
-          const CvMat* weights, CvMat* probs = NULL, bool normalize = false )
+          const CvMat* weights, CvMat* probs CV_DEFAULT(NULL), bool normalize CV_DEFAULT(false) )
 {
     double prob;
     CvMat* _probs;

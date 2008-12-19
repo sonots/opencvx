@@ -37,13 +37,14 @@
  * @param dst        Output Array
  * @param element    Kernel shape. see cvErode or cvDilate
  * @param iterations
- * @return void
+ * @return CVAPI(void)
  *
  * References)
  *  R. Gonzalez, R. Woods, "Digital Image Processing," chapter 9
-*/
-void cvClosing( const CvArr* src, CvArr* dst, 
-                IplConvKernel* element = NULL, int iterations = 1 )
+ */
+CVAPI(void) cvClosing( const CvArr* src, CvArr* dst, 
+                       IplConvKernel* element CV_DEFAULT(NULL), 
+                       int iterations CV_DEFAULT(1) )
 {
     cvDilate( dst, dst, element, iterations );
     cvErode( src, dst, element, iterations );

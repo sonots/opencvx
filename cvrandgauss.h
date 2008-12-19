@@ -34,7 +34,7 @@
  * @param sigma standard deviation
  * @return double
  */
-double cvRandGauss( CvRNG* rng, double sigma )
+CV_INLINE double cvRandGauss( CvRNG* rng, double sigma )
 {
     CvMat* mat = cvCreateMat( 1, 1, CV_64FC1 );
     double var = 0;
