@@ -12,7 +12,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 #include "highgui.h"
-#include "../cvanglemean.h"
+#include "opencvx/cvanglemean.h"
 
 int main( int argc, char** argv )
 {

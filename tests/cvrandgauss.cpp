@@ -1,4 +1,4 @@
-#include "../cvxrand.h"
+#include "opencvx/cvxrand.h"
 #include<time.h>
 #include<stdio.h>
 

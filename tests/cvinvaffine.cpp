@@ -5,10 +5,10 @@
 #include "cxcore.h"
 #include "highgui.h"
 
-#include "../cvxmat.h"
-#include "../cvinvaffine.h"
-#include "../cvcreateaffine.h"
-#include "../cvrect32f.h"
+#include "opencvx/cvxmat.h"
+#include "opencvx/cvinvaffine.h"
+#include "opencvx/cvcreateaffine.h"
+#include "opencvx/cvrect32f.h"
 
 int main()
 {

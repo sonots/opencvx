@@ -12,8 +12,8 @@
 #include "cvaux.h"
 #include "cxcore.h"
 #include "highgui.h"
-#include "../cvxmat.h"
-#include "../cvgaussnorm.h"
+#include "opencvx/cvxmat.h"
+#include "opencvx/cvgaussnorm.h"
 
 int main( int argc, char** argv )
 {

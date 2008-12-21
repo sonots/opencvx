@@ -10,8 +10,8 @@
 #include "cvaux.h"
 #include "highgui.h"
 #include <stdio.h>
-#include "../cvbackground.h"
-#include "../cvxmorphological.h"
+#include "opencvx/cvbackground.h"
+#include "opencvx/cvxmorphological.h"
 #include <ctype.h>
 
 int main(int argc, char** argv)

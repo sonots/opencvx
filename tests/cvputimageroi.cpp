@@ -10,8 +10,8 @@
 #include "cvaux.h"
 #include "highgui.h"
 #include <stdio.h>
-#include "../cvxmat.h"
-#include "../cvputimageroi.h"
+#include "opencvx/cvxmat.h"
+#include "opencvx/cvputimageroi.h"
 
 int main(int argc, char** argv)
 {

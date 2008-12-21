@@ -12,9 +12,9 @@
 #include "cvaux.h"
 #include "cxcore.h"
 #include "highgui.h"
-#include "../cvxmat.h"
-#include "../cvcreateaffine.h"
-#include "../cvcreateaffineimage.h"
+#include "opencvx/cvxmat.h"
+#include "opencvx/cvcreateaffine.h"
+#include "opencvx/cvcreateaffineimage.h"
 
 int main( int argc, char** argv )
 {

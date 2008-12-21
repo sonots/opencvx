@@ -10,7 +10,7 @@
 #include "cvaux.h"
 #include "highgui.h"
 #include <stdio.h>
-#include "../cvrect32f.h"
+#include "opencvx/cvrect32f.h"
 
 int main(int argc, char** argv)
 {

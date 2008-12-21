@@ -13,22 +13,22 @@
 #include "cxcore.h"
 #include "highgui.h"
 
-#include "../cvxmat.h"
-#include "../cvxrectangle.h"
-#include "../cvrect32f.h"
-#include "../cvcropimageroi.h"
-#include "../cvdrawrectangle.h"
+#include "opencvx/cvxmat.h"
+#include "opencvx/cvxrectangle.h"
+#include "opencvx/cvrect32f.h"
+#include "opencvx/cvcropimageroi.h"
+#include "opencvx/cvdrawrectangle.h"
 #include <time.h>
 
 // General particle filter structure
 // cvParticleXXX are functions in this
-#include "../cvparticle.h"
+#include "opencvx/cvparticle.h"
 // Rotated rectangle + 2nd AR model state model
 // cvParticleStateXXX are functions in this
-#include "../cvparticlestaterect2.h"
+#include "opencvx/cvparticlestaterect2.h"
 // Template matching observertion model
 // cvParticleObserveXXX are functions in this
-#include "../cvparticleobservetemplate.h"
+#include "opencvx/cvparticleobservetemplate.h"
 
 /****************************** Global *****************************/
 
