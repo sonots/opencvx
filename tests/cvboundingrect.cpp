@@ -13,7 +13,7 @@
 #include "cxcore.h"
 #include "highgui.h"
 #include <time.h>
-#include "opencvx/cvrect32f.h"
+#include "cvrect32f.h"
 
 int
 main (int argc, char **argv)

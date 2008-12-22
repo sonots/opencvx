@@ -13,7 +13,7 @@
 #include "cxcore.h"
 #include "highgui.h"
 #include <time.h>
-#include "opencvx/cvpointrecttest.h"
+#include "cvpointrecttest.h"
 #include <iostream>
 using namespace std;
 

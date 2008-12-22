@@ -13,8 +13,8 @@
 #include "cvaux.h"
 #include "cxcore.h"
 #include "highgui.h"
-#include "opencvx/cvxmat.h"
-#include "opencvx/cvsetrow.h"
+#include "cvxmat.h"
+#include "cvsetrow.h"
 
 int main( int argc, char** argv )
 {

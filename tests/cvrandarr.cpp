@@ -12,7 +12,7 @@
 #include "cvaux.h"
 #include "cxcore.h"
 #include "highgui.h"
-#include "opencvx/cvxmat.h"
+#include "cvxmat.h"
 
 int main( int argc, char** argv )
 {

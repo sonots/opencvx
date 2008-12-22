@@ -1,11 +1,14 @@
 CC      = g++ -Wall
-OPENCVX = ../..
+OPENCVX = ..
 CFLAGS  = -I. -I$(OPENCVX) `pkg-config --cflags opencv`
 LIBS    = `pkg-config --libs opencv`
 
-all: cvpcadiffs.exe
+all: cvpcadiffs.exe cvhaarlike.exe
 
-cvpcadiffs.exe: cvpcadiffs.cpp $(OPENCVX)/opencvx/cvpcadiffs.h
+cvhaarlike.exe: cvhaarlike.cpp
+	echo $(CFLAGS) $(LIBS) -I$(OPENCVX)/HaarTraining | xargs g++ cvhaarlike.cpp -o $@
+
+cvpcadiffs.exe: cvpcadiffs.cpp
 	echo $(CFLAGS) $(LIBS) | xargs $(CC) cvpcadiffs.cpp -o $@
 
 clean:
