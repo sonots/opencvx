@@ -18,7 +18,7 @@ main (int argc, char **argv)
   IplImage *frame = 0;
   CvVideoWriter *writer;
   int c, num = 0;
-  CvFont font;
+  //CvFont font;
   //char str[64];
 
   double fps, width, height;
