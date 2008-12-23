@@ -1,6 +1,6 @@
 CC      = g++ -Wall
 OPENCVX = ..
-CFLAGS  = -I. -I$(OPENCVX) `pkg-config --cflags opencv`
+CFLAGS  = -I. -I$(OPENCVX) -I$(OPENCVX)/HaarTraining `pkg-config --cflags opencv`
 LIBS    = `pkg-config --libs opencv`
 CXXTESTGEN = cxxtestgen.pl --error-printer
 # GNU make
