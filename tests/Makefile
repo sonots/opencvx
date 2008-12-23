@@ -1,22 +1,20 @@
 CC      = g++ -Wall -I"C:\cxxtest"
 OPENCVX = ..
-CFLAGS  = -I. -I$(OPENCVX) `pkg-config --cflags opencv`
+CFLAGS  = -I. -I$(OPENCVX) -I$(OPENCVX)/HaarTraining `pkg-config --cflags opencv`
 LIBS    = `pkg-config --libs opencv`
 CXXTESTGEN = cxxtestgen.pl --error-printer
+# GNU make
+SRCS = $(wildcard *.hxx)
+CXXS = $(SRCS:.hxx=.cxx)
+EXES = $(CXXS:.cxx=.exe)
 
-all: cvpcadiffs.exe cvhaarlike.exe cvanglemean.exe
+all: $(EXES)
 
-cvanglemean.exe: cvanglemean.cxx
-	echo $(CFLAGS) $(LIBS) | xargs $(CC) cvanglemean.cxx -o $@
+%.exe: %.cxx
+	echo $(CFLAGS) $(LIBS) | xargs $(CC) $^ -o $@
 
-cvanglemean.cxx: cvanglemean.hxx
-	$(CXXTESTGEN) cvanglemean.hxx -o $@
-
-cvhaarlike.exe: cvhaarlike.cpp
-	echo $(CFLAGS) $(LIBS) -I$(OPENCVX)/HaarTraining | xargs g++ cvhaarlike.cpp -o $@
-
-cvpcadiffs.exe: cvpcadiffs.cpp
-	echo $(CFLAGS) $(LIBS) | xargs $(CC) cvpcadiffs.cpp -o $@
+%.cxx: %.hxx
+	$(CXXTESTGEN) $^ -o $@
 
 clean:
 	rm -f *~ *.o *.exe core
