@@ -3,6 +3,8 @@
  *
  * You need to set include path to opencvx/HaarTraining such as
  * g++ -Iopencvx/HaarTraining
+ *
+ * @see samples/cvhaarlike.cpp
  **/
 /* The MIT License
 * 
@@ -34,7 +36,39 @@
 #include "cxcore.h"
 
 // cvIntegral( img, sum )
+
+// @see HaarTraining/cvhaartraing.h/cpp
 // CvIntHaarFeatures* haar = icvCreateIntHaarFeatures( cvGetSize(sum), 0, 0 );
+
+// @see HaarTraining/_cvhaartraining.h
+// typedef struct CvTHaarFeature
+// {
+//     char desc[CV_HAAR_FEATURE_DESC_MAX];
+//     int  tilted;
+//     struct
+//     {
+//         CvRect r;
+//         float weight;
+//     } rect[CV_HAAR_FEATURE_MAX];
+// } CvTHaarFeature;
+//
+// typedef struct CvFastHaarFeature
+// {
+//     int tilted;
+//     struct
+//     {
+//         int p0, p1, p2, p3;
+//         float weight;
+//     } rect[CV_HAAR_FEATURE_MAX];
+// } CvFastHaarFeature;
+//
+// typedef struct CvIntHaarFeatures
+// {
+//     CvSize winsize;
+//     int count;
+//     CvTHaarFeature* feature;
+//     CvFastHaarFeature* fastfeature;
+// } CvIntHaarFeatures;
 
 #include "HaarTraining/cvhaartraining.h"
 #include "HaarTraining/cvhaartraining.cpp"
