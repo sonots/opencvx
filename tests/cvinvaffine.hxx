@@ -17,7 +17,7 @@
 
 #include <cxxtest/TestSuite.h>
 
-class CvGaussNormTest : public CxxTest::TestSuite
+class CvInvAffineTest : public CxxTest::TestSuite
 {
 public:
     void testInvAffine()
