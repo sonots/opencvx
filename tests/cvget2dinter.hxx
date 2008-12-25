@@ -12,14 +12,14 @@
 #include "cvaux.h"
 #include "cxcore.h"
 #include "highgui.h"
-#include "cvinterlinear.h"
+#include "cvget2dinter.h"
 
 #include <cxxtest/TestSuite.h>
 
 class CvTest : public CxxTest::TestSuite
 {
 public:
-    void test_do()
+    void test_linear()
     {
         double a[] = { 
             0, 100, 200,
@@ -28,9 +28,9 @@ public:
         };
         CvMat mat = cvMat( 3, 3, CV_64FC1, a );
         CvScalar color;
-        color = cvInterLinear( &mat, cvPoint2D32f( 1.5, 0.5 ) );
+        color = cvGet2DInter( &mat, 0.5, 1.5 );
         TS_ASSERT_DELTA( color.val[0], 175, 0.00001 );
-        color = cvInterLinear( &mat, cvPoint2D32f( 1.5, -0.4 ) );
+        color = cvGet2DInter( &mat, -0.4, 1.5 );
         TS_ASSERT_DELTA( color.val[0], 150, 0.00001 );
     }
 };

@@ -21,12 +21,43 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-#ifndef CV_INTER_LINEAR_INCLUDED
-#define CV_INTER_LINEAR_INCLUDED
+#ifndef CV_GET2D_INTER_INCLUDED
+#define CV_GET2D_LINEAR_INCLUDED
 
 #include "cv.h"
 #include "cvaux.h"
 #include "cxcore.h"
+
+/**
+ * Nearest Neighbor Interpolation
+ *
+ * Get a color at a floating position using nearest neighbor (round) method.
+ *
+ * @param  arr     array
+ * @param  row
+ * @param  col
+ * @return color
+ * @see cvInterLinear
+ */
+CVAPI(CvScalar) 
+icvGet2DInterNn( const CvArr *arr, float row, float col )
+{
+    IplImage* img, imgstub;
+    int ix, iy;
+    CvScalar color;
+    CV_FUNCNAME( "cvInterNn" );
+    __BEGIN__;
+    img = (IplImage*)arr;
+    if( !CV_IS_IMAGE(img) )
+    {
+        CV_CALL( img = cvGetImage( img, &imgstub ) );
+    }
+    ix = cvRound( col );
+    iy = cvRound( row );
+    color = cvGet2D( img, iy, ix );
+    __END__;
+    return color;
+}
 
 /**
  * Bilinear Interpolation
@@ -35,13 +66,12 @@
  * Floating origin is the center of (0,0) pixel.
  *
  * @param  arr     array
- * @param  pt      position
+ * @param  row
+ * @param  col
  * @return color
- * @see cvInterNn
- * @see cvResize has CV_INTER_LINEAR but it was not reusable. 
  */
-CVAPI(CvScalar) cvInterLinear( const CvArr *arr, 
-                               CvPoint2D32f pos )
+CVAPI(CvScalar)
+icvGet2DInterLinear( const CvArr *arr, float row, float col )
 {
     IplImage* img, imgstub;
     int ix, iy;
@@ -57,10 +87,10 @@ CVAPI(CvScalar) cvInterLinear( const CvArr *arr,
     {
         CV_CALL( img = cvGetImage( img, &imgstub ) );
     }
-    ix = cvFloor( pos.x );
-    iy = cvFloor( pos.y );
-    dx = pos.x - ix;
-    dy = pos.y - iy;
+    ix = cvFloor( col );
+    iy = cvFloor( row );
+    dx = col - ix;
+    dy = row - iy;
     if( ix < 0 ) { // out of left
         pt[0].x = pt[1].x = pt[2].x = pt[3].x = 0;
     } else if( ix > img->width - 2 ) { // out of right
@@ -89,5 +119,43 @@ CVAPI(CvScalar) cvInterLinear( const CvArr *arr,
     return color;
 }
 
+/**
+ * Get an element of array with interpolation method
+ *
+ * Get a color at a floating position using an interpolation method.
+ * Floating origin is the center of (0,0) pixel.
+ *
+ * @param  arr     array
+ * @param  row     floating row position
+ * @param  col     floating col position
+ * @param  inter   The interpolation method. 
+ *   - CV_INTER_NN - Nearest Neighborhood method
+ *   - CV_INTER_LINEAR - Bilinear interpolation
+ * @return color
+ * @see cvResize has "interpolation" method, 
+ *      but it was not reusable. 
+ */
+CVAPI(CvScalar)
+cvGet2DInter( const CvArr *arr, float row, float col,
+              int inter CV_DEFAULT(CV_INTER_LINEAR) )
+{
+    CvScalar color;
+    CV_FUNCNAME( "cvGet2DInter" );
+    __BEGIN__;
+    switch( inter )
+    {
+    case CV_INTER_NN:
+        color = icvGet2DInterNn( arr, row, col );
+        break;
+    case CV_INTER_LINEAR:
+        color = icvGet2DInterLinear( arr, row, col );
+        break;
+    default:
+        CV_ERROR( 0, "No such interpolation method is available." );
+        break;
+    }
+    __END__;
+    return color;
+}
 
 #endif

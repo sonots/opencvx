@@ -85,7 +85,8 @@ cvCropImageROI( const IplImage* img, IplImage* dst,
     }
     else if( shear.x == 0 && shear.y == 0 )
     {
-        int x, y, ch, xp, yp;
+        int x, y, ch;
+        float xp, yp;
         double c = cos( -M_PI / 180 * angle );
         double s = sin( -M_PI / 180 * angle );
         /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
@@ -99,9 +100,9 @@ cvCropImageROI( const IplImage* img, IplImage* dst,
         {
             for( y = 0; y < rect.height; y++ )
             {
-                xp = cvRound( c * x + -s * y ) + rect.x;
-                yp = cvRound( s * x + c * y ) + rect.y;
-                if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
+                xp = ( c * x + -s * y ) + rect.x;
+                yp = ( s * x + c * y ) + rect.y;
+                if( xp <= -0.5 || xp >= img->width - 0.5 || yp <= -0.5 || yp >= img->height - 0.5 ) continue;
                 for( ch = 0; ch < img->nChannels; ch++ )
                 {
                     dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
