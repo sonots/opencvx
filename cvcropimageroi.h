@@ -56,12 +56,16 @@
  * @param rect32f      The rectangle region (x,y,width,height) to crop and 
  *                     the rotation angle in degree where the rotation center is (x,y)
  * @param shear        The shear deformation parameter shx and shy
+ * @param interpolation The interpolation method. 
+ *                     CV_INTER_NN - Nearest Neighborhood method
+ *                     CV_INTER_LINEAR - Bilinear interpolation
  * @return CVAPI(void)
  */
 CVAPI(void) 
 cvCropImageROI( const IplImage* img, IplImage* dst, 
                 CvRect32f rect32f CV_DEFAULT(cvRect32f(0,0,1,1,0)),
-                CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)) )
+                CvPoint2D32f shear CV_DEFAULT(cvPoint2D32f(0,0)),
+                int interpolation CV_DEFAULT(CV_INTER_LINEAR) )
 {
     CvRect rect = cvRectFromRect32f( rect32f );
     float angle = rect32f.angle;
