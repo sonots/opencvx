@@ -51,11 +51,13 @@ CvMat *eigenvectors;
 CvMat *eigenavg;
 
 /****************************** Function Prototypes ********************************/
+#ifndef NO_DOXYGEN
 void cvParticleObserveInitialize();
 void cvParticleObserveFinalize();
 void icvPreprocess( const IplImage* patch, CvMat *mat );
 void icvGetFeatures( const CvParticle* p, const IplImage* frame, CvMat* features );
-void cvParticleObserveLikelihood( CvParticle* p, IplImage* cur_frame, IplImage *pre_frame );
+void cvParticleObserveMeasure( CvParticle* p, IplImage* cur_frame, IplImage *pre_frame );
+#endif
 
 /****************************** Functions ******************************************/
 
@@ -154,13 +156,20 @@ void icvGetFeatures( const CvParticle* p, const IplImage* frame, CvMat* features
 }
 
 /**
+ * Measure and weight particles. 
+ *
+ * The proposal function q is set p(xt|xt-1) in SIR/Condensation, and it results 
+ * that "weights" are set to be proportional to the likelihood probability 
+ * (Normalize later).
+ * Rewrite here if you want to use a different proposal function q. 
+ *
  * CvParticleState s must have s.x, s.y, s.width, s.height, s.angle
  *
  * @param particle
  * @param frame
  * @param reference
  */
-void cvParticleObserveLikelihood( CvParticle* p, IplImage* frame )
+void cvParticleObserveMeasure( CvParticle* p, IplImage* frame )
 {
     int feature_height = feature_size.height;
     int feature_width  = feature_size.width;

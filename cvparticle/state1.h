@@ -70,6 +70,7 @@ double dynamics[] = {
 
 /********************** Function Prototypes *********************************/
 
+#ifndef NO_DOXYGEN
 // Functions for CvParticleState structure ( constructor, getter, setter )
 inline CvParticleState cvParticleState( double x, 
                                         double y, 
@@ -88,6 +89,7 @@ void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize );
 // Utility Functions
 void cvParticleStateDraw( const CvParticleState& state, IplImage* frame, CvScalar color );
 void cvParticleStatePrint( const CvParticleState& state );
+#endif
 
 /****************** Functions for CvParticleState structure ******************/
 

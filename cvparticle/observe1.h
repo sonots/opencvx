@@ -38,16 +38,25 @@ int num_observes = 1;
 CvSize feature_size = cvSize(24, 24);
 
 /******************** Function Prototypes **********************/
-void cvParticleObserveLikelihood( CvParticle* p, IplImage* cur_frame, IplImage *pre_frame );
+#ifndef NO_DOXYGEN
+void cvParticleObserveMeasure( CvParticle* p, IplImage* cur_frame, IplImage *pre_frame );
+#endif
 
 /**
+ * Measure and weight particles. 
+ *
+ * The proposal function q is set p(xt|xt-1) in SIR/Condensation, and it results 
+ * that "weights" are set to be proportional to the likelihood probability 
+ * (Normalize later).
+ * Rewrite here if you want to use a different proposal function q. 
+ *
  * CvParticleState s must have s.x, s.y, s.width, s.height, s.angle
  *
  * @param particle
  * @param frame
  * @param reference
  */
-void cvParticleObserveLikelihood( CvParticle* p, IplImage* frame, IplImage *reference )
+void cvParticleObserveMeasure( CvParticle* p, IplImage* frame, IplImage *reference )
 {
     int i;
     double likeli;

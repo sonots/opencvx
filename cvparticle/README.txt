@@ -6,8 +6,7 @@ State and state transition model.
 state1.h   - x,y,width,height,angle states and state transition model is
              next := current + noise
 state2.h   - x,y,width,height,angle states and state transition model is
-             next := current + speed + noise
-                  := 2 * current - previous + noise
+             next := current + speed + noise  
              Thus, states include previous values of x,y,.. too, totally 10.
 
 Observation model depends on a state model.
