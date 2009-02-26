@@ -32,6 +32,7 @@
 
 #include "cvcreateaffine.h"
 #include "cvrect32f.h"
+#include "cvget2dinter.h"
 
 //CVAPI(void) 
 //cvCropImageROI( const IplImage* img, IplImage* dst, 
@@ -85,10 +86,11 @@ cvCropImageROI( const IplImage* img, IplImage* dst,
     }
     else if( shear.x == 0 && shear.y == 0 )
     {
-        int x, y, ch;
+        int x, y;
         float xp, yp;
         double c = cos( -M_PI / 180 * angle );
         double s = sin( -M_PI / 180 * angle );
+        CvScalar color;
         /*CvMat* R = cvCreateMat( 2, 3, CV_32FC1 );
         cv2DRotationMatrix( cvPoint2D32f( 0, 0 ), angle, 1.0, R );
         double c = cvmGet( R, 0, 0 );
@@ -103,17 +105,24 @@ cvCropImageROI( const IplImage* img, IplImage* dst,
                 xp = ( c * x + -s * y ) + rect.x;
                 yp = ( s * x + c * y ) + rect.y;
                 if( xp <= -0.5 || xp >= img->width - 0.5 || yp <= -0.5 || yp >= img->height - 0.5 ) continue;
-                for( ch = 0; ch < img->nChannels; ch++ )
-                {
-                    dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
-                        = img->imageData[img->widthStep * yp + xp * img->nChannels + ch];
-                }
+                color = cvGet2DInter( img, yp, xp, interpolation );
+                cvSet2D( dst, y, x, color );
+                //xp = cvRound( c * x + -s * y ) + rect.x;
+                //yp = cvRound( s * x + c * y ) + rect.y;
+                //if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
+                //for( ch = 0; ch < img->nChannels; ch++ )
+                //{
+                //    dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
+                //        = img->imageData[img->widthStep * yp + xp * img->nChannels + ch];
+                //}
             }
         }
     }
     else
     {
-        int x, y, ch, xp, yp;
+        int x, y;
+        float xp, yp;
+        CvScalar color;
         CvMat* affine = cvCreateMat( 2, 3, CV_32FC1 );
         CvMat* xy     = cvCreateMat( 3, 1, CV_32FC1 );
         CvMat* xyp    = cvCreateMat( 2, 1, CV_32FC1 );
@@ -128,14 +137,19 @@ cvCropImageROI( const IplImage* img, IplImage* dst,
             {
                 cvmSet( xy, 1, 0, y / rect32f.height );
                 cvMatMul( affine, xy, xyp );
-                xp = cvRound( cvmGet( xyp, 0, 0 ) );
-                yp = cvRound( cvmGet( xyp, 1, 0 ) );
-                if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
-                for( ch = 0; ch < img->nChannels; ch++ )
-                {
-                    dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
-                        = img->imageData[img->widthStep * yp + xp * img->nChannels + ch];
-                }
+                xp = cvmGet( xyp, 0, 0 );
+                yp = cvmGet( xyp, 1, 0 );
+                if( xp <= -0.5 || xp >= img->width - 0.5 || yp <= -0.5 || yp >= img->height - 0.5 ) continue;
+                color = cvGet2DInter( img, yp, xp, interpolation );
+                cvSet2D( dst, y, x, color );
+                //xp = cvRound( cvmGet( xyp, 0, 0 ) );
+                //yp = cvRound( cvmGet( xyp, 1, 0 ) );
+                //if( xp < 0 || xp >= img->width || yp < 0 || yp >= img->height ) continue;
+                //for( ch = 0; ch < img->nChannels; ch++ )
+                //{
+                //    dst->imageData[dst->widthStep * y + x * dst->nChannels + ch]
+                //        = img->imageData[img->widthStep * yp + xp * img->nChannels + ch];
+                //}
             }
         }
         cvReleaseMat( &affine );
