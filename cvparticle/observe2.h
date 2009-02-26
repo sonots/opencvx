@@ -170,7 +170,7 @@ void cvParticleObserveLikelihood( CvParticle* p, IplImage* frame )
     icvGetFeatures( p, frame, features );
     
     // Likelihood measurments
-    cvMatPcaDiffs( features, eigenavg, eigenvalues, eigenvectors, p->probs, 0, TRUE);
+    cvMatPcaDiffs( features, eigenavg, eigenvalues, eigenvectors, p->weights, 0, TRUE);
 }
 
 #endif

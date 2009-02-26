@@ -69,7 +69,7 @@ void cvParticleObserveLikelihood( CvParticle* p, IplImage* frame, IplImage *refe
         // exp( -d^2 / sigma^2 )
         // sigma can be omitted because common param does not affect ML estimate
         likeli = -cvNorm( resize, reference, CV_L2 ); 
-        cvmSet( p->probs, 0, i, likeli );
+        cvmSet( p->weights, 0, i, likeli );
         
         cvReleaseImage( &patch );
     }
