@@ -33,6 +33,8 @@
 //     You may reduce this number when you can allow larger false alaram rate which
 //     results in to reduce reduce miss detection rate.
 // @param probs      The likelihood-ratio valued array rather than mask if you want
+// @todo Store GMM probabilities as a hash table having 255*255*255 entries.
+//       Then, no more computation is required and the computation finishes immediately.
 // 
 // References)
 // @verbatim
