@@ -200,6 +200,7 @@ cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues,
 /**
  * PCA Distance "in" and "from" feature space
  *
+ * @param sample              D x 1 feature vector
  * @param avg                 D x 1 mean vector
  * @param eigenvalues         nEig x 1 eigen values
  * @param eigenvectors        M x D eigen vectors
