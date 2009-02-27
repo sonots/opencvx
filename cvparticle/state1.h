@@ -87,7 +87,7 @@ void cvParticleStateConfig( CvParticle* p, CvSize imsize, CvParticleState& std )
 void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize );
 
 // Utility Functions
-void cvParticleStateDraw( const CvParticleState& state, IplImage* frame, CvScalar color );
+void cvParticleStateDisplay( const CvParticleState& state, IplImage* frame, CvScalar color );
 void cvParticleStatePrint( const CvParticleState& state );
 #endif
 
@@ -228,7 +228,7 @@ void cvParticleStateAdditionalBound( CvParticle* p, CvSize imsize )
 
 /***************************** Utility Functions ****************************************/
 
-void cvParticleStateDraw( const CvParticleState& state, IplImage* img, CvScalar color )
+void cvParticleStateDisplay( const CvParticleState& state, IplImage* img, CvScalar color )
 {
     CvBox32f box32f = cvBox32f( state.x, state.y, state.width, state.height, state.angle );
     CvRect32f rect32f = cvRect32fFromBox32f( box32f );
