@@ -386,8 +386,8 @@ CVAPI(void) cvParticleBound( CvParticle* p )
  */
 CVAPI(void) cvParticleInit( CvParticle* p, const CvParticle* init = NULL )
 {
-    int i, j, k;
-    if( init )
+    int i, c, n, s;
+    if( init ) // copy
     {
         int *num_copy;
         CvMat init_particle;
@@ -400,33 +400,54 @@ CVAPI(void) cvParticleInit( CvParticle* p, const CvParticle* init = NULL )
             num_copy[i] = divide + ( i < remain ? 1 : 0 );
         }
         
-        k = 0;
+        n = 0; // copy all states once
         for( i = 0; i < init->num_particles; i++ )
         {
             cvGetCol( init->particles, &init_particle, i );
-            for( j = 0; j < num_copy[i]; j++ )
+            for( c = 0; c < num_copy[i]; c++ )
             {
-                cvSetCol( &init_particle, p->particles, k++ );
+                cvSetCol( &init_particle, p->particles, n++ );
+            }
+        }
+        // randomize partial states if necessary
+        for( s = 0; s < init->num_states; s++ )
+        {
+            n = 0;
+            for( i = 0; i < init->num_particles; i++ )
+            {
+                if( FLT_MAX - cvmGet( init->particles, s, i ) < FLT_EPSILON ) // randomize flag
+                {
+                    CvScalar lower, upper;
+                    CvMat* statenoiseT = cvCreateMat( num_copy[i], 1, p->particles->type );
+                    lower = cvScalar( cvmGet( p->bound, s, 0 ) );
+                    upper = cvScalar( cvmGet( p->bound, s, 1 ) );
+                    cvRandArr( &p->rng, statenoiseT, CV_RAND_UNI, lower, upper );
+                    for( c = 0; c < num_copy[i]; c++ )
+                    {
+                        cvmSet( p->particles, s, n++, cvmGet( statenoiseT, c, 0 ) );
+                    }
+                    cvReleaseMat( &statenoiseT );
+                }
             }
         }
 
         free( num_copy );
     } 
-    else
+    else // randomize all states
     {
         CvScalar lower, upper;
-        CvMat* onenoiseT = cvCreateMat( p->num_particles, 1, p->particles->type );
-        CvMat* onenoise  = cvCreateMat( 1, p->num_particles, p->particles->type );
-        for( i = 0; i < p->num_states; i++ )
+        CvMat* statenoiseT = cvCreateMat( p->num_particles, 1, p->particles->type );
+        CvMat* statenoise  = cvCreateMat( 1, p->num_particles, p->particles->type );
+        for( s = 0; s < p->num_states; s++ )
         {
-            lower = cvScalar( cvmGet( p->bound, i, 0 ) );
-            upper = cvScalar( cvmGet( p->bound, i, 1 ) );
-            cvRandArr( &p->rng, onenoiseT, CV_RAND_UNI, lower, upper );
-            cvT( onenoiseT, onenoise );
-            cvSetRow( onenoise, p->particles, i );
+            lower = cvScalar( cvmGet( p->bound, s, 0 ) );
+            upper = cvScalar( cvmGet( p->bound, s, 1 ) );
+            cvRandArr( &p->rng, statenoiseT, CV_RAND_UNI, lower, upper );
+            cvT( statenoiseT, statenoise );
+            cvSetRow( statenoise, p->particles, s );
         }
-        cvReleaseMat( &onenoise );
-        cvReleaseMat( &onenoiseT );
+        cvReleaseMat( &statenoise );
+        cvReleaseMat( &statenoiseT );
     }
 }
 
