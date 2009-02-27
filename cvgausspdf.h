@@ -78,7 +78,7 @@ cvMatGaussPdf( const CvMat* samples,
                const CvMat* mean, 
                const CvMat* cov, 
                CvMat* probs, 
-               bool normalize CV_DEFAULT(false), 
+               bool normalize CV_DEFAULT(true), 
                bool logprob CV_DEFAULT(false) )
 {
     int D = samples->rows;
@@ -159,7 +159,7 @@ cvMatGaussPdf( const CvMat* samples,
 */
 CV_INLINE double 
 cvGaussPdf( const CvMat* sample, const CvMat* mean, const CvMat* cov, 
-            bool normalize CV_DEFAULT(false), bool logprob CV_DEFAULT(false) )
+            bool normalize CV_DEFAULT(true), bool logprob CV_DEFAULT(false) )
 {
     double prob;
     CvMat *_probs  = cvCreateMat( 1, 1, sample->type );

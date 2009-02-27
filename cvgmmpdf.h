@@ -82,7 +82,7 @@
 */
 CVAPI(void) 
 cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs, 
-             const CvMat* weights, CvMat* probs, bool normalize CV_DEFAULT(false) )
+             const CvMat* weights, CvMat* probs, bool normalize CV_DEFAULT(true) )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -145,7 +145,7 @@ cvMatGmmPdf( const CvMat* samples, const CvMat* means, CvMat** covs,
  */
 CV_INLINE double 
 cvGmmPdf( const CvMat* sample, const CvMat* means, CvMat** covs, 
-          const CvMat* weights, CvMat* probs CV_DEFAULT(NULL), bool normalize CV_DEFAULT(false) )
+          const CvMat* weights, CvMat* probs CV_DEFAULT(NULL), bool normalize CV_DEFAULT(true) )
 {
     double prob;
     CvMat* _probs;

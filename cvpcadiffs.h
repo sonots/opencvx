@@ -20,13 +20,15 @@
 #ifndef CV_PCADIFFS_INCLUDED
 #define CV_PCADIFFS_INCLUDED
 
-//CVAPI(void) 
-//cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
-//               const CvMat* eigenvectors, CvMat* probs, 
-//               int normalize = 0, bool logprob = true );
-//CV_INLINE double 
-//cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
-//            const CvMat* eigenvectors, int normalize = 0, bool logprob = true );
+#ifndef NO_DOXYGEN
+CVAPI(void) 
+cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
+               const CvMat* eigenvectors, CvMat* probs, 
+               int normalize, bool logprob );
+CV_INLINE double 
+cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
+            const CvMat* eigenvectors, int normalize, bool logprob );
+#endif
 
 /**
  * PCA Distance "in" and "from" feature space [1]
@@ -74,7 +76,7 @@
 CVAPI(void) 
 cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues, 
                const CvMat* eigenvectors, CvMat* probs, 
-               int normalize CV_DEFAULT(0), bool logprob CV_DEFAULT(true) )
+               int normalize CV_DEFAULT(1), bool logprob CV_DEFAULT(false) )
 {
     int D = samples->rows;
     int N = samples->cols;
@@ -162,10 +164,12 @@ cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues,
         }
     }
     
-    // logp sum
+    // sum DIFS and DFFS in log form
     for( n = 0; n < N; n++ ) {
         cvmSet( probs, 0, n, cvmGet( DIFS, 0, n ) / (-2) + cvmGet( DFFS, 0, n) / (-2) - normterm );
     }
+
+    // normalization and so on
     if( normalize == 2 ) {
         double minval, maxval;
         cvMinMaxLoc( probs, &minval, &maxval );
@@ -205,13 +209,16 @@ cvMatPcaDiffs( const CvMat* samples, const CvMat* avg, const CvMat* eigenvalues,
  * @param eigenvalues         nEig x 1 eigen values
  * @param eigenvectors        M x D eigen vectors
  * @param normalize           Compute normalization term or not
+ *                            0 - nothing
+ *                            1 - normalization term
+ *                            2 - normalize so that sum becomes 1.0
  * @param logprob             Log probability or not
  * @return double likelihood
 */
 CV_INLINE double 
 cvPcaDiffs( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
             const CvMat* eigenvectors, 
-            int normalize CV_DEFAULT(0), bool logprob CV_DEFAULT(true) )
+            int normalize CV_DEFAULT(1), bool logprob CV_DEFAULT(false) )
 {
     double prob;
     CvMat *_probs  = cvCreateMat( 1, 1, sample->type );
