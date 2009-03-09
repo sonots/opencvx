@@ -8,7 +8,7 @@
  * Other functions should not necessary be modified.
  *
  * cvCreateParticle -> cvPartcileSetXxx -> cvParticleInit
- * -> loop { cvParticleTransition -> cvParticleResample )
+ * -> loop { cvParticleTransition -> measurement -> cvParticleResample )
  * -> cvReleaseParticle
  */
 /* The MIT License
@@ -61,9 +61,11 @@ typedef struct CvParticle {
     CvMat* dynamics;   /**< num_states x num_states. Dynamics model. */
     CvRNG  rng;        /**< Random seed */
     CvMat* std;        /**< num_states x 1. Standard deviation for gaussian noise
-                           Set standard deviation == 0 for no noise */
-    CvMat* stds;       /**< num_states x num_particles. Std for each state and
-                          each particle. "std" is used if "stds" is not set. */
+                          Set standard deviation == 0 for no noise */
+    CvMat* stds;       /**< num_states x num_particles. 
+                          Std for each particle so that you could be varying 
+                          noise variance for each particle.
+                          "std" is used if "stds" is not set. */
     CvMat* bound;      /**< num_states x 3 (lowerbound, upperbound, 
                           wrap_around (like angle) flag 0 or 1)
                           Set lowerbound == upperbound to express no bound */
