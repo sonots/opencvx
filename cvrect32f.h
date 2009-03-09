@@ -34,12 +34,12 @@
  * Floating Rectangle Structure
  */
 typedef struct CvRect32f {
-    float x;      /* left x coord of rectangle */
-    float y;      /* top y coord of rectangle */
-    float width;  /* width of rectangle */
-    float height; /* height of rectangle */
-    float angle;  /* counter-clockwise rotation angle in degree */
-                  /* rotation center is (x, y) coordinates */
+    float x;      /**< left x coord of rectangle */
+    float y;      /**< top y coord of rectangle */
+    float width;  /**< width of rectangle */
+    float height; /**< height of rectangle */
+    float angle;  /**< counter-clockwise rotation angle in degree
+                       rotation center is (x, y) coordinates */
 } CvRect32f;
 
 /**
@@ -50,12 +50,12 @@ typedef struct CvRect32f {
  * CvBox2D does not have a constructor cvBox2D(...). 
  */
 typedef struct CvBox32f { 
-    float cx;     /* center x coord of rectangle */
-    float cy;     /* center y coord of center of rectangle */
-    float width;  /* width of rectangle */
-    float height; /* height of rectangle */
-    float angle;  /* counter-clockwise rotation angle in degree */
-                  /* rotation center is center of rectangle */
+    float cx;     /**< center x coord of rectangle */
+    float cy;     /**< center y coord of center of rectangle */
+    float width;  /**< width of rectangle */
+    float height; /**< height of rectangle */
+    float angle;  /**< counter-clockwise rotation angle in degree
+                       rotation center is center of rectangle */
 } CvBox32f;
 
 /***************************** Prototypes *************************************/
@@ -86,6 +86,13 @@ typedef struct CvBox32f {
 
 /**
  * The Constructor of Floating Rectangle Structure
+ *
+ * @param x      left x coord of rectangle
+ * @param y      top y coord of center of rectangle
+ * @param width  width of rectangle
+ * @param height height of rectangle
+ * @param angle  counter-clockwise rotation angle in degree
+ *               rotation center is (x, y) coordinates
  */
 CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height, 
                                float angle CV_DEFAULT(0.0) )
@@ -96,6 +103,13 @@ CV_INLINE CvRect32f cvRect32f( float x, float y, float width, float height,
 
 /**
  * The Constructor of Center Coordinate Floating Rectangle Structure
+ *
+ * @param cx     center x coord of rectangle
+ * @param cy     center y coord of center of rectangle
+ * @param width  width of rectangle
+ * @param height height of rectangle
+ * @param angle  counter-clockwise rotation angle in degree
+ *               rotation center is center of rectangle
  */
 CV_INLINE CvBox32f cvBox32f( float cx, float cy, float width, float height, 
                              float angle CV_DEFAULT(0.0) )

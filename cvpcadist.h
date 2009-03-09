@@ -106,8 +106,7 @@ cvMatPcaDist( const CvMat* samples, const CvMat* avg,
  * @return double
 */
 CV_INLINE double 
-cvPcaDist( const CvMat* sample, const CvMat* avg, const CvMat* eigenvalues, 
-           const CvMat* eigenvectors )
+cvPcaDist( const CvMat* sample, const CvMat* avg, const CvMat* eigenvectors )
 {
     double prob;
     CvMat *_dists  = cvCreateMat( 1, 1, sample->type );

@@ -34,8 +34,7 @@ cvPcaProbDist( const CvMat* sample, const CvMat* avg,
 #endif
 
 /**
- * Distance between sample and PCA subspace, i.e, reconstruction error
- * Probabiliticlly model with Gaussian
+ * Probabilistic model of Distance from PCA subspace with Gaussian
  *
  * @param samples             D x N sample vectors
  * @param avg                 D x 1 mean vector

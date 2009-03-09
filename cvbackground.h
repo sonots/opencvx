@@ -31,9 +31,9 @@
 /**
  * Obtain non-background pixels using reference image (such as previous frame in video )
  *
- * @param mg     The target image
- * @param ref    The reference image. Usually the previous frame of video
- * @param mask   The generated mask image where 0 is for bg and 1 is for non-bg.
+ * @param _img   The target image
+ * @param _ref   The reference image. Usually the previous frame of video
+ * @param _mask  The generated mask image where 0 is for bg and 1 is for non-bg.
  *               Must be 8U and 1 channel
  * @param thresh The threshold. [0 - 255^2] for single channel image. 
  *               [0 - 255^2 * 3] for 3 channel image.
