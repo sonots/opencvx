@@ -31,14 +31,14 @@
 using namespace std;
 
 /**
-// Compute Norm between two points
-//
-// @param CvPoint p1              A point 1
-// @param CVPoint p2              A point 2
-// @param int [norm_type = CV_L2] CV_L2 to compute L2 norm (euclidean distance)
-//                                CV_L1 to compute L1 norm (abs)
-// @return double
-*/
+ * Compute Norm between two points
+ *
+ * @param p1        A point 1
+ * @param p2        A point 2
+ * @param norm_type CV_L2 to compute L2 norm (euclidean distance)
+ *                  CV_L1 to compute L1 norm (abs)
+ * @return double
+ */
 CV_INLINE double cvPointNorm( CvPoint p1, CvPoint p2, int norm_type CV_DEFAULT(CV_L2) )
 {
     if( norm_type == CV_L1 )
