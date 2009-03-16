@@ -7,9 +7,16 @@
  * cvParticleTransition( p ). 
  * Other functions should not necessary be modified.
  *
- * cvCreateParticle -> cvPartcileSetXxx -> cvParticleInit
- * -> loop { cvParticleTransition -> measurement -> cvParticleResample )
- * -> cvReleaseParticle
+ * cvCreateParticle
+ * cvPartcileSetXxx
+ * cvParticleInit
+ * loop { 
+ *   cvParticleTransition
+ *   Measurement
+ *   cvParticleNormalize
+ *   cvParticleResample
+ * }
+ * cvReleaseParticle
  */
 /* The MIT License
  * 
@@ -96,7 +103,7 @@ CVAPI(void) cvParticleNormalize( CvParticle* p );
 
 CVAPI(void) cvParticleInit( CvParticle* p, const CvParticle* init );
 CVAPI(void) cvParticleTransition( CvParticle* p );
-CVAPI(void) cvParticleResample( CvParticle* p, bool normalize );
+CVAPI(void) cvParticleResample( CvParticle* p );
 #endif
 
 /*************************** Constructor / Destructor *************************/
@@ -521,21 +528,14 @@ CVAPI(void) cvParticleTransition( CvParticle* p )
  *
  * @param particle
  * @note Uses See also functions inside.
- * @see cvParticleNormalize
- * @see cvParticleGetMax
  */
-CVAPI(void) cvParticleResample( CvParticle* p, bool normalize = true )
+CVAPI(void) cvParticleResample( CvParticle* p )
 {
     int i, j, np, k = 0;
     CvMat* particle, hdr;
     CvMat* new_particles = cvCreateMat( p->num_states, p->num_particles, p->particles->type );
     double weight;
     int max_loc;
-
-    if( normalize )
-    {
-        cvParticleNormalize( p );
-    }
 
     k = 0;
     for( i = 0; i < p->num_particles; i++ )
