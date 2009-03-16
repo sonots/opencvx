@@ -527,7 +527,6 @@ CVAPI(void) cvParticleTransition( CvParticle* p )
  * Simply copy, not uniform randomly selects
  *
  * @param particle
- * @note Uses See also functions inside.
  */
 CVAPI(void) cvParticleResample( CvParticle* p )
 {
