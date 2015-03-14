@@ -1,14 +1,3 @@
-OpenCV eXtensional headear-only library
-http://code.google.com/p/opencvx/
-
-HOW TO INSTALL:
-
-Assume OpenCV is successfully installed yet.
- #include "opencvx/function.h"
-in your file. That's all.
-
-LISENCE:
-
 The MIT License
 
 Copyright (c) 2008, Naotoshi Seo <sonots(at)umd.edu>
